@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009165249.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/conteudo/style.css">
+    <title>Arqtalk-Pré-Literária</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bronze: #b58647;
+            --primary-dark: #725227;
+            --bronze-light: #d4b88c;
+            --bronze-lighter: #f0e4d3;
+            --dark-medium: #8a6b3a;
+            --dark-light: #a38754;
+            --delete-red: #dc2626;
+            --delete-dark: #991b1b;
+            --site-background: #725227;
+            --content-background: #b58647;
+        }
+
+        body {
+            background: var(--site-background);
+            color: #f0e4d3;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+
+        .modern-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Seção do Projeto */
+        .project-section {
+            background: linear-gradient(135deg, rgba(181, 134, 71, 0.15), rgba(114, 82, 39, 0.25));
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            border: 1px solid rgba(181, 134, 71, 0.4);
+            padding: 4rem 3rem;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, 
+                var(--primary-bronze), 
+                var(--bronze-light), 
+                var(--primary-bronze));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .project-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(181, 134, 71, 0.3);
+        }
+
+        .project-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--bronze-lighter), var(--bronze-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .project-subtitle {
+            font-size: 1.4rem;
+            color: var(--bronze-light);
+            margin-bottom: 3rem;
+            font-weight: 500;
+            opacity: 0.95;
+            max-width: 600px;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-bronze);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary-bronze);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: white;
+            box-shadow: 0 8px 20px rgba(181, 134, 71, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--bronze-lighter);
+            margin-bottom: 1rem;
+        }
+
+        .card-description {
+            color: var(--bronze-light);
+            line-height: 1.7;
+            opacity: 0.9;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(181, 134, 71, 0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-bronze);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--bronze-light);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Seção de Introdução Modernizada */
+        .intro-section {
+            background: linear-gradient(135deg, rgba(181, 134, 71, 0.1), rgba(114, 82, 39, 0.2));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-bronze), var(--bronze-light));
+        }
+
+        .intro-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--bronze-lighter), var(--bronze-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .intro-subtitle {
+            font-size: 1.2rem;
+            color: var(--bronze-lighter);
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(181, 134, 71, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-bronze);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--bronze-lighter);
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--bronze-light);
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark-medium));
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            margin: 4rem 0;
+            border: 1px solid var(--primary-bronze);
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--bronze-lighter);
+            margin-bottom: 1rem;
+        }
+
+        .cta-description {
+            color: var(--bronze-light);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(181, 134, 71, 0.4);
+        }
+
+        /* Estilos existentes que você pediu para manter */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-bronze));
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-bottom: 3px solid var(--primary-bronze);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--bronze-lighter);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .logo img {
+            min-height: 90px;
+            max-width: 90px;
+            min-width: 90px;
+            max-height: 90px;
+            background-color: transparent;
+        }
+
+        .menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .menu a {
+            color: var(--bronze-lighter);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+
+
+        @keyframes float {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-200px) translateY(-200px); }
+        }
+
+        .social-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .social-float a {
+            display: block;
+            margin-bottom: 10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .social-float a:hover {
+            transform: scale(1.1);
+        }
+
+        .social-float img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1 style="color: #725227;">ArqTalk</h1>
+            <img class="logo" src="/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="">
+            <h1>ArqTalk</h1>
+        </div>
+        <div class="menu">
+            <a href="/conteudo/prelit.html">Pré-Literária/a>
+            <a href="/conteudo/subaqua.html">Subaquática</a>
+            <a href="/conteudo/zoo.html">Zooarqueologia</a>
+            <a href="">Paisagem</a>
+        </div>
+    </nav>
+
+    <div class="head">
+        <h1>Início</h1>
+    </div>
+
+    <div class="social-float">
+        <a href="https://wa.me/5547999999999" target="_blank" class="whatsapp-floa">
+            <img src="/images/circle-whatsapp-logotype-icon-social-media-app-network-application-popular-editorial-brand-vector-il-removebg-preview-fotor-20250308162320.png" alt="WhatsApp">
+        </a>
+        <a href="https://www.instagram.com/robotmakerspvs?igsh=Y29kY3R5ODhuODNr" target="_blank" class="instagram-floa">
+            <img src="/images/instagram-icon-free-png (1).webp" alt="Instagram">
+        </a>
+    </div>
+
+    <div class="modern-container">
+        <!-- Seção do Projeto - Explicação Principal -->
+        <section class="project-section">
+            <div class="project-badge">
+                <i class="fas fa-rocket mr-2"></i>
+                SOBRE O PROJETO
+            </div>
+            
+            <h1 class="project-title">
+        </br>
+                Revelando as Origens da Comunicação Humana
+            </h1>
+            
+            <p class="project-subtitle">
+                Uma plataforma colaborativa dedicada ao estudo e à comunicação arqueológica, onde a tecnologia se une à pesquisa para agilizar o acesso a dados, conectar profissionais e fortalecer o conhecimento científico sobre o passado.
+            </p>
+
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">Arqueólogos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">40+</div>
+                    <div class="stat-label">Tópicos Compartilhados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">Dados Compartilhados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">Reuniões de Equipe</div>
+                </div>
+            </div>
+
+            <div class="project-grid">
+                <div class="project-card">
+                    <div class="card-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3 class="card-title">Missão</h3>
+                    <p class="card-description">
+                        Democratizar o acesso ao conhecimento sobre sociedades pré-literárias, 
+                        criando uma ponte entre pesquisadores acadêmicos, estudantes e entusiastas 
+                        da arqueologia mundial.
+                    </p>
+                </div>
+
+                <div class="project-card">
+                    <div class="card-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3 class="card-title">Visão</h3>
+                    <p class="card-description">
+                        Tornar-se a principal referência digital para estudos colaborativos 
+                        sobre comunicação pré-escrita, integrando descobertas arqueológicas 
+                        com análises multidisciplinares inovadoras.
+                    </p>
+                </div>
+
+                <div class="project-card">
+                    <div class="card-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="card-title">Diferenciais</h3>
+                    <p class="card-description">
+                        Interface moderna inspirada em escavações arqueológicas, sistema de 
+                        comentários estratificado, datação colaborativa e integração com 
+                        bancos de dados internacionais especializados.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Introdução Modernizada -->
+        <section class="intro-section">
+            <h1 class="intro-title">Explorando as Origens da Humanidade</h1>
+            <p class="intro-subtitle">
+                Mergulhe no fascinante mundo das sociedades pré-escrita e descubra como nossos ancestrais 
+                se comunicavam, criavam e organizavam seu mundo antes da invenção da escrita.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-monument"></i>
+                    </div>
+                    <h3 class="feature-title">Arte Rupestre</h3>
+                    <p class="feature-description">
+                        As primeiras expressões artísticas da humanidade, encontradas em cavernas e abrigos 
+                        rochosos ao redor do mundo, revelam complexos sistemas simbólicos e narrativos visuais.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="feature-title">Tecnologia Lítica</h3>
+                    <p class="feature-description">
+                        O desenvolvimento de ferramentas de pedra marcou importantes avanços tecnológicos 
+                        e cognitivos, representando a transição para o comportamento moderno.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Organização Social</h3>
+                    <p class="feature-description">
+                        Evidências arqueológicas sugerem complexas estruturas sociais, rituais e sistemas 
+                        de troca que antecederam em milênios o surgimento da escrita.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <h2 class="cta-title">Junte-se à Nossa Comunidade</h2>
+            <p class="cta-description">
+                Participe de discussões, compartilhe descobertas e contribua para o avanço do conhecimento 
+                sobre as sociedades pré-literárias. Sua expertise é valiosa para nossa comunidade.
+            </p>
+            <a href="#comentarios" class="btn-primary">
+                <i class="fas fa-comments mr-2"></i>
+                Participar das Discussões
+            </a>
+        </section>
+    </div>
+
+    <script>
+        // Animação para os elementos do projeto
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectCards = document.querySelectorAll('.project-card');
+            const statNumbers = document.querySelectorAll('.stat-number');
+            
+            // Animação para os cards do projeto
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            projectCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
+
+            // Animação para os números estatísticos
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = Math.floor(current) + '+';
+                }, 50);
+            });
+        });
+    </script>
+</body>
+</html>
