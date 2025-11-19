@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArqTalk - Login</title>
+    <link rel="shortcut icon" href="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009165249.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArqTalk - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+</head>
+
+   <style>
+        
+        :root {
+            --primary-bronze: #b58647;
+            --primary-dark: #725227;
+            --bronze-light: #d4b88c;
+            --bronze-lighter: #f0e4d3;
+            --dark-medium: #8a6b3a;
+            --dark-light: #a38754;
+            --delete-red: #dc2626;
+            --delete-dark: #991b1b;
+            --site-background: #725227;
+            --content-background: #b58647;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark-medium));
+            color: #f0e4d3;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-bronze));
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-bottom: 3px solid var(--primary-bronze);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--bronze-lighter);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .logo img {
+            height: 90px;
+            width: auto;
+            background: transparent !important;
+            background-color: transparent !important;
+            filter: none !important;
+            -webkit-filter: none !important;
+            mix-blend-mode: normal !important;
+            border: none !important;
+            outline: none !important;
+            display: block;
+            transform: none !important;
+            opacity: 1 !important;
+        }
+
+        .menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .menu a {
+    background: var(--card-bg);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 1.2em 1em 1em 1.2em;
+      transition: background 0.22s, box-shadow 0.22s, border-color 0.22s;
+      
+      justify-content: space-between;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    padding: 10px 16px;
+    text-decoration: none;
+      font-weight: 600;
+    
+}
+
+.menu a:hover {
+    border-radius: 15%;
+    background-color: #593e1b;
+    border: 2px solid white;
+    color: white;
+      background: var(--card-hover);
+      box-shadow: 0 6px 24px white;
+      border-color: white;
+          transform: translateY(-2px);
+            animation-delay: 0.8s;
+}
+
+        /* Container principal do login */
+        .login-container {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: linear-gradient(135deg, rgba(181, 134, 71, 0.15), rgba(114, 82, 39, 0.25));
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            border: 1px solid rgba(181, 134, 71, 0.4);
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+.google-login-section {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* Customiza o botão do Google */
+.g_id_signin iframe {
+    border-radius: 10px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+}
+#userPanel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--bronze-lighter);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--bronze-light);
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.user-email {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.logout-btn {
+    background: var(--delete-red);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: var(--delete-dark);
+    transform: translateY(-1px);
+}
+/* Google - azul */
+.user-google {
+    border: 2px solid #4285f4;
+}
+
+/* Email - bronze */
+.user-email {
+    border: 2px solid var(--primary-bronze);
+}
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--bronze-lighter), var(--bronze-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: var(--bronze-light);
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--bronze-lighter);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(181, 134, 71, 0.3);
+            border-radius: 12px;
+            color: var(--bronze-lighter);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-bronze);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 3px rgba(181, 134, 71, 0.2);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--bronze-light);
+            font-size: 1.1rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--bronze-light);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: var(--bronze-lighter);
+        }
+
+        .profession-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profession-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(181, 134, 71, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .profession-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--bronze-light);
+        }
+
+        .profession-option.selected {
+            background: rgba(181, 134, 71, 0.2);
+            border-color: var(--primary-bronze);
+            box-shadow: 0 0 0 2px rgba(181, 134, 71, 0.3);
+        }
+
+        .profession-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--bronze-light);
+        }
+
+        .profession-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--bronze-lighter);
+        }
+
+        .other-profession-input {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .other-profession-input.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        .facebook-login-section {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+}
+.avatar-initials {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    border: 2px solid var(--bronze-light);
+}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--bronze-light);
+        }
+
+        .remember-me input {
+            accent-color: var(--primary-bronze);
+        }
+
+        .forgot-password {
+            color: var(--bronze-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: var(--bronze-lighter);
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(181, 134, 71, 0.4);
+        }
+
+        .register-link {
+            text-align: center;
+            color: var(--bronze-light);
+            font-size: 0.95rem;
+        }
+
+        .register-link a {
+            color: var(--bronze-lighter);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark-medium));
+            padding: 2rem;
+            margin-top: auto;
+            border-top: 3px solid var(--primary-bronze);
+        }
+   .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-medium);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .footer-logo img {
+            height: 70px;
+            width: 70px;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--bronze-light);
+            font-size: 1rem;
+        }
+
+        .footer-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--bronze-lighter);
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+        }
+
+        .robot-icon {
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-link {
+            color: var(--bronze-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .footer-link:hover {
+            color: var(--bronze-lighter);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .menu a {
+                font-size: 0.9rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .login-card {
+                padding: 2rem;
+            }
+            
+            .login-title {
+                font-size: 1.8rem;
+            }
+            
+            .profession-options {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1rem;
+            }
+            
+            .login-card {
+                padding: 1.5rem;
+            }
+            
+            .login-title {
+                font-size: 1.6rem;
+            }
+            
+            .remember-forgot {
+                flex-direction: column;
+                gap: 0.8rem;
+                align-items: flex-start;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img class="logo" src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="">
+            <h1>ArqTalk</h1>
+        </div>
+        <div class="menu">
+            <a href="/ArqTalk/conteudo/prelit.html">Pré-Literária</a>
+            <a href="/ArqTalk/conteudo/subaqua.html">Subaquática</a>
+            <a href="/ArqTalk/conteudo/zoo.html">Zooarqueologia</a>
+            <a href="/ArqTalk/conteudo/equipe.html">Sobre Nós</a>
+        </div>
+         
+    </nav>
+
+   
+
+<!-- ADICIONE isto no lugar -->
+<div class="google-login-section">
+    <div id="g_id_onload"
+         data-client_id="268650964309-5hd20suql0d7peckgac1ehkub9qesbbk.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleGoogleLogin"
+         data-auto_prompt="false">
+    </div>
+    
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="filled_blue"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left"
+         data-width="300">
+    </div>
+</div>
+
+
+    <!-- Conteúdo Principal -->
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="login-title">Bem-vindo de Volta</h1>
+                <p class="login-subtitle">Entre na sua conta para acessar o ArqTalk de forma completa</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">E-mail</label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="email" class="form-input" placeholder="seu@email.com" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Senha</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="password" class="form-input" placeholder="Sua senha" required>
+                        <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Selecione sua profissão</label>
+                    <div class="profession-options">
+                        <div class="profession-option" data-profession="arqueologo">
+                            <i class="fas fa-monument profession-icon"></i>
+                            <span class="profession-name">Arqueólogo</span>
+                        </div>
+                        <div class="profession-option" data-profession="estudante">
+                            <i class="fas fa-graduation-cap profession-icon"></i>
+                            <span class="profession-name">Estudante</span>
+                        </div>
+                        <div class="profession-option" data-profession="outras">
+                            <i class="fas fa-briefcase profession-icon"></i>
+                            <span class="profession-name">Outras Profissões</span>
+                        </div>
+                    </div>
+                    
+                    <div class="other-profession-input" id="otherProfessionInput">
+                        <div class="input-group">
+                            <i class="fas fa-user-tie input-icon"></i>
+                            <input type="text" id="otherProfession" class="form-input" placeholder="Qual sua profissão?">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember">
+                        Lembrar de mim
+                    </label>
+                    <a href="#" class="forgot-password">Esqueceu a senha?</a>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Entrar
+                </button>
+                
+                <div class="register-link">
+                    Não tem uma conta? <a href="#">Cadastre-se</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+     <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="ArqTalk">
+                <span>ArqTalk</span>
+            </div>
+            
+            <div class="footer-text">
+                <p>Equipe de robótica dedicada à inovação e excelência tecnológica</p>
+            </div>
+            
+            <div class="footer-author">
+                <i class="fas fa-robot robot-icon"></i>
+                <span>Robot Makers</span>
+            </div>
+            
+            <div class="footer-links">
+                <a href="/ArqTalk/conteudo/index.html" class="footer-link">Início</a>
+                <a href="/ArqTalk/conteudo/prelit.html" class="footer-link">Pré-literária</a>
+                <a href="/ArqTalk/conteudo/subaqua.html" class="footer-link">Subaquática</a>
+                <a href="/ArqTalk/conteudo/zoo.html" class="footer-link">Zooarqueologia</a>
+            </div>
+        </div>
+    </footer>
+
+   <script>
+    // ✅ CONFIGURAÇÃO COMPLETA DO SISTEMA DE LOGIN
+    
+    // ⭐⭐ FUNÇÃO getAvatarInitials NO ESCOPO GLOBAL ⭐⭐
+    function getAvatarInitials(email) {
+        const username = email.split('@')[0];
+        const lettersOnly = username.replace(/[^a-zA-ZÀ-ÿ]/g, '');
+        
+        if (lettersOnly.length >= 2) {
+            return lettersOnly.substring(0, 2).toUpperCase();
+        } else if (lettersOnly.length === 1) {
+            return (lettersOnly + lettersOnly).toUpperCase();
+        } else {
+            const numbersOnly = username.replace(/[^0-9]/g, '');
+            if (numbersOnly.length >= 2) {
+                return numbersOnly.substring(0, 2);
+            } else if (numbersOnly.length === 1) {
+                return numbersOnly + numbersOnly;
+            } else {
+                return 'US';
+            }
+        }
+    }
+
+    // ✅ FUNÇÃO DE LOGIN GOOGLE - NO ESCOPO GLOBAL
+    function handleGoogleLogin(response) {
+        console.log('🎯 handleGoogleLogin chamada!');
+        console.log('📦 Resposta do Google:', response);
+        
+        if (!response || !response.credential) {
+            console.error('❌ Resposta do Google inválida:', response);
+            alert('Erro: Resposta do Google inválida. Tente novamente.');
+            return;
+        }
+
+        const userData = decodeJWT(response.credential);
+        console.log('🔓 Dados decodificados:', userData);
+        
+        if (userData) {
+            const userInfo = {
+                email: userData.email,
+                name: userData.name,
+                photo: userData.picture,
+                provider: 'google',
+                loginTime: new Date().toLocaleString('pt-BR'),
+                lastAccess: new Date().toISOString(),
+                accessCount: 1,
+                initials: getAvatarInitials(userData.email),
+                locale: userData.locale || 'pt-BR',
+                emailVerified: userData.email_verified || false,
+                userSince: new Date().toLocaleDateString('pt-BR')
+            };
+            
+            // Atualiza contador de acessos se já existir
+            const existingUser = JSON.parse(localStorage.getItem('arqtalk_user'));
+            if (existingUser) {
+                userInfo.accessCount = (existingUser.accessCount || 0) + 1;
+            }
+            
+            console.log('💾 Salvando no localStorage:', userInfo);
+            localStorage.setItem('arqtalk_user', JSON.stringify(userInfo));
+            
+            // ⭐⭐ VERIFICAR SE SALVOU CORRETAMENTE ⭐⭐
+            const savedUser = localStorage.getItem('arqtalk_user');
+            console.log('✅ Usuário salvo no localStorage:', savedUser);
+            
+            showWelcomeMessage(userInfo);
+        } else {
+            console.error('❌ Falha ao decodificar JWT');
+            alert('Erro ao processar login do Google.');
+        }
+    }
+
+    // Função para decodificar o token JWT
+    function decodeJWT(token) {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
+        } catch (error) {
+            console.error('Erro ao decodificar JWT:', error);
+            return null;
+        }
+    }
+
+    function showWelcomeMessage(user) {
+        console.log('👋 Mostrando mensagem de boas-vindas para:', user.name);
+        
+        const messages = [
+            `Bem-vindo de volta, ${user.name}! 🎉`,
+            `Que bom te ver novamente, ${user.name}! 👋`,
+            `${user.name}, seu conhecimento é valioso aqui! 📚`,
+            `Acesso número ${user.accessCount}! Continue explorando! 🔍`
+        ];
+        
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        console.log('💬 Mensagem:', randomMessage);
+        
+        alert(randomMessage);
+        
+        // ⭐⭐ REDIRECIONAMENTO CONFIRMADO ⭐⭐
+        console.log('🔄 Redirecionando para a página principal...');
+        window.location.href = 'teste.html';
+    }
+
+    function addLogoutButton() {
+        const user = JSON.parse(localStorage.getItem('arqtalk_user'));
+        const userPanel = document.getElementById('userPanel');
+        
+        if (user && userPanel) {
+            const providerIcon = user.provider === 'google' ? '🔵' : '📧';
+            const avatarContent = user.photo 
+                ? `<img src="${user.photo}" class="user-avatar" alt="${user.name}">`
+                : `<div class="avatar-initials">${user.initials}</div>`;
+            
+            userPanel.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    ${avatarContent}
+                    <div class="user-info">
+                        <span class="user-name">${user.name} ${providerIcon}</span>
+                        <span class="user-email">${user.email}</span>
+                        <small style="color: var(--bronze-light);">${user.profession || 'Visitante'}</small>
+                    </div>
+                    <button onclick="logout()" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair
+                    </button>
+                </div>
+            `;
+            userPanel.style.display = 'flex';
+        }
+    }
+
+    function checkExistingLogin() {
+        const user = JSON.parse(localStorage.getItem('arqtalk_user'));
+        if (user) {
+            console.log('👤 Usuário já logado:', user.name);
+            addLogoutButton();
+            
+            if (window.location.pathname.includes('loginarq.html')) {
+                window.location.href = 'teste.html';
+            }
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('arqtalk_user');
+        if (typeof firebase !== 'undefined') {
+            firebase.auth().signOut();
+        }
+        alert('Até logo! 👋');
+        location.reload();
+    }
+
+    // Salva estatísticas de uso
+    function saveUserStats(action) {
+        const stats = JSON.parse(localStorage.getItem('arqtalk_stats')) || {};
+        const today = new Date().toDateString();
+        
+        if (!stats[today]) {
+            stats[today] = { logins: 0, pageViews: 0, actions: [] };
+        }
+        
+        stats[today].actions.push({
+            action: action,
+            timestamp: new Date().toISOString()
+        });
+        
+        localStorage.setItem('arqtalk_stats', JSON.stringify(stats));
+    }
+
+    // ✅ DOMContentLoaded CORRETO
+    document.addEventListener('DOMContentLoaded', function() {
+        const professionOptions = document.querySelectorAll('.profession-option');
+        const otherProfessionInput = document.getElementById('otherProfessionInput');
+        const otherProfessionField = document.getElementById('otherProfession');
+
+        // Seleção de profissão
+        professionOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                professionOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                if (this.dataset.profession === 'outras') {
+                    otherProfessionInput.classList.add('show');
+                    otherProfessionField.required = true;
+                } else {
+                    otherProfessionInput.classList.remove('show');
+                    otherProfessionField.required = false;
+                    otherProfessionField.value = '';
+                }
+            });
+        });
+
+        // Alternar visibilidade da senha
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+        
+        // URL do Google Apps Script
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyrfJCMzrAL0SqlCDFYvuB9jYgSQuUJOGUuLKT4Hj2oPL-I-fVQEdEYvC1A4ADdItEv/exec';
+
+        // Validação do formulário NORMAL
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const selectedProfession = document.querySelector('.profession-option.selected');
+                
+                if (!selectedProfession) {
+                    alert('Por favor, selecione sua profissão.');
+                    return;
+                }
+                
+                const profession = selectedProfession.dataset.profession;
+                let professionText = '';
+                
+                if (profession === 'arqueologo') professionText = 'Arqueólogo';
+                else if (profession === 'estudante') professionText = 'Estudante';
+                else if (profession === 'outras') {
+                    if (!otherProfessionField.value.trim()) {
+                        alert('Por favor, informe sua profissão.');
+                        return;
+                    }
+                    professionText = otherProfessionField.value;
+                }
+
+                // Dados do usuário
+                const userData = {
+                    email: email,
+                    name: email.split('@')[0],
+                    profession: professionText,
+                    loginTime: new Date().toLocaleString('pt-BR'),
+                    initials: getAvatarInitials(email),
+                    provider: 'email',
+                    photo: null
+                };
+
+                try {
+                    // 1. Salva localmente
+                    localStorage.setItem('arqtalk_user', JSON.stringify(userData));
+                    
+                    // 2. Tenta enviar para o servidor
+                    const serverSuccess = await saveToGoogleSheets(userData);
+                    
+                    if (serverSuccess) {
+                        alert(`✅ Login salvo no servidor!\nBem-vindo, ${userData.name}!`);
+                    } else {
+                        alert(`⚠️ Login salvo localmente!\nBem-vindo, ${userData.name}!`);
+                    }
+                    
+                    // 3. MOSTRA O PAINEL DO USUÁRIO
+                    addLogoutButton();
+                    
+                    // 4. Redireciona para teste.html
+                    setTimeout(() => {
+                        window.location.href = 'teste.html';
+                    }, 1000);
+                    
+                } catch (error) {
+                    // Fallback
+                    alert(`🔶 Login offline!\nBem-vindo, ${userData.name}!`);
+                    addLogoutButton();
+                    setTimeout(() => {
+                        window.location.href = 'teste.html';
+                    }, 1000);
+                }
+            });
+        }
+
+        // Função para salvar no Google Sheets
+        async function saveToGoogleSheets(userData) {
+            try {
+                const params = new URLSearchParams({
+                    email: userData.email,
+                    nome: userData.name,
+                    profissao: userData.profession,
+                    dataLogin: userData.loginTime
+                });
+
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: params
+                });
+                
+                const result = await response.json();
+                return result.result === 'success';
+                
+            } catch (error) {
+                console.log('Servidor offline, usando dados locais');
+                return false;
+            }
+        }
+
+        // Verifica se já está logado ao carregar a página
+        checkExistingLogin();
+    });
+</script>
+</body>
+</html>

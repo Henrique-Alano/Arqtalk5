@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009165249.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/ArqTalk/conteudo/style.css">
+    <title>Equipe - ArqTalk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+<!-- Sistema de Autenticação -->
+<script>
+// ⭐⭐ SISTEMA DE LOGIN - prelit.html ⭐⭐
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔍 Verificando login na pré-literária...');
+    
+    const userData = localStorage.getItem('arqtalk_user');
+    const loginBtn = document.getElementById('loginBtn');
+    const userProfile = document.getElementById('userProfile');
+    const userName = document.getElementById('userName');
+    const userAvatar = document.getElementById('userAvatar');
+    
+    if (userData) {
+        console.log('✅ Usuário está logado!');
+        const user = JSON.parse(userData);
+        
+        // Esconde login, mostra perfil
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (userProfile) {
+            userProfile.style.display = 'flex';
+            
+            // Logout ao clicar no perfil
+            userProfile.addEventListener('click', function() {
+                if (confirm('Deseja sair da sua conta?')) {
+                    localStorage.removeItem('arqtalk_user');
+                    location.reload();
+                }
+            });
+        }
+        
+        // Atualiza nome e avatar
+        if (userName) userName.textContent = user.name || user.email.split('@')[0];
+        if (userAvatar) userAvatar.textContent = user.initials || 'US';
+        
+    } else {
+        console.log('❌ Usuário NÃO está logado');
+        if (loginBtn) loginBtn.style.display = 'flex';
+        if (userProfile) userProfile.style.display = 'none';
+    }
+});
+</script> 
+ <style>
+
+        :root {
+            --primary-dark: #725227;
+            --primary-bronze: #b58647;
+            --accent-blue: #4a7ba6;
+            --bronze-light: #d4b88c;
+            --bronze-lighter: #f0e4d3;
+            --dark-medium: #8a6b3a;
+        }
+
+        body {
+            background: var(--primary-dark);
+            color: #f0e4d3;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+.social-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+}
+.whatsapp-floa img {
+      width: 50px;
+    height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 100%; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease; 
+}
+
+.instagram-floa img {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 100%; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease; 
+}
+
+.whatsapp-floa img:hover {
+    transform: scale(1.1);
+}
+.instagram-floa img:hover {
+    transform: scale(1.1);
+}
+        .modern-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        /* Header da Equipe */
+        .team-header {
+            background: linear-gradient(135deg, rgba(181, 134, 71, 0.15), rgba(114, 82, 39, 0.25));
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            border: 1px solid rgba(181, 134, 71, 0.4);
+            padding: 4rem 3rem;
+            margin: 2rem 0 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, 
+                var(--primary-bronze), 
+                var(--accent-blue), 
+                var(--primary-bronze));
+        }
+/* Logo da Equipe no Header */
+.equipe-logo-container {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.equipe-logo {
+    height: 120px;
+    width: auto;
+    max-width: 300px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.team-header-content {
+    text-align: center;
+}
+        .team-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--bronze-lighter), var(--bronze-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .team-subtitle {
+            font-size: 1.4rem;
+            color: var(--bronze-light);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Grid da Equipe */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .team-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+            transition: all 0.4s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-bronze), var(--accent-blue));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary-bronze);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .team-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* Card especial para a técnica */
+        .coach-card {
+            background: linear-gradient(135deg, rgba(181, 134, 71, 0.2), rgba(74, 123, 166, 0.15));
+            border-radius: 20px;
+            padding: 3rem;
+            border: 2px solid var(--primary-bronze);
+            transition: all 0.4s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto 4rem auto;
+        }
+
+        .coach-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-bronze), gold, var(--primary-bronze));
+        }
+
+        .coach-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Avatar Circular */
+        .avatar-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .coach-avatar-container {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 2rem;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-bronze);
+            background: linear-gradient(135deg, var(--primary-bronze), var(--accent-blue));
+            transition: all 0.3s ease;
+        }
+
+        .coach-avatar {
+            border: 5px solid gold;
+        }
+
+        .team-card:hover .avatar {
+            border-color: var(--accent-blue);
+            transform: scale(1.05);
+        }
+
+        .coach-card:hover .coach-avatar {
+            border-color: var(--accent-blue);
+            transform: scale(1.05);
+        }
+
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-bronze), var(--accent-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            border: 4px solid var(--primary-bronze);
+        }
+/* Logo no header da equipe */
+.logo-header {
+    object-fit: contain !important;
+    background: white;
+    padding: 15px;
+    border: 4px solid var(--primary-bronze);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Ajuste o container se necessário */
+.team-header .coach-avatar-container {
+    margin-bottom: 1.5rem;
+}
+        /* Informações do Membro */
+        .member-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--bronze-lighter);
+            margin-bottom: 0.5rem;
+        }
+
+        .coach-name {
+            font-size: 2rem;
+            color: gold;
+            margin-bottom: 0.5rem;
+        }
+
+        .member-role {
+            font-size: 1.1rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(74, 123, 166, 0.1);
+            border-radius: 25px;
+            display: inline-block;
+        }
+
+        .coach-role {
+            font-size: 1.3rem;
+            color: gold;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .member-bio {
+            color: var(--bronze-light);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .coach-bio {
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* Especialidades */
+        .specialties {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .specialty {
+            background: rgba(181, 134, 71, 0.2);
+            color: var(--bronze-light);
+            padding: 0.4rem 1rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+        }
+
+        .coach-specialties {
+            margin-top: 1.5rem;
+        }
+
+        .coach-specialty {
+            background: rgba(255, 215, 0, 0.2);
+            color: gold;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+/* Seção das Mentoras */
+.mentors-section {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(181, 134, 71, 0.15));
+    border-radius: 20px;
+    padding: 4rem 0;
+    margin: 4rem 0;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.mentors-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    background: linear-gradient(135deg, gold, var(--bronze-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin-bottom: 1rem;
+}
+
+.mentors-subtitle {
+    font-size: 1.2rem;
+    color: var(--bronze-light);
+    text-align: center;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+}
+
+.mentors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 3rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.mentor-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2.5rem;
+    border: 2px solid rgba(255, 215, 0, 0.4);
+    transition: all 0.4s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.mentor-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, gold, var(--primary-bronze));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.mentor-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: gold;
+    box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
+}
+
+.mentor-card:hover::before {
+    transform: scaleX(1);
+}
+
+.mentor-role {
+    background: rgba(255, 215, 0, 0.15) !important;
+    color: gold !important;
+    border: 1px solid rgba(255, 215, 0, 0.3) !important;
+}
+.team-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* SÓ para o grid da equipe */
+.team-grid {
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
+    gap: 3rem;
+    margin: 4rem 0;
+}
+
+/* O grid de valores mantém o original */
+.values-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+.avatar-with-initials {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.7rem;
+    border: 2px solid var(--bronze-light);
+}
+
+.login-btn-nav {
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    color: white !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 25px !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid transparent !important;
+}
+
+.login-btn-nav:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(181, 134, 71, 0.4);
+    background: linear-gradient(135deg, var(--dark-medium), var(--primary-bronze)) !important;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    border: 1px solid rgba(181, 134, 71, 0.3);
+    transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+@media (max-width: 768px) {
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+}
+        /* Seção de Valores */
+        .values-section {
+            background: linear-gradient(135deg, rgba(74, 123, 166, 0.1), rgba(114, 82, 39, 0.2));
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 4rem 0;
+            border: 1px solid rgba(74, 123, 166, 0.3);
+        }
+
+        .values-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--bronze-lighter);
+            margin-bottom: 3rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .value-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-bronze), var(--accent-blue));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .value-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--bronze-lighter);
+            margin-bottom: 1rem;
+        }
+
+        .value-description {
+            color: var(--bronze-light);
+            line-height: 1.6;
+        }
+
+        /* Estatísticas da Equipe */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(181, 134, 71, 0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-bronze);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--bronze-light);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* Estilos da Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-bronze));
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-bottom: 3px solid var(--primary-bronze);
+        }
+
+        .logo {
+            display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--bronze-lighter);
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.logo img {
+    height: 90px;
+    width: auto;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none;
+    outline: none;
+    display: block;
+}
+        .menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .menu a {
+            color: var(--bronze-lighter);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        
+           .head-pre{
+    background-size: cover;
+    background-image: url(/ArqTalk/images/equipe/IMG-20250924-WA0107.jpg);
+    height: 550px;
+    width: 100%;
+    text-align: center;
+    font-family: "League Spartan", serif;
+    color: white;
+    letter-spacing: 2px;
+    font-size: 80px;
+    margin-top: 0;
+}
+        
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-bronze));
+            padding: 2.5rem 2rem;
+            margin-top: auto;
+            border-top: 3px solid var(--primary-bronze);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--bronze-lighter);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .footer-logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--bronze-light);
+            font-size: 1rem;
+        }
+
+        .footer-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--bronze-lighter);
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+        }
+
+        .robot-icon {
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-link {
+            color: var(--bronze-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .footer-link:hover {
+            color: var(--bronze-lighter);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .team-title {
+                font-size: 2.5rem;
+            }
+            
+            .team-header {
+                padding: 3rem 2rem;
+            }
+            
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 2rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .team-title {
+                font-size: 2rem;
+            }
+            
+            .values-title {
+                font-size: 2rem;
+            }
+            
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+    <div class="logo">
+        <h1 style="color: transparent;">ArqTalk</h1>
+        <img class="logo" src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="">
+        <h1>ArqTalk</h1>
+    </div>
+    <div class="menu">
+        <a href="teste.html">Início</a>
+        <a href="subaqua.html">Subaquática</a>
+        <a href="zoo.html">Zooarqueologia</a>
+        <a href="prelit.html">Pré-literária</a>
+        
+        <!-- BOTÃO DE LOGIN -->
+        <a href="loginarq.html" class="login-btn-nav" id="loginBtn" style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-sign-in-alt"></i>
+            Entrar
+        </a>
+        
+        <!-- PERFIL DO USUÁRIO -->
+        <div class="user-profile" id="userProfile" style="display: none; cursor: pointer;">
+            <div class="profile-info">
+                <div class="avatar-with-initials" id="userAvatar">
+                    <!-- Iniciais aqui -->
+                </div>
+                <span class="user-name" id="userName">Usuário</span>
+                <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--bronze-light);"></i>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="social-float">
+        <a href="https://wa.me/5547999999999" target="_blank" class="whatsapp-floa">
+            <img src="/ArqTalk/images/circle-whatsapp-logotype-icon-social-media-app-network-application-popular-editorial-brand-vector-il-removebg-preview-fotor-20250308162320.png" alt="WhatsApp">
+        </a>
+        <a href="https://www.instagram.com/robotmakerspvs?igsh=Y29kY3R5ODhuODNr" target="_blank" class="instagram-floa">
+            <img src="/ArqTalk/images/instagram-icon-free-png (1).webp" alt="Instagram">
+        </a>
+    </div>
+    <div class="head-pre">
+        <h1>Nossa Equipe</h1>
+        <style>
+/* RESET URGENTE - coloque no <head> */
+.navbar .logo img {
+    all: unset !important;
+    height: 90px !important;
+    width: auto !important;
+    display: block !important;
+    background: transparent !important;
+}
+</style>
+    </div>
+
+    <!-- Header da Equipe COM LOGO -->
+<section class="team-header">
+    <!-- Logo no topo (usando as mesmas classes do avatar) -->
+    <div class="coach-avatar-container">
+        <div class="avatar-placeholder">
+            <img src="/ArqTalk/images/Captura de tela 2025-11-05 162710.png" class="avatar logo-header" alt="Logo Robot Makers">
+        </div>
+    </div>
+    
+    <!-- Título -->
+    <h1 class="team-title">Conheça Nossa Equipe</h1>
+    
+    <!-- Explicação -->
+    <p class="team-subtitle">
+        Jovens apaixonados por robótica, inovação e tecnologia, unidos pelo propósito 
+        de desenvolver soluções criativas que transformam ideias em realidade.
+    </p>
+</section>
+        
+    <!-- Estatísticas -->
+<!-- Estatísticas -->
+<div class="stats-section">
+    <div class="stat-item">
+        <div class="stat-number">4</div>
+        <div class="stat-label">Integrantes</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">1</div>
+        <div class="stat-label">Técnica</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">2</div>
+        <div class="stat-label">Mentoras</div>
+    </div>
+</div>
+
+        <!-- Técnica da Equipe -->
+        <div class="coach-card">
+            <div class="coach-avatar-container">
+                <div class="avatar-placeholder">
+                  <img src="/ArqTalk/images/equipe/imagem_cortada_circular (1).png" class="avatar" alt="">
+                </div>
+            </div>
+            <h2 class="coach-name">Prof. Gilmara dos Santos</h2>
+            <div class="member-role coach-role">Nossa Técnica</div>
+            <p class="member-bio coach-bio">
+                Professora dedicada e orientadora da equipe ArqTalk de robótica. Com paixão pela educação 
+                tecnológica, guia nossos jovens talentos no desenvolvimento de habilidades em programação, 
+                eletrônica e trabalho em equipe, inspirando a próxima geração de inovadores.
+            </p>
+            <div class="specialties coach-specialties">
+                <span class="specialty coach-specialty">Orientação</span>
+                <span class="specialty coach-specialty">Mentoria</span>
+                <span class="specialty coach-specialty">Educação Tecnológica</span>
+            </div>
+        </div>
+
+        <!-- Grid de Membros -->
+        <div class="team-grid">
+            <!-- Arthur Goulart Lenser -->
+            <div class="team-card">
+                <div class="avatar-container">
+                    <img src="/ArqTalk/images/equipe/arthur-fotor-20251024154528.png" class="avatar" alt="Arthur Goulart Lenser">
+                </div>
+                <h3 class="member-name">Arthur Goulart Lenser</h3>
+                <div class="member-role">Programação e Eletrônica</div>
+                <p class="member-bio">
+                   Armador da equipe Robot Makers, atua com dedicação na construção e aprimoramento do projeto, contribuindo em cada etapa do desenvolvimento do robô. Participa ativamente das montagens e testes, buscando sempre soluções criativas e eficientes para os desafios da FLL. Entusiasta da robótica e da tecnologia, é apaixonado por inovação, aprendizado contínuo e pelo trabalho em equipe que fortalece o grupo Robot Makers.
+                </p>
+                <div class="specialties">
+                    <span class="specialty">Programação</span>
+                    <span class="specialty">Armação</span>
+                    <span class="specialty">Aprimoramentos</span>
+                </div>
+            </div>
+        
+            
+            <!-- Henrique Alano Schmidt -->
+            <div class="team-card">
+                <div class="avatar-container">
+                    <img src="/ArqTalk/images/equipe/imagem_cortada_circular (2).png" class="avatar" alt="Henrique Alano Schmidt">
+                </div>
+                <h3 class="member-name">Henrique Alano Schmidt</h3>
+                <div class="member-role">Armador e Pesquisador</div>
+                <p class="member-bio">
+                   Especializado em <strong>programação</strong> e <strong>pesquisa</strong> de projeto, atua como armador na equipe Robot Makers durante a FLL (First Lego League). Contribui ativamente no <strong>desenvolvimento do projeto de inovação</strong>, ajudando a criar soluções tecnológicas que buscam resolver problemas reais de forma criativa e sustentável. Apaixonado por robótica, inovação e trabalho em equipe.
+                </p> 
+                <div class="specialties">
+                    <span class="specialty">Programação</span>
+                    <span class="specialty">Pesquisa</span>
+                    <span class="specialty">Armação</span>
+                </div>
+            </div>
+
+           
+            <!-- Murilo Da Silva -->
+            <div class="team-card">
+                <div class="avatar-container">
+                    <img src="/ArqTalk/images/equipe/imagem_cortada_circular (4).png" class="avatar" alt="Murilo Da Silva">
+                </div>
+                <h3 class="member-name">Murilo Da Silva</h3>
+                <div class="member-role">Pesquisa e Design Do Robô</div>
+                <p class="member-bio">
+Especialista em projeto de inovação e design do robô na equipe Robot Makers, atua de forma criativa no desenvolvimento de soluções que aprimoram o desempenho e a estética do robô. Participa ativamente do processo de concepção e aperfeiçoamento do projeto, contribuindo com ideias originais e visão técnica. Apaixonado por tecnologia, design e pelos desafios da FLL, busca sempre unir funcionalidade e inovação em cada detalhe do trabalho da equipe.                </p>
+                <div class="specialties">
+                    <span class="specialty">Projeto</span>
+                    <span class="specialty">Design</span>
+                    <span class="specialty">Qualidade</span>
+                </div>
+            </div>
+
+            <!-- Vitor Miguel Goedert -->
+            <div class="team-card">
+                <div class="avatar-container">
+                    <img src="/ArqTalk/images/equipe/imagem_cortada_circular (5).png" class="avatar" alt="Vitor Miguel Goedert">
+                </div>
+                <h3 class="member-name">Vitor Miguel Goedert</h3>
+                <div class="member-role">Designer Do Robô</div>
+                <p class="member-bio">
+                   Focado na <strong>programação do robô</strong> e no desenvolvimento de estratégias de desempenho, atua também como <strong>especialista em design e construção de anexos</strong>, garantindo eficiência e precisão nas missões da FLL (First Lego League). Contribui de forma essencial para a integração entre o software e a mecânica do robô, sempre buscando inovação e melhoria contínua nos projetos da equipe Robot Makers.
+                </p>
+                <div class="specialties">
+                    <span class="specialty">Design</span>
+                    <span class="specialty">Armação</span>
+                    <span class="specialty">Estrategista</span>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    
+    <!-- Seção das Mentoras -->
+    <section class="mentors-section">
+        <div class="modern-container">
+            <h2 class="mentors-title">Nossas Mentoras</h2>
+            <p class="mentors-subtitle">
+                Experiência e dedicação guiando nossa equipe rumo ao sucesso
+            </p>
+            
+            <div class="mentors-grid">
+                <!-- Camila Isabel dos Santos - Mentora -->
+                <div class="mentor-card">
+                    <div class="avatar-container">
+                        <img src="/ArqTalk/images/equipe/imagem_cortada_circular.png" class="avatar" alt="Camila Isabel dos Santos">
+                    </div>
+                    <h3 class="member-name">Camila Isabel dos Santos</h3>
+                    <div class="member-role mentor-role">Mentora - Design e Mecânica</div>
+                    <p class="member-bio">
+                        Com vasta experiência em design e engenharia, orienta nossa equipe 
+                        no desenvolvimento de soluções criativas e eficientes para os desafios 
+                        do robô.
+                    </p>
+                    <div class="specialties">
+                        <span class="specialty">Design</span>
+                        <span class="specialty">Mecânica</span>
+                        <span class="specialty">Criatividade</span>
+                        <span class="specialty">Mentoria</span>
+                    </div>
+                </div>
+
+                <!-- Maria Eduarda Carvalho - Mentora -->
+                <div class="mentor-card">
+                    <div class="avatar-container">
+                        <img src="/ArqTalk/images/equipe/imagem_cortada_circular (3).png" class="avatar" alt="Maria Eduarda Carvalho">
+                    </div>
+                    <h3 class="member-name">Maria Eduarda Carvalho</h3>
+                    <div class="member-role mentor-role">Mentora - Documentação e Apresentação</div>
+                    <p class="member-bio">
+                        Especialista em comunicação técnica, guia nossa equipe na documentação 
+                        de projetos e preparação de apresentações, garantindo clareza e impacto 
+                        em nossas competições.
+                    </p>
+                    <div class="specialties">
+                        <span class="specialty">Documentação</span>
+                        <span class="specialty">Comunicação</span>
+                        <span class="specialty">Apresentação</span>
+                        <span class="specialty">Mentoria</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+        <!-- Seção de Valores COMPLETA com 6 cards -->
+        <section class="values-section">
+            <h2 class="values-title">Nossos Valores</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="value-title">Trabalho em Equipe</h3>
+                    <p class="value-description">
+                        Acreditamos que juntos somos mais fortes. Cada membro contribui 
+                        com suas habilidades únicas para o sucesso coletivo.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="value-title">Criatividade</h3>
+                    <p class="value-description">
+                        Buscamos soluções inovadoras para os desafios da robótica, 
+                        pensando fora da caixa e experimentando novas ideias.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="value-title">Aprendizado</h3>
+                    <p class="value-description">
+                        Valorizamos o processo de aprendizado contínuo, tanto com os 
+                        acertos quanto com os erros que nos fazem evoluir.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 class="value-title">Superação</h3>
+                    <p class="value-description">
+                        Acreditamos no nosso potencial e trabalhamos duro para superar 
+                        limites e alcançar nossos objetivos.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 class="value-title">Colaboração</h3>
+                    <p class="value-description">
+                        Compartilhamos conhecimentos e apoiamos uns aos outros, 
+                        entendendo que o crescimento individual fortalece o coletivo.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="value-title">Paixão</h3>
+                    <p class="value-description">
+                        Fazemos com entusiasmo e dedicação, movidos pelo amor à tecnologia 
+                        e à inovação que transforma vidas.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="ArqTalk">
+                <span>ArqTalk</span>
+            </div>
+            
+            <div class="footer-text">
+                <p>Equipe de robótica dedicada à inovação e excelência tecnológica</p>
+            </div>
+            
+            <div class="footer-author">
+                <i class="fas fa-robot robot-icon"></i>
+                <span>Robot Makers</span>
+            </div>
+            
+            <div class="footer-links">
+                <a href="/conteudo/index.html" class="footer-link">Início</a>
+                <a href="/conteudo/prelit.html" class="footer-link">Pré-literária</a>
+                <a href="/conteudo/subaqua.html" class="footer-link">Subaquática</a>
+                <a href="/conteudo/zoo.html" class="footer-link">Zooarqueologia</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animação para os cards da equipe
+        document.addEventListener('DOMContentLoaded', function() {
+            const teamCards = document.querySelectorAll('.team-card');
+            const coachCard = document.querySelector('.coach-card');
+            const valueCards = document.querySelectorAll('.value-card');
+            const statNumbers = document.querySelectorAll('.stat-number');
+            
+            // Animação para os cards
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            teamCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
+
+            valueCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease 0.2s';
+                observer.observe(card);
+            });
+
+            // Animação para o card da técnica
+            if (coachCard) {
+                coachCard.style.opacity = '0';
+                coachCard.style.transform = 'translateY(30px)';
+                coachCard.style.transition = 'all 0.6s ease';
+                observer.observe(coachCard);
+            }
+
+                       // Animação para os números estatísticos
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                let current = 0;
+                const increment = target / 30;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = Math.floor(current);
+                }, 50);
+            });
+        }); // ← ESTAVA FALTANDO ESTE FECHAMENTO
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,1948 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009165249.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/ArqTalk/conteudo/style.css">
+    <title>Arqtalk-Pré-Literária</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet CSS para o mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+
+    <style>
+        :root {
+            --primary-bronze: #b58647;
+            --primary-dark: #725227;
+            --bronze-light: #d4b88c;
+            --bronze-lighter: #f0e4d3;
+            --dark-medium: #8a6b3a;
+            --dark-light: #a38754;
+            --delete-red: #dc2626;
+            --delete-dark: #991b1b;
+            --site-background: #725227;
+            --content-background: #b58647;
+        }
+
+        body {
+            background: var(--site-background);
+            color: #f0e4d3;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+
+        .modern-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Seção do Mapa */
+        .map-section {
+            background: linear-gradient(135deg, rgba(181, 134, 71, 0.15), rgba(114, 82, 39, 0.25));
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            border: 1px solid rgba(181, 134, 71, 0.4);
+            padding: 3rem;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .map-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, 
+                var(--primary-bronze), 
+                var(--bronze-light), 
+                var(--primary-bronze));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        .map-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--bronze-lighter), var(--bronze-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .map-subtitle {
+            font-size: 1.2rem;
+            color: var(--bronze-light);
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        #archeologyMap {
+            height: 500px;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(181, 134, 71, 0.3);
+        }
+
+        .emoji-marker {
+            background: none !important;
+            border: none !important;
+            font-size: 24px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .custom-popup {
+            max-width: 300px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .custom-popup h3 {
+            color: var(--primary-dark);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .custom-popup p {
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .custom-popup strong {
+            color: var(--primary-dark);
+        }
+
+        .map-legend {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--primary-bronze);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .map-legend h4 {
+            color: var(--primary-dark);
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .map-legend p {
+            color: #666;
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        /* Seção do Projeto */
+        .project-section {
+            background: linear-gradient(135deg, rgba(181, 134, 71, 0.15), rgba(114, 82, 39, 0.25));
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            border: 1px solid rgba(181, 134, 71, 0.4);
+            padding: 4rem 3rem;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, 
+                var(--primary-bronze), 
+                var(--bronze-light), 
+                var(--primary-bronze));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        /* Botão de Login na Navbar */
+.login-btn-nav {
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    color: white !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 25px !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid transparent !important;
+}
+
+.login-btn-nav:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(181, 134, 71, 0.4);
+    background: linear-gradient(135deg, var(--dark-medium), var(--primary-bronze)) !important;
+}
+
+/* Perfil do Usuário */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    border: 1px solid rgba(181, 134, 71, 0.3);
+    transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--bronze-light);
+    object-fit: cover;
+}
+
+.user-name {
+    color: var(--bronze-lighter);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* No <style> da página principal - ADICIONAR */
+.avatar-with-initials {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.7rem;
+    border: 2px solid var(--bronze-light);
+}
+        .project-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(181, 134, 71, 0.3);
+        }
+
+        .project-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--bronze-lighter), var(--bronze-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .project-subtitle {
+            font-size: 1.4rem;
+            color: var(--bronze-light);
+            margin-bottom: 3rem;
+            font-weight: 500;
+            opacity: 0.95;
+            max-width: 600px;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-bronze);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary-bronze);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: white;
+            box-shadow: 0 8px 20px rgba(181, 134, 71, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--bronze-lighter);
+            margin-bottom: 1rem;
+        }
+
+        .card-description {
+            color: var(--bronze-light);
+            line-height: 1.7;
+            opacity: 0.9;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(181, 134, 71, 0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-bronze);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--bronze-light);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Seção de Introdução Modernizada */
+        .intro-section {
+            background: linear-gradient(135deg, rgba(181, 134, 71, 0.1), rgba(114, 82, 39, 0.2));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-bronze), var(--bronze-light));
+        }
+
+        .intro-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--bronze-lighter), var(--bronze-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .intro-subtitle {
+            font-size: 1.2rem;
+            color: var(--bronze-lighter);
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(181, 134, 71, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-bronze);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--bronze-lighter);
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--bronze-light);
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark-medium));
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            margin: 4rem 0;
+            border: 1px solid var(--primary-bronze);
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--bronze-lighter);
+            margin-bottom: 1rem;
+        }
+
+        .cta-description {
+            color: var(--bronze-light);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(181, 134, 71, 0.4);
+        }
+
+        /* Estilos existentes que você pediu para manter */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-bronze));
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-bottom: 3px solid var(--primary-bronze);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--bronze-lighter);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .logo img {
+    height: 90px;
+    width: auto;
+    background: transparent !important;
+    background-color: transparent !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+    mix-blend-mode: normal !important;
+    border: none !important;
+    outline: none !important;
+    display: block;
+    transform: none !important;
+    opacity: 1 !important;
+        }
+
+        .menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .menu a {
+            color: var(--bronze-lighter);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+.head{
+     background-image: url(/ArqTalk/images/istockphoto-1312318046-612x612.jpg);
+    background-size: cover; /* ou contain */
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 560px; /* altura mínima importante */
+     text-align: center;
+    font-family: "League Spartan", serif;
+    color: white;
+    letter-spacing: 2px;
+    font-size: 80px;
+    margin-top: 0;
+}
+        .social-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .social-float a {
+            display: block;
+            margin-bottom: 10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .social-float a:hover {
+            transform: scale(1.1);
+        }
+
+        .social-float img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ===== FOOTER ESTILOS ===== */
+ .footer {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-bronze));
+            padding: 2.5rem 2rem;
+            margin-top: auto;
+            border-top: 3px solid var(--primary-bronze);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--bronze-lighter);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .footer-logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--bronze-light);
+            font-size: 1rem;
+        }
+
+        .footer-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--bronze-lighter);
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+        }
+
+        .robot-icon {
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-link {
+            color: var(--bronze-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .footer-link:hover {
+            color: var(--bronze-lighter);
+            background: rgba(255, 255, 255, 0.1);
+        }
+.avatar-initials {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    border: 2px solid var(--bronze-light);
+}
+    #userPanel {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 2rem 1rem;
+    }
+    
+    .footer-content {
+        gap: 1rem;
+    }
+    
+    .footer-logo {
+        font-size: 1.2rem;
+    }
+    
+    .footer-logo img {
+        height: 50px;
+    }
+    
+    .footer-author {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .footer-links {
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .footer-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 1.5rem 0.5rem;
+    }
+    
+    .footer-logo {
+        font-size: 1.1rem;
+        gap: 8px;
+    }
+    
+    .footer-logo img {
+        height: 45px;
+    }
+    
+    .footer-text p {
+        font-size: 0.9rem;
+    }
+    
+    .footer-author {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .footer-links {
+        gap: 0.5rem;
+    }
+    
+    .footer-link {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+        /* ===== MEDIA QUERIES ===== */
+        
+        /* Tablets (768px - 1024px) */
+        @media (max-width: 1024px) {
+            .modern-container {
+                padding: 1.5rem;
+            }
+            
+            .project-section {
+                padding: 3rem 2rem;
+            }
+            
+            .project-title {
+                font-size: 2.5rem;
+            }
+            
+            .project-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .intro-title {
+                font-size: 2rem;
+            }
+            
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.3rem;
+            }
+            
+            .logo img {
+                min-height: 70px;
+                max-width: 70px;
+                min-width: 70px;
+                max-height: 70px;
+            }
+
+            .map-section {
+                padding: 2rem;
+            }
+            
+            .map-title {
+                font-size: 2rem;
+            }
+            
+            #archeologyMap {
+                height: 400px;
+            }
+        }
+
+        /* Tablets Pequenos (600px - 768px) */
+        @media (max-width: 768px) {
+            .head h1 {
+                font-size: 2.5rem;
+            }
+            
+            .project-section {
+                padding: 2.5rem 1.5rem;
+                margin: 2rem 0;
+            }
+            
+            .project-title {
+                font-size: 2rem;
+            }
+            
+            .project-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .project-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 1.5rem;
+            }
+            
+            .intro-section {
+                padding: 2rem 1.5rem;
+            }
+            
+            .intro-title {
+                font-size: 1.8rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-section {
+                padding: 2rem 1.5rem;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .menu a {
+                font-size: 0.9rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .footer {
+                padding: 2rem 1rem;
+            }
+            
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .social-float {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .social-float a {
+                width: 45px;
+                height: 45px;
+            }
+
+            .map-section {
+                padding: 1.5rem;
+            }
+            
+            .map-title {
+                font-size: 1.8rem;
+            }
+            
+            #archeologyMap {
+                height: 350px;
+            }
+        }
+
+        /* Celulares (480px - 600px) */
+        @media (max-width: 600px) {
+            .modern-container {
+                padding: 1rem;
+            }
+            
+            .head {
+                height: 150px;
+            }
+            
+            .head h1 {
+                font-size: 2rem;
+            }
+            
+            .project-section {
+                padding: 2rem 1rem;
+                border-radius: 16px;
+            }
+            
+            .project-title {
+                font-size: 1.8rem;
+            }
+            
+            .project-badge {
+                font-size: 0.8rem;
+                padding: 0.4rem 1.2rem;
+            }
+            
+            .project-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .card-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .intro-section {
+                padding: 1.5rem 1rem;
+                border-radius: 16px;
+            }
+            
+            .intro-title {
+                font-size: 1.6rem;
+            }
+            
+            .intro-subtitle {
+                font-size: 1rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .feature-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+            
+            .cta-section {
+                padding: 1.5rem 1rem;
+                border-radius: 16px;
+            }
+            
+            .cta-title {
+                font-size: 1.6rem;
+            }
+            
+            .btn-primary {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .footer-content {
+                gap: 1rem;
+            }
+            
+            .footer-logo {
+                font-size: 1.2rem;
+            }
+            
+            .footer-logo img {
+                height: 50px;
+                width: 50px;
+            }
+            
+            .footer-author {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .map-section {
+                padding: 1rem;
+                margin: 2rem 0;
+            }
+            
+            .map-title {
+                font-size: 1.6rem;
+            }
+            
+            .map-subtitle {
+                font-size: 1rem;
+            }
+            
+            #archeologyMap {
+                height: 300px;
+            }
+        }
+
+        /* Celulares Pequenos (até 480px) */
+        @media (max-width: 480px) {
+            .head h1 {
+                font-size: 1.8rem;
+                letter-spacing: 1px;
+            }
+            
+            .project-title {
+                font-size: 1.6rem;
+            }
+            
+            .project-subtitle {
+                font-size: 1rem;
+            }
+            
+            .card-title {
+                font-size: 1.2rem;
+            }
+            
+            .intro-title {
+                font-size: 1.4rem;
+            }
+            
+            .cta-title {
+                font-size: 1.4rem;
+            }
+            
+            .menu {
+                gap: 0.5rem;
+            }
+            
+            .menu a {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.6rem;
+            }
+            
+            .social-float {
+                bottom: 5px;
+                right: 5px;
+            }
+            
+            .social-float a {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 5px;
+            }
+            
+            .footer {
+                padding: 1.5rem 0.5rem;
+            }
+            
+            .footer-text p {
+                font-size: 0.9rem;
+            }
+
+            .map-title {
+                font-size: 1.4rem;
+            }
+            
+            #archeologyMap {
+                height: 250px;
+            }
+        }
+
+        /* Telas muito pequenas (até 360px) */
+        @media (max-width: 360px) {
+            .head h1 {
+                font-size: 1.5rem;
+            }
+            
+            .project-title {
+                font-size: 1.4rem;
+            }
+            
+            .project-card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .menu a {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+
+            #archeologyMap {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">
+        <h1 style="color: #725227;">ArqTalk</h1>
+        <img class="logo" src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="">
+        <h1>ArqTalk</h1>
+    </div>
+    <div class="menu">
+        <a href="/ArqTalk/conteudo/prelit.html">Pré-Literária</a>
+        <a href="/ArqTalk/conteudo/subaqua.html">Subaquática</a>
+        <a href="/ArqTalk/conteudo/zoo.html">Zooarqueologia</a>
+        <a href="/ArqTalk/conteudo/equipe.html">Sobre Nós</a>
+        
+        <!-- BOTÃO DE LOGIN (aparece quando não logado) -->
+        <a href="loginarq.html" class="login-btn-nav" id="loginBtn" style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-sign-in-alt"></i>
+            Entrar
+        </a>
+        
+        <!-- PERFIL DO USUÁRIO (aparece quando logado) -->
+       <div class="user-profile" id="userProfile" style="display: none; cursor: pointer;">
+    <div class="profile-info">
+        <div class="avatar-with-initials" id="userAvatar">
+            <!-- As iniciais vão aparecer aqui automaticamente -->
+        </div>
+        <span class="user-name" id="userName">Usuário</span>
+        <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--bronze-light);"></i>
+    </div>
+</div>
+    </div>
+      <div id="userPanel"></div>
+</nav>
+
+    <div class="head">
+        <h1>Início</h1>
+    </div>
+
+    <div class="social-float">
+        <a href="https://wa.me/5547999999999" target="_blank" class="whatsapp-floa">
+            <img src="/ArqTalk/images/circle-whatsapp-logotype-icon-social-media-app-network-application-popular-editorial-brand-vector-il-removebg-preview-fotor-20250308162320.png" alt="WhatsApp">
+        </a>
+        <a href="https://www.instagram.com/robotmakerspvs?igsh=Y29kY3R5ODhuODNr" target="_blank" class="instagram-floa">
+            <img src="/ArqTalk/images/instagram-icon-free-png (1).webp" alt="Instagram">
+        </a>
+    </div>
+
+    <div class="modern-container">
+        <!-- Seção do Projeto - Explicação Principal -->
+        <section class="project-section">
+            <div class="project-badge">
+                <i class="fas fa-rocket mr-2"></i>
+                SOBRE O PROJETO
+            </div>
+            
+            <h1 class="project-title">
+                Revelando as Origens da Comunicação Humana
+            </h1>
+            
+            <p class="project-subtitle">
+                Uma plataforma colaborativa dedicada ao estudo e à comunicação arqueológica, onde a tecnologia se une à pesquisa para agilizar o acesso a dados, conectar profissionais e fortalecer o conhecimento científico sobre o passado.
+            </p>
+
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">Arqueólogos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">40+</div>
+                    <div class="stat-label">Tópicos Compartilhados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">Dados Compartilhados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">Reuniões de Equipe</div>
+                </div>
+            </div>
+
+            <div class="project-grid">
+                <div class="project-card">
+                    <div class="card-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3 class="card-title">Missão</h3>
+                    <p class="card-description">
+                        Democratizar o acesso ao conhecimento sobre sociedades pré-literárias, 
+                        criando uma ponte entre pesquisadores acadêmicos, estudantes e entusiastas 
+                        da arqueologia mundial.
+                    </p>
+                </div>
+
+                <div class="project-card">
+                    <div class="card-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3 class="card-title">Visão</h3>
+                    <p class="card-description">
+                        Tornar-se a principal referência digital para estudos colaborativos 
+                        sobre comunicação pré-escrita, integrando descobertas arqueológicas 
+                        com análises multidisciplinares inovadoras.
+                    </p>
+                </div>
+
+                <div class="project-card">
+                    <div class="card-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="card-title">Diferenciais</h3>
+                    <p class="card-description">
+                        Interface moderna inspirada em escavações arqueológicas, sistema de 
+                        comentários estratificado, datação colaborativa e integração com 
+                        bancos de dados internacionais especializados.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Introdução Modernizada -->
+        <section class="intro-section">
+            <h1 class="intro-title">Explorando as Origens da Humanidade</h1>
+            <p class="intro-subtitle">
+                Mergulhe no universo da arqueologia digital e descubra como o ARQTALK transforma a forma de pesquisar, registrar e compartilhar as histórias que moldaram a humanidade.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-monument"></i>
+                    </div>
+                    <h3 class="feature-title">Explorando o Conhecimento Arqueológico</h3>
+                    <p class="feature-description">
+                       Mergulhe no universo da arqueologia digital com o ARQTALK, a plataforma que conecta pesquisadores, estudantes e técnicos em um ambiente colaborativo. Descubra como a tecnologia transforma a forma de registrar, analisar e compartilhar descobertas arqueológicas, tornando o conhecimento mais acessível e dinâmico.
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="feature-title">Redefinindo a Arqueologia Digital</h3>
+                    <p class="feature-description">
+                       O ARQTALK surge como uma ponte entre campo e pesquisa, unindo inovação e colaboração. A plataforma transforma a maneira de documentar, organizar e divulgar descobertas arqueológicas, aproximando profissionais e estudantes em uma nova era de exploração e aprendizado científico.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Organização Social</h3>
+                    <p class="feature-description">
+                        Antes mesmo da escrita, nossos ancestrais já formavam comunidades complexas baseadas na cooperação e na partilha de saberes. O ARQTALK resgata essa essência coletiva ao conectar pesquisadores, estudantes e profissionais em uma rede colaborativa, recriando no ambiente digital a união que sustentou as primeiras formas de convivência humana.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOVA SEÇÃO: Mapa de Sítios Arqueológicos -->
+        <section class="map-section">
+            <h2 class="map-title">🏺 Mapa de Sítios Arqueológicos Mundiais</h2>
+            <p class="map-subtitle">
+                Explore importantes sítios arqueológicos ao redor do mundo. Clique nos vasos para descobrir a história de cada local.
+            </p>
+            
+            <div id="archeologyMap"></div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <h2 class="cta-title">Junte-se à Nossa Comunidade</h2>
+            <p class="cta-description">
+                Participe de discussões, compartilhe descobertas e contribua para o avanço do conhecimento 
+                sobre as sociedades pré-literárias. Sua expertise é valiosa para nossa comunidade.
+            </p>
+            <a href="prelit.html" class="btn-primary">
+                <i class="fas fa-comments mr-2"></i>
+                Participar das Discussões
+            </a>
+        </section>
+    </div>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="ArqTalk">
+                <span>ArqTalk</span>
+            </div>
+            
+            <div class="footer-text">
+                <p>Equipe de robótica dedicada à inovação e excelência tecnológica</p>
+            </div>
+            
+            <div class="footer-author">
+                <i class="fas fa-robot robot-icon"></i>
+                <span>Robot Makers</span>
+            </div>
+            
+            <div class="footer-links">
+                <a href="/ArqTalk/conteudo/index.html" class="footer-link">Início</a>
+                <a href="/ArqTalk/conteudo/prelit.html" class="footer-link">Pré-literária</a>
+                <a href="/ArqTalk/conteudo/subaqua.html" class="footer-link">Subaquática</a>
+                <a href="/ArqTalk/conteudo/zoo.html" class="footer-link">Zooarqueologia</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JavaScript -->
+     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+ <script>
+    // ✅ SISTEMA COMPLETO DE VERIFICAÇÃO DE LOGIN
+        
+    // Sistema de Login
+    function checkLoginStatus() {
+        const userData = localStorage.getItem('arqtalk_user');
+        const loginBtn = document.getElementById('loginBtn');
+        const userProfile = document.getElementById('userProfile');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+        
+        if (userData) {
+            const user = JSON.parse(userData);
+            loginBtn.style.display = 'none';
+            userProfile.style.display = 'flex';
+            userName.textContent = user.name || user.email.split('@')[0];
+            userAvatar.textContent = user.initials || 'US';
+        } else {
+            loginBtn.style.display = 'flex';
+            userProfile.style.display = 'none';
+        }
+    }
+
+    // Logout function
+    function logout() {
+        localStorage.removeItem('arqtalk_user');
+        checkLoginStatus();
+        alert('Logout realizado com sucesso!');
+        location.reload();
+    }
+
+    // Adicionar evento de logout ao perfil
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('📄 Página carregada!');
+        
+        checkLoginStatus();
+        
+        // Adicionar evento de clique no perfil para logout
+        const userProfile = document.getElementById('userProfile');
+        if (userProfile) {
+            userProfile.addEventListener('click', function() {
+                if (confirm('Deseja sair da sua conta?')) {
+                    logout();
+                }
+            });
+            
+            // Tooltip para o perfil
+            userProfile.title = 'Clique para sair';
+        }
+
+        // ⭐⭐ VERIFICAR SE O MAPA EXISTE ANTES DE INICIALIZAR ⭐⭐
+        const mapElement = document.getElementById('archeologyMap');
+        console.log('🗺️ Elemento do mapa:', mapElement);
+        
+        if (mapElement) {
+            console.log('✅ Inicializando mapa...');
+            initializeMap();
+        } else {
+            console.error('❌ Elemento do mapa não encontrado!');
+        }
+        
+        // Animação para os elementos do projeto
+        const projectCards = document.querySelectorAll('.project-card');
+        const statNumbers = document.querySelectorAll('.stat-number');
+        
+        // Animação para os cards do projeto
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        projectCards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Animação para os números estatísticos
+        statNumbers.forEach(stat => {
+            const target = parseInt(stat.textContent);
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                stat.textContent = Math.floor(current) + '+';
+            }, 50);
+        });
+    });
+
+    // Função para pegar iniciais do avatar
+    function getAvatarInitials(email) {
+        const username = email.split('@')[0];
+        const lettersOnly = username.replace(/[^a-zA-ZÀ-ÿ]/g, '');
+        
+        if (lettersOnly.length >= 2) {
+            return lettersOnly.substring(0, 2).toUpperCase();
+        } else if (lettersOnly.length === 1) {
+            return (lettersOnly + lettersOnly).toUpperCase();
+        } else {
+            const numbersOnly = username.replace(/[^0-9]/g, '');
+            if (numbersOnly.length >= 2) {
+                return numbersOnly.substring(0, 2);
+            } else if (numbersOnly.length === 1) {
+                return numbersOnly + numbersOnly;
+            } else {
+                return 'US';
+            }
+        }
+    }
+
+    // FUNÇÃO COMPLETA DO MAPA - VERSÃO CORRIGIDA
+    function initializeMap() {
+        console.log('🗺️ Iniciando mapa...');
+        
+        try {
+            // ⭐⭐ VERIFICAR SE O LEAFLET CARREGOU ⭐⭐
+            if (typeof L === 'undefined') {
+                console.error('❌ Leaflet não carregou!');
+                alert('Erro: Biblioteca do mapa não carregou. Recarregue a página.');
+                return;
+            }
+
+            // Inicializar o mapa
+            const map = L.map('archeologyMap').setView([20, 0], 2);
+            console.log('✅ Mapa criado:', map);
+
+            // Adicionar tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Ícone personalizado apenas com emoji de vaso
+            const archeologyIcon = L.divIcon({
+                className: 'emoji-marker',
+                html: '🏺',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+
+            // Dados dos sítios arqueológicos (versão reduzida para teste)
+            const sitiosArqueologicos = [
+                {
+                    nome: "Machu Picchu",
+                    coordenadas: [-13.1631, -72.5450],
+                    descricao: "Cidade inca do século XV, Patrimônio Mundial da UNESCO",
+                    periodo: "Século XV",
+                    importancia: "Uma das sete maravilhas do mundo moderno",
+                    pais: "Peru"
+                },
+                {
+                    nome: "Stonehenge",
+                    coordenadas: [51.1789, -1.8262],
+                    descricao: "Monumento megalítico do período neolítico",
+                    periodo: "3000-2000 a.C.",
+                    importancia: "Um dos monumentos pré-históricos mais famosos do mundo",
+                    pais: "Reino Unido"
+                },
+                {
+                    nome: "Pirâmides de Gizé",
+                    coordenadas: [29.9773, 31.1325],
+                    descricao: "Complexo de pirâmides e a Esfinge",
+                    periodo: "2580-2560 a.C.",
+                    importancia: "Única das sete maravilhas do mundo antigo ainda existente",
+                    pais: "Egito"
+                },
+               
+    {
+        nome: "Machu Picchu",
+        coordenadas: [-13.1631, -72.5450],
+        descricao: "Cidade inca do século XV, Patrimônio Mundial da UNESCO",
+        periodo: "Século XV",
+        importancia: "Uma das sete maravilhas do mundo moderno",
+        pais: "Peru"
+    },
+    {
+        nome: "Linhas de Nazca",
+        coordenadas: [-14.7167, -75.1333],
+        descricao: "Geoglifos gigantes desenhados no deserto",
+        periodo: "500 a.C. - 500 d.C.",
+        importancia: "Mistério arqueológico sobre seu propósito",
+        pais: "Peru"
+    },
+    {
+        nome: "Parque Nacional Serra da Capivara",
+        coordenadas: [-8.6667, -42.5500],
+        descricao: "Patrimônio Mundial da UNESCO com mais de 1.300 sítios",
+        periodo: "50.000 anos AP",
+        importancia: "Evidências mais antigas da presença humana nas Américas",
+        pais: "Brasil"
+    },
+    {
+        nome: "Caral",
+        coordenadas: [-10.8942, -77.5225],
+        descricao: "Cidade sagrada da civilização mais antiga das Américas",
+        periodo: "2600-2000 a.C.",
+        importancia: "Civilização mais antiga do continente americano",
+        pais: "Peru"
+    },
+    {
+        nome: "Cueva de Las Manos",
+        coordenadas: [-47.1553, -70.6546],
+        descricao: "Pinturas rupestres únicas com impressões de mãos humanas",
+        periodo: "9.000–700 a.C.",
+        importancia: "Representa caçadas e rituais de povos antigos da Patagônia",
+        pais: "Argentina"
+    },
+    {
+        nome: "Monte Verde",
+        coordenadas: [-41.4830, -73.2330],
+        descricao: "Restos de cabanas, alimentos vegetais e ferramentas de pedra",
+        periodo: "14.500 a.C.",
+        importancia: "Um dos sítios mais antigos das Américas, pré-Clóvis",
+        pais: "Chile"
+    },
+    {
+        nome: "Pedra Furada",
+        coordenadas: [-9.083, -42.55],
+        descricao: "Abrigo com pinturas rupestres e ferramentas de pedra",
+        periodo: "48.000–30.000 a.C.",
+        importancia: "Evidência precoce de presença humana no continente sul-americano",
+        pais: "Brasil"
+    },
+    {
+        nome: "Boqueirão da Pedra Furada",
+        coordenadas: [-8.845, -42.563],
+        descricao: "Abrigo com centenas de pinturas rupestres mostrando cenas de caça e rituais",
+        periodo: "12.000–50.000 a.C.",
+        importancia: "Um dos maiores conjuntos de arte rupestre das Américas",
+        pais: "Brasil"
+    },
+    {
+        nome: "Lapa do Santo",
+        coordenadas: [-19.463, -44.376],
+        descricao: "Abrigo com sepultamentos antigos e arte rupestre no vale de Lagoa Santa",
+        periodo: "10.000–8.000 a.C.",
+        importancia: "Evidência de rituais funerários complexos entre povos pré-históricos",
+        pais: "Brasil"
+    },
+    {
+        nome: "Sambaqui da Beirada",
+        coordenadas: [-27.7, -48.55],
+        descricao: "Monte de conchas e restos humanos que revelam o modo de vida de pescadores-coletores",
+        periodo: "6.000–1.000 a.C.",
+        importancia: "Importante registro dos povos sambaquieiros do litoral sul brasileiro",
+        pais: "Brasil"
+    },
+    {
+        nome: "Hatahara",
+        coordenadas: [-3.278, -60.598],
+        descricao: "Aldeia amazônica com cerâmicas policromadas e solos de terra preta",
+        periodo: "500 a.C. – 1.400 d.C.",
+        importancia: "Revela sociedades complexas na Amazônia pré-colonial",
+        pais: "Brasil"
+    },
+    {
+        nome: "Itacoatiara do Inga",
+        coordenadas: [-7.28, -35.6],
+        descricao: "Painel de inscrições e símbolos talhados em rocha arenítica",
+        periodo: "2.000 a.C. – 500 d.C.",
+        importancia: "Enigmático exemplo de arte rupestre brasileira ainda sem tradução definitiva",
+        pais: "Brasil"
+    },
+
+    // América Central
+    {
+        nome: "Chichén Itzá",
+        coordenadas: [20.6831, -88.5686],
+        descricao: "Cidade maia com a famosa pirâmide de Kukulcán",
+        periodo: "600-1200 d.C.",
+        importancia: "Uma das sete maravilhas do mundo moderno",
+        pais: "México"
+    },
+    {
+        nome: "Teotihuacán",
+        coordenadas: [19.6925, -98.8439],
+        descricao: "Cidade antiga com as Pirâmides do Sol e da Lua",
+        periodo: "100 a.C. - 650 d.C.",
+        importancia: "Uma das maiores cidades do mundo antigo",
+        pais: "México"
+    },
+
+    // América do Norte
+    {
+        nome: "Cahokia Mounds",
+        coordenadas: [38.6552, -90.0615],
+        descricao: "Contém mais de 120 montes de terra, incluindo o 'Monk's Mound'",
+        periodo: "1050–1350 d.C.",
+        importancia: "Maior cidade pré-colombiana ao norte do México",
+        pais: "Estados Unidos"
+    },
+    {
+        nome: "Mesa Verde",
+        coordenadas: [37.1846, -108.4862],
+        descricao: "Casas e vilas escavadas em penhascos, como o famoso 'Cliff Palace'",
+        periodo: "600–1300 d.C.",
+        importancia: "Habitações em penhascos que mostram o engenho dos Ancestrais Pueblo",
+        pais: "Estados Unidos"
+    },
+    {
+        nome: "Chaco Canyon",
+        coordenadas: [36.0617, -107.9648],
+        descricao: "Complexo de grandes casas de pedra alinhadas astronomicamente",
+        periodo: "850–1250 d.C.",
+        importancia: "Centro político e cerimonial dos Ancestrais Pueblo",
+        pais: "Estados Unidos"
+    },
+    {
+        nome: "Serra da Pedra Pintada (Painted Rock Cave)",
+        coordenadas: [35.7226, -106.3192],
+        descricao: "Abrigo com pinturas rupestres e artefatos líticos associados a caçadores-coletores paleoíndios",
+        periodo: "Cerca de 11.000 a.C.",
+        importancia: "Evidências de algumas das primeiras ocupações humanas nas Américas",
+        pais: "Estados Unidos"
+    },
+    {
+        nome: "Head-Smashed-In Buffalo Jump",
+        coordenadas: [49.7057, -113.6529],
+        descricao: "Penhasco usado por povos indígenas das planícies para conduzir bisões a quedas mortais",
+        periodo: "6.000 a.C. – 1850 d.C.",
+        importancia: "Um dos mais antigos e bem preservados locais de caça coletiva de bisões",
+        pais: "Canadá"
+    },
+    {
+        nome: "Topper site",
+        coordenadas: [33.0055, -81.4899],
+        descricao: "Ferramentas líticas primitivas e camadas de carvão, apontando atividade humana pré-Clóvis",
+        periodo: "16.000–50.000 a.C.",
+        importancia: "Controversa por sugerir ocupação humana anterior à cultura Clóvis",
+        pais: "Estados Unidos"
+    },
+    {
+        nome: "Wilson Butte Cave",
+        coordenadas: [42.7861, -114.2086],
+        descricao: "Ossos de bisões e cavalos, além de pontas de projéteis e artefatos ósseos",
+        periodo: "14.000–10.000 a.C.",
+        importancia: "Um dos primeiros locais com evidências de caça e uso de ferramentas de osso na América do Norte",
+        pais: "Estados Unidos"
+    },
+    {
+        nome: "Page-Ladson Site",
+        coordenadas: [30.1704, -83.9569],
+        descricao: "Ferramentas de pedra e ossos cortados, submersos em um sistema de cavernas fluviais",
+        periodo: "14.500 a.C.",
+        importancia: "Evidências de caça de mastodontes no sudeste dos EUA",
+        pais: "Estados Unidos"
+    },
+    {
+        nome: "Bluefish Caves",
+        coordenadas: [67.1495, -140.5825],
+        descricao: "Ossos de animais com marcas de corte, sugerindo atividades humanas antes da última glaciação",
+        periodo: "24.000–12.000 a.C.",
+        importancia: "Possível evidência da presença humana mais antiga na América do Norte",
+        pais: "Canadá"
+    },
+
+    // Europa
+   
+    {
+        nome: "Pompeia",
+        coordenadas: [40.7500, 14.4833],
+        descricao: "Cidade romana preservada pela erupção do Vesúvio",
+        periodo: "Século VII a.C. - 79 d.C.",
+        importancia: "Janela única para a vida romana antiga",
+        pais: "Itália"
+    },
+    {
+        nome: "Acrópole de Atenas",
+        coordenadas: [37.9715, 23.7257],
+        descricao: "Cidadela antiga com o Partenon",
+        periodo: "Século V a.C.",
+        importancia: "Marco da civilização ocidental",
+        pais: "Grécia"
+    },
+    {
+        nome: "Carnac",
+        coordenadas: [47.5833, -3.0833],
+        descricao: "Extenso alinhamento de menires da Bretanha",
+        periodo: "4500-3300 a.C.",
+        importancia: "Maior conjunto de menires pré-históricos do mundo",
+        pais: "França"
+    },
+    {
+        nome: "Agrigento",
+        coordenadas: [37.3087, 13.5865],
+        descricao: "Templos gregos bem preservados do Vale dos Templos",
+        periodo: "Século VI a.C.",
+        importancia: "Conjunto de templos gregos mais bem preservados fora da Grécia",
+        pais: "Itália"
+    },
+    {
+        nome: "Göbekli Tepe",
+        coordenadas: [37.2233, 38.9225],
+        descricao: "Templo mais antigo do mundo, precede Stonehenge em 6.000 anos",
+        periodo: "9600-7300 a.C.",
+        importancia: "Revolucionou o entendimento sobre o desenvolvimento das sociedades neolíticas",
+        pais: "Turquia"
+    },
+
+    // Ásia
+    {
+        nome: "Grande Muralha da China",
+        coordenadas: [40.4319, 116.5704],
+        descricao: "Sistema de fortificações para proteção do império",
+        periodo: "Século VII a.C. - 1644 d.C.",
+        importancia: "Maior estrutura do mundo feita por humanos",
+        pais: "China"
+    },
+    {
+        nome: "Angkor Wat",
+        coordenadas: [13.4125, 103.8670],
+        descricao: "Complexo de templos do Império Khmer",
+        periodo: "Século XII d.C.",
+        importancia: "Maior monumento religioso do mundo",
+        pais: "Camboja"
+    },
+    {
+        nome: "Petra",
+        coordenadas: [30.3285, 35.4444],
+        descricao: "Cidade rosa esculpida em rochas",
+        periodo: "Século V a.C.",
+        importancia: "Uma das sete maravilhas do mundo moderno",
+        pais: "Jordânia"
+    },
+    {
+        nome: "Ban Chiang",
+        coordenadas: [17.409, 103.247],
+        descricao: "Antigo assentamento agrícola com cerâmicas e ferramentas de bronze",
+        periodo: "2100 a.C. – 200 d.C.",
+        importancia: "Evidência precoce do uso do bronze e agricultura no Sudeste Asiático",
+        pais: "Tailandia"
+    },
+    {
+        nome: "Jiahu",
+        coordenadas: [33.6, 114.0],
+        descricao: "Vilarejo neolítico com flautas de osso e inscrições primitivas",
+        periodo: "7000–5700 a.C.",
+        importancia: "Possível origem da escrita e da música na China antiga",
+        pais: "China"
+    },
+    {
+        nome: "Mehrgarh",
+        coordenadas: [29.4, 67.9],
+        descricao: "Assentamento neolítico com casas de tijolos e cerâmica decorada",
+        periodo: "7000–2500 a.C.",
+        importancia: "Um dos primeiros centros agrícolas e urbanos do sul da Ásia",
+        pais: "Paquistao"
+    },
+    {
+        nome: "Liangzhu",
+        coordenadas: [30.4, 120.0],
+        descricao: "Cidade com diques, jade esculpido e sepultamentos elaborados",
+        periodo: "3300–2300 a.C.",
+        importancia: "Centro cerimonial da antiga civilização do delta do Yangtzé",
+        pais: "China"
+    },
+    {
+        nome: "Sarazm",
+        coordenadas: [39.512, 67.372],
+        descricao: "Cidade pré-histórica com metais, cerâmica e arquitetura planejada",
+        periodo: "3500–2000 a.C.",
+        importancia: "Evidência de urbanização precoce na Ásia Central",
+        pais: "Tajaquistao"
+    },
+    {
+        nome: "Dmanisi",
+        coordenadas: [41.333, 44.350],
+        descricao: "Local com fósseis de Homo erectus e ferramentas de pedra",
+        periodo: "1.8 milhão de anos atrás",
+        importancia: "Primeira evidência de humanos fora da África",
+        pais: "Georgia"
+    },
+    {
+        nome: "ShahrISokhta",
+        coordenadas: [30.705, 61.546],
+        descricao: "Ruínas de uma cidade do deserto com ruas e oficinas de artesãos",
+        periodo: "3200–1800 a.C.",
+        importancia: "Centro urbano importante da antiga civilização do Irã Oriental",
+        pais: "Ira"
+    },
+    {
+        nome: "Bhimbetka",
+        coordenadas: [22.94, 77.61],
+        descricao: "Abrigos rochosos com pinturas rupestres de animais e figuras humanas",
+        periodo: "30.000 a.C. – atualidade",
+        importancia: "Registro contínuo de ocupação humana e arte pré-histórica",
+        pais: "India"
+    },
+    {
+        nome: "Anuradhapura",
+        coordenadas: [8.35, 80.383],
+        descricao: "Antiga capital cingalesa com estupas e monastérios",
+        periodo: "Século IV a.C. – XI d.C.",
+        importancia: "Um dos primeiros centros budistas da Ásia",
+        pais: "SriLanka"
+    },
+
+    // África
+    {
+        nome: "Pirâmides de Gizé",
+        coordenadas: [29.9773, 31.1325],
+        descricao: "Complexo de pirâmides e a Esfinge",
+        periodo: "2580-2560 a.C.",
+        importancia: "Única das sete maravilhas do mundo antigo ainda existente",
+        pais: "Egito"
+    },
+    {
+        nome: "Lalibela",
+        coordenadas: [12.0331, 39.0475],
+        descricao: "Igrejas monolíticas escavadas na rocha",
+        periodo: "Séculos XII-XIII",
+        importancia: "Patrimônio Mundial da UNESCO e local de peregrinação",
+        pais: "Etiópia"
+    },
+
+    // Oceania
+    {
+        nome: "Moais da Ilha de Páscoa",
+        coordenadas: [-27.1127, -109.3497],
+        descricao: "Estatuas monolíticas da cultura Rapa Nui",
+        periodo: "1250-1500 d.C.",
+        importancia: "Mistério arqueológico sobre transporte das estátuas",
+        pais: "Chile"
+    },
+    {
+        nome: "Lake Mungo",
+        coordenadas: [-33.7424, 143.1222],
+        descricao: "Contém fósseis conhecidos como 'Mungo Man' e 'Mungo Lady'",
+        periodo: "Cerca de 50.000 a.C.",
+        importancia: "Um dos locais mais antigos com restos humanos modernos fora da África",
+        pais: "Austrália"
+    },
+    {
+        nome: "Kuk Swamp",
+        coordenadas: [-5.7825, 144.3307],
+        descricao: "Campos drenados e canais de irrigação para cultivo de taro e banana",
+        periodo: "9.000–1.500 a.C.",
+        importancia: "Evidência das primeiras práticas agrícolas independentes do mundo",
+        pais: "Papua-Nova Guiné"
+    },
+    {
+        nome: "Wairau Bar",
+        coordenadas: [-41.5009, 174.0569],
+        descricao: "Inclui túmulos, artefatos de pedra e ossos, evidenciando a chegada dos primeiros maoris",
+        periodo: "1250–1300 d.C.",
+        importancia: "Um dos primeiros assentamentos polinésios na Nova Zelândia",
+        pais: "Nova Zelândia"
+    },
+    {
+        nome: "Jinmium Rock Shelter",
+        coordenadas: [-15.5040, 130.6530],
+        descricao: "Gravuras em pedra e sedimentos com artefatos líticos primitivos",
+        periodo: "60.000–116.000 a.C.",
+        importancia: "Potencialmente uma das mais antigas ocupações humanas da Austrália",
+        pais: "Austrália"
+    },
+    {
+        nome: "Ngarrabullgan",
+        coordenadas: [-16.8654, 144.7728],
+        descricao: "Ferramentas de pedra, pinturas rupestres e restos de acampamentos cerimoniais",
+        periodo: "37.000 a.C.",
+        importancia: "Local sagrado e um dos mais antigos sítios aborígenes da Austrália",
+        pais: "Austrália"
+    }
+];
+            
+
+            // Adicionar marcadores ao mapa
+            sitiosArqueologicos.forEach(sitio => {
+                const marker = L.marker(sitio.coordenadas, {icon: archeologyIcon})
+                    .addTo(map)
+                    .bindPopup(`
+                        <div class="custom-popup">
+                            <h3>${sitio.nome}</h3>
+                            <div style="font-size: 48px; text-align: center; margin: 10px 0;">🏺</div>
+                            <p><strong>País:</strong> ${sitio.pais}</p>
+                            <p><strong>Descrição:</strong> ${sitio.descricao}</p>
+                            <p><strong>Período:</strong> ${sitio.periodo}</p>
+                            <p><strong>Importância:</strong> ${sitio.importancia}</p>
+                        </div>
+                    `);
+            });
+
+            // Adicionar legenda
+            const legenda = L.control({position: 'bottomright'});
+            legenda.onAdd = function(map) {
+                const div = L.DomUtil.create('div', 'map-legend');
+                div.innerHTML = `
+                    <h4>🏺 Legenda</h4>
+                    <p>🏺 Sítio Arqueológico</p>
+                `;
+                return div;
+            };
+            legenda.addTo(map);
+
+            console.log('✅ Mapa inicializado com sucesso!');
+            
+        } catch (error) {
+            console.error('❌ Erro ao inicializar mapa:', error);
+            alert('Erro ao carregar o mapa: ' + error.message);
+        }
+    }
+</script>
+</body>
+</html>

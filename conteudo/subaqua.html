@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Arqueologia">
+    <meta name="author" content="Robot Makers">
+    <link rel="stylesheet" href="/ArqTalk/conteudo/style.css">
+    <link rel="shortcut icon" href="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009165249.ico" type="image/x-icon">
+    <title>ArqTalk-Subaquática</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Sistema de Autenticação - Subaquática -->
+<script>
+// ⭐⭐ SISTEMA DE LOGIN - SUBAQUÁTICA ⭐⭐
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔍 Subaquática - Verificando login...');
+    
+    const userData = localStorage.getItem('arqtalk_user');
+    
+    // ⭐⭐ MÉTODO SIMPLES: Forçar manualmente ⭐⭐
+    forceVisibilitySubaqua(userData);
+    
+    if (userData) {
+        const user = JSON.parse(userData);
+        updateUserProfileSubaqua(user);
+        setupUserPermissionsSubaqua(user);
+    } else {
+        setupGuestPermissionsSubaqua();
+    }
+});
+
+function forceVisibilitySubaqua(userData) {
+    const loginBtn = document.getElementById('loginBtn');
+    const userProfile = document.getElementById('userProfile');
+    
+    if (userData) {
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (userProfile) userProfile.style.display = 'flex';
+    } else {
+        if (loginBtn) loginBtn.style.display = 'flex';
+        if (userProfile) userProfile.style.display = 'none';
+    }
+}
+
+function updateUserProfileSubaqua(user) {
+    const userName = document.getElementById('userName');
+    const userAvatar = document.getElementById('userAvatar');
+    
+    if (userName) userName.textContent = user.name || user.email.split('@')[0];
+    if (userAvatar) userAvatar.textContent = user.initials || 'US';
+    
+    addProfessionBadgeSubaqua(user.profession);
+    
+    const userProfile = document.getElementById('userProfile');
+    if (userProfile) {
+        userProfile.onclick = function() {
+            if (confirm('Deseja sair da sua conta?')) {
+                localStorage.removeItem('arqtalk_user');
+                location.reload();
+            }
+        };
+    }
+}
+
+function setupUserPermissionsSubaqua(user) {
+    const commentTypeSelect = document.getElementById('comment-type');
+    const authorNameInput = document.getElementById('author-name');
+    
+    if (authorNameInput) {
+        authorNameInput.value = user.name || user.email.split('@')[0];
+        authorNameInput.readOnly = true;
+    }
+    
+    if (commentTypeSelect) {
+        const profession = user.profession?.toLowerCase() || '';
+        
+        if (profession.includes('arqueólogo') || profession.includes('arqueologo')) {
+            commentTypeSelect.innerHTML = `
+                <option value="question">❓ Pergunta Subaquática</option>
+                <option value="discovery">🐚 Descoberta Marinha</option>
+                <option value="analysis">🔍 Análise de Naufrágio</option>
+                <option value="technology">🤖 Tecnologia Subaquática</option>
+                <option value="conservation">💧 Conservação Aquática</option>
+                <option value="publication">📄 Publicação Oceânica</option>
+            `;
+        } else {
+            commentTypeSelect.innerHTML = `
+                <option value="question">❓ Pergunta Geral</option>
+                <option value="question">🌊 Dúvida Subaquática</option>
+                <option value="question">🐠 Consulta Marinha</option>
+            `;
+        }
+    }
+}
+
+function addProfessionBadgeSubaqua(profession) {
+    const existingBadge = document.getElementById('profession-badge');
+    if (existingBadge) existingBadge.remove();
+    
+    const userProfile = document.getElementById('userProfile');
+    if (userProfile && profession) {
+        const badge = document.createElement('div');
+        badge.id = 'profession-badge';
+        
+        let badgeColor = '#666';
+        let badgeText = profession;
+        
+        if (profession.toLowerCase().includes('arqueólogo') || profession.toLowerCase().includes('arqueologo')) {
+            badgeColor = 'var(--primary-bronze)';
+            badgeText = '🏺 Arqueólogo';
+        } else if (profession.toLowerCase().includes('estudante')) {
+            badgeColor = '#4f7db0';
+            badgeText = '🎓 Estudante';
+        }
+        
+        badge.innerHTML = `
+            <span style="background: ${badgeColor}; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.65rem; font-weight: 600;">
+                ${badgeText}
+            </span>
+        `;
+        
+        userProfile.appendChild(badge);
+    }
+}
+
+function setupGuestPermissionsSubaqua() {
+    const commentForm = document.querySelector('.modern-card.p-6');
+    if (commentForm) {
+        commentForm.innerHTML = `
+            <div class="text-center p-6">
+                <div class="text-4xl mb-4">🔐</div>
+                <h3 class="text-lg font-bold mb-2">Acesso Restrito</h3>
+                <p class="mb-4 opacity-80">Faça login para explorar a arqueologia subaquática</p>
+                <a href="loginarq.html" class="btn-modern inline-flex items-center gap-2">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Fazer Login
+                </a>
+                <p class="text-sm mt-4 opacity-70">
+                    <strong>Arqueólogos:</strong> Acesso completo às descobertas marinhas<br>
+                    <strong>Estudantes:</strong> Apenas perguntas sobre naufrágios<br>
+                    <strong>Outras profissões:</strong> Perguntas básicas
+                </p>
+            </div>
+        `;
+    }
+}
+</script>
+<script>
+// ⭐⭐ SISTEMA DE LOGIN - prelit.html ⭐⭐
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔍 Verificando login na pré-literária...');
+    
+    const userData = localStorage.getItem('arqtalk_user');
+    const loginBtn = document.getElementById('loginBtn');
+    const userProfile = document.getElementById('userProfile');
+    const userName = document.getElementById('userName');
+    const userAvatar = document.getElementById('userAvatar');
+    
+    if (userData) {
+        console.log('✅ Usuário está logado!');
+        const user = JSON.parse(userData);
+        
+        // Esconde login, mostra perfil
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (userProfile) {
+            userProfile.style.display = 'flex';
+            
+            // Logout ao clicar no perfil
+            userProfile.addEventListener('click', function() {
+                if (confirm('Deseja sair da sua conta?')) {
+                    localStorage.removeItem('arqtalk_user');
+                    location.reload();
+                }
+            });
+        }
+        
+        // Atualiza nome e avatar
+        if (userName) userName.textContent = user.name || user.email.split('@')[0];
+        if (userAvatar) userAvatar.textContent = user.initials || 'US';
+        
+    } else {
+        console.log('❌ Usuário NÃO está logado');
+        if (loginBtn) loginBtn.style.display = 'flex';
+        if (userProfile) userProfile.style.display = 'none';
+    }
+});
+</script>
+    <style>
+        :root {
+            --deep-brown: #725227;
+            --medium-brown: #b58647;
+            --light-brown: #d4b88c;
+            --sand: #f0e4d3;
+            --accent-blue: #4a7ba6;
+            --dark-blue: #2c5282;
+            --light-blue: #63b3ed;
+            --coral: #e53e3e;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--deep-brown), #8a6b3a);
+            color: var(--sand);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .modern-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .modern-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .modern-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .comment-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-blue);
+            transition: all 0.2s ease;
+        }
+
+        .comment-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(4px);
+        }
+
+        .reply-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-left: 3rem;
+            border-left: 3px solid var(--light-blue);
+            position: relative;
+        }
+
+        .reply-card::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1.5rem;
+            width: 1rem;
+            height: 2px;
+            background: var(--light-blue);
+            opacity: 0.6;
+        }
+
+        .badge-modern {
+            background: linear-gradient(135deg, var(--accent-blue), var(--dark-blue));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-modern {
+            background: linear-gradient(135deg, var(--accent-blue), var(--dark-blue));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--sand);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--coral), #c53030);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c53030, var(--coral));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .input-modern {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--sand);
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-modern:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(74, 123, 166, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .input-modern::placeholder {
+            color: rgba(240, 228, 211, 0.6);
+        }
+
+        select.input-modern {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23f0e4d3' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .depth-indicator {
+            background: linear-gradient(135deg, var(--medium-brown), var(--deep-brown));
+            color: var(--sand);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .timestamp {
+            color: rgba(240, 228, 211, 0.7);
+            font-size: 0.8rem;
+        }
+ .footer {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-bronze));
+            padding: 2.5rem 2rem;
+            margin-top: auto;
+            border-top: 3px solid var(--primary-bronze);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--bronze-lighter);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .footer-logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--bronze-light);
+            font-size: 1rem;
+        }
+
+        .footer-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--bronze-lighter);
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+        }
+
+        .robot-icon {
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-link {
+            color: var(--bronze-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .footer-link:hover {
+            color: var(--bronze-lighter);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--sand), var(--light-brown));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(240, 228, 211, 0.7);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Modal de confirmação */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--deep-brown), var(--medium-brown));
+            border-radius: 16px;
+            border: 2px solid var(--accent-blue);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            padding: 2rem;
+            max-width: 90%;
+            width: 400px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+      
+       
+       
+
+        /* Correção para o range input */
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--light-brown), var(--medium-brown), var(--deep-brown));
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+            border: 2px solid var(--sand);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+            border: 2px solid var(--sand);
+        }
+      
+        .avatar-with-initials {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.7rem;
+    border: 2px solid var(--bronze-light);
+}
+
+.login-btn-nav {
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    color: white !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 25px !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid transparent !important;
+}
+
+.login-btn-nav:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(181, 134, 71, 0.4);
+    background: linear-gradient(135deg, var(--dark-medium), var(--primary-bronze)) !important;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    border: 1px solid rgba(181, 134, 71, 0.3);
+    transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+    </style>
+</head>
+
+<body>
+     <div class="social-float">
+        <a href="https://wa.me/5547999999999" target="_blank" class="whatsapp-floa">
+            <img src="/ArqTalk/images/circle-whatsapp-logotype-icon-social-media-app-network-application-popular-editorial-brand-vector-il-removebg-preview-fotor-20250308162320.png" alt="WhatsApp">
+        </a>
+        <a href="https://www.instagram.com/robotmakerspvs?igsh=Y29kY3R5ODhuODNr" target="_blank" class="instagram-floa">
+            <img src="/ArqTalk/images/instagram-icon-free-png (1).webp" alt="Instagram">
+        </a>
+    </div>
+    <nav class="navbar">
+    <div class="logo">
+        <h1 style="color: #725227;">ArqTalk</h1>
+        <img class="logo" src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="">
+        <h1>ArqTalk</h1>
+    </div>
+    <div class="menu">
+        <a href="teste.html">Início</a>
+        <a href="prelit.html">Pré-literária</a>
+        <a href="zoo.html">Zooarqueologia</a>
+        <a href="equipe.html">Sobre Nós</a>
+        
+        <!-- BOTÃO DE LOGIN -->
+        <a href="loginarq.html" class="login-btn-nav" id="loginBtn" style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-sign-in-alt"></i>
+            Entrar
+        </a>
+        
+        <!-- PERFIL DO USUÁRIO -->
+        <div class="user-profile" id="userProfile" style="display: none; cursor: pointer;">
+            <div class="profile-info">
+                <div class="avatar-with-initials" id="userAvatar">
+                    <!-- Iniciais aqui -->
+                </div>
+                <span class="user-name" id="userName">Usuário</span>
+                <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--bronze-light);"></i>
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <div class="header-com-imagem">               
+        <h1>Subaquática</h1>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="delete-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="text-center mb-4">
+                <div class="text-4xl mb-4">🗑️</div>
+                <h3 class="text-xl font-bold mb-2">Confirmar Exclusão</h3>
+                <p class="mb-4 opacity-90" id="delete-modal-message">Tem certeza que deseja excluir esta contribuição?</p>
+                <p class="text-sm mb-4 text-red-300 font-medium" id="delete-modal-warning"></p>
+            </div>
+            <div class="flex space-x-3 justify-center">
+                <button id="confirm-delete" class="btn-danger px-5 py-2 rounded-lg font-medium">
+                    <i class="fas fa-trash mr-2"></i>
+                    Sim, Excluir
+                </button>
+                <button id="cancel-delete" class="btn-secondary px-5 py-2 rounded-lg font-medium">
+                    <i class="fas fa-times mr-2"></i>
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modern-container">
+        <!-- Cabeçalho da Seção de Comentários -->
+        <div class="text-center mb-12">
+            <h2 class="section-title">Discussões Subaquáticas</h2>
+            <p class="text-lg opacity-80">Compartilhe descobertas e insights sobre arqueologia subaquática</p>
+        </div>
+
+        <!-- Área Principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Coluna de Comentários -->
+            <div class="lg:col-span-3">
+                <div class="modern-card p-6 mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold">
+                            <i class="fas fa-comments mr-2" style="color: var(--accent-blue);"></i>
+                            Descobertas Recentes
+                        </h3>
+                        <div class="flex items-center gap-4">
+                            <span class="depth-indicator">
+                                <i class="fas fa-layer-group mr-1"></i>
+                                <span id="total-comments">0</span> contribuições
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Área de Comentários -->
+                    <div id="comments-container" class="space-y-6">
+                        <!-- Comentários serão carregados aqui -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar - Novo Comentário -->
+            <div class="space-y-6">
+                <!-- Formulário -->
+                <div class="modern-card p-6">
+                    <h3 class="text-lg font-bold mb-4">
+                        <i class="fas fa-plus-circle mr-2" style="color: var(--accent-blue);"></i>
+                        Nova Descoberta
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block font-medium mb-2">Seu Nome</label>
+                            <input type="text" id="author-name" 
+                                   class="input-modern"
+                                   placeholder="Arqueólogo...">
+                        </div>
+                        
+                        <div>
+                            <label class="block font-medium mb-2">Tipo de Contribuição</label>
+                            <select id="comment-type" class="input-modern">
+                                <option value="question">❓ Pergunta</option>
+                                <option value="discovery">🔍 Descoberta</option>
+                                <option value="analysis">📊 Análise</option>
+                                <option value="theory">💡 Teoria</option>
+                                <option value="observation">👁️ Observação</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-medium mb-2">Sua Contribuição</label>
+                            <textarea id="comment-text" 
+                                      class="input-modern h-32"
+                                      placeholder="Compartilhe sua descoberta ou pergunta..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block font-medium mb-2">Profundidade</label>
+                            <input type="range" id="comment-depth" min="1" max="10" value="3" 
+                                   class="w-full">
+                            <div class="flex justify-between text-sm font-medium mt-1 opacity-80">
+                                <span>Superficial</span>
+                                <span id="depth-value">Nível 3</span>
+                                <span>Profundo</span>
+                            </div>
+                        </div>
+
+                        <button onclick="addNewComment()" 
+                                class="btn-modern w-full font-semibold py-3">
+                            <i class="fas fa-paper-plane mr-2"></i>
+                            Publicar Descoberta
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Informações -->
+                <div class="modern-card p-6">
+                    <h3 class="text-lg font-bold mb-4">
+                        <i class="fas fa-info-circle mr-2" style="color: var(--accent-blue);"></i>
+                        Sobre Esta Zona
+                    </h3>
+                    <div class="space-y-3 text-sm opacity-80">
+                        <p>Esta é uma zona de discussão colaborativa para arqueologia subaquática.</p>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="badge-modern text-xs">❓ Pergunta</span>
+                            <span class="badge-modern text-xs">🔍 Descoberta</span>
+                            <span class="badge-modern text-xs">📊 Análise</span>
+                            <span class="btn-danger text-xs px-2 py-1 rounded">🗑️ Excluir</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr style="">
+<footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="ArqTalk">
+                <span>ArqTalk</span>
+            </div>
+            
+            <div class="footer-text">
+                <p>Equipe de robótica dedicada à inovação e excelência tecnológica</p>
+            </div>
+            
+            <div class="footer-author">
+                <i class="fas fa-robot robot-icon"></i>
+                <span>Robot Makers</span>
+            </div>
+            
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">Início</a>
+                <a href="equipe.html" class="footer-link">Sobre Nós</a>
+                <a href="subaqua.html" class="footer-link">Subaquática</a>
+                <a href="zoo.html" class="footer-link">Zooarqueologia</a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Banco de dados
+        let commentsData = JSON.parse(localStorage.getItem('subaquaticComments')) || {
+            comments: [],
+            replies: []
+        };
+
+        // Variáveis para controle de exclusão
+        let itemToDelete = null;
+        let deleteType = null;
+
+        // Inicializar
+        function initializeComments() {
+            renderAllComments();
+            updateDepthValue();
+            setupDeleteModal();
+            addSampleData();
+            updateCommentCount();
+        }
+
+        // Configurar modal de exclusão
+        function setupDeleteModal() {
+            const confirmBtn = document.getElementById('confirm-delete');
+            const cancelBtn = document.getElementById('cancel-delete');
+            const modal = document.getElementById('delete-modal');
+
+            confirmBtn.addEventListener('click', executeDeletion);
+            cancelBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                itemToDelete = null;
+                deleteType = null;
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                    itemToDelete = null;
+                    deleteType = null;
+                }
+            });
+        }
+
+        // Atualizar valor da profundidade
+        function updateDepthValue() {
+            const depthSlider = document.getElementById('comment-depth');
+            const depthValue = document.getElementById('depth-value');
+            
+            if (depthSlider && depthValue) {
+                depthSlider.addEventListener('input', function() {
+                    depthValue.textContent = `Nível ${this.value}`;
+                });
+            }
+        }
+
+        // Adicionar novo comentário
+        function addNewComment() {
+            const author = document.getElementById('author-name').value.trim();
+            const text = document.getElementById('comment-text').value.trim();
+            const type = document.getElementById('comment-type').value;
+            const depth = parseInt(document.getElementById('comment-depth').value);
+
+            if (!author || !text) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            const comment = {
+                id: 'c' + Date.now(),
+                author: author,
+                text: text,
+                type: type,
+                depth: depth,
+                timestamp: new Date().toISOString(),
+                replyCount: 0
+            };
+
+            commentsData.comments.unshift(comment);
+            saveData();
+            renderAllComments();
+            clearForm();
+            animateNewItem(comment.id);
+            updateCommentCount();
+        }
+
+        // Adicionar resposta
+        function addReply(commentId) {
+            const replyText = document.getElementById(`reply-text-${commentId}`).value.trim();
+            const author = document.getElementById(`reply-author-${commentId}`)?.value.trim() || 'Anônimo';
+
+            if (!replyText) {
+                alert('Por favor, escreva sua resposta.');
+                return;
+            }
+
+            const reply = {
+                id: 'r' + Date.now(),
+                commentId: commentId,
+                author: author,
+                text: replyText,
+                timestamp: new Date().toISOString()
+            };
+
+            commentsData.replies.push(reply);
+            
+            const comment = commentsData.comments.find(c => c.id === commentId);
+            if (comment) {
+                comment.replyCount = (comment.replyCount || 0) + 1;
+            }
+
+            saveData();
+            renderAllComments();
+            document.getElementById(`reply-text-${commentId}`).value = '';
+            hideReplyForm(commentId);
+            updateCommentCount();
+        }
+
+        // Solicitar exclusão de comentário
+        function requestDeleteComment(commentId) {
+            const comment = commentsData.comments.find(c => c.id === commentId);
+            if (!comment) return;
+
+            itemToDelete = commentId;
+            deleteType = 'comment';
+
+            const modal = document.getElementById('delete-modal');
+            const message = document.getElementById('delete-modal-message');
+            const warning = document.getElementById('delete-modal-warning');
+
+            message.textContent = `Tem certeza que deseja excluir a contribuição "${comment.text.substring(0, 50)}${comment.text.length > 50 ? '...' : ''}"?`;
+            
+            const replyCount = commentsData.replies.filter(r => r.commentId === commentId).length;
+            if (replyCount > 0) {
+                warning.textContent = `Atenção: ${replyCount} resposta(s) vinculada(s) também será(ão) excluída(s).`;
+            } else {
+                warning.textContent = '';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        // Solicitar exclusão de resposta
+        function requestDeleteReply(replyId) {
+            const reply = commentsData.replies.find(r => r.id === replyId);
+            if (!reply) return;
+
+            itemToDelete = replyId;
+            deleteType = 'reply';
+
+            const modal = document.getElementById('delete-modal');
+            const message = document.getElementById('delete-modal-message');
+            const warning = document.getElementById('delete-modal-warning');
+
+            message.textContent = `Tem certeza que deseja excluir a resposta "${reply.text.substring(0, 50)}${reply.text.length > 50 ? '...' : ''}"?`;
+            warning.textContent = '';
+
+            modal.classList.remove('hidden');
+        }
+
+        // Executar a exclusão
+        function executeDeletion() {
+            if (!itemToDelete || !deleteType) return;
+
+            if (deleteType === 'comment') {
+                commentsData.comments = commentsData.comments.filter(c => c.id !== itemToDelete);
+                commentsData.replies = commentsData.replies.filter(r => r.commentId !== itemToDelete);
+            } else if (deleteType === 'reply') {
+                const reply = commentsData.replies.find(r => r.id === itemToDelete);
+                if (reply) {
+                    const comment = commentsData.comments.find(c => c.id === reply.commentId);
+                    if (comment && comment.replyCount > 0) {
+                        comment.replyCount--;
+                    }
+                }
+                commentsData.replies = commentsData.replies.filter(r => r.id !== itemToDelete);
+            }
+
+            saveData();
+            renderAllComments();
+            document.getElementById('delete-modal').classList.add('hidden');
+            itemToDelete = null;
+            deleteType = null;
+            updateCommentCount();
+        }
+
+        // Renderizar todos os comentários
+        function renderAllComments() {
+            const container = document.getElementById('comments-container');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (commentsData.comments.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comment-slash"></i>
+                        <h3 class="text-xl font-bold mb-2">Nenhuma Descoberta</h3>
+                        <p>Seja o primeiro a compartilhar uma descoberta!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            commentsData.comments.forEach(comment => {
+                const commentElement = createCommentElement(comment);
+                container.appendChild(commentElement);
+
+                const replies = commentsData.replies.filter(r => r.commentId === comment.id);
+                replies.forEach(reply => {
+                    const replyElement = createReplyElement(reply);
+                    container.appendChild(replyElement);
+                });
+            });
+        }
+
+        // Criar elemento de comentário
+        function createCommentElement(comment) {
+            const div = document.createElement('div');
+            div.className = 'comment-card fade-in p-5';
+            div.id = comment.id;
+
+            const typeIcons = {
+                'question': '❓',
+                'discovery': '🔍',
+                'analysis': '📊',
+                'theory': '💡',
+                'observation': '👁️'
+            };
+
+            const typeLabels = {
+                'question': 'Pergunta',
+                'discovery': 'Descoberta',
+                'analysis': 'Análise',
+                'theory': 'Teoria',
+                'observation': 'Observação'
+            };
+
+            div.innerHTML = `
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <div class="depth-indicator">${comment.depth}m</div>
+                        <span class="font-semibold">${comment.author}</span>
+                        <span class="badge-modern">${typeIcons[comment.type]} ${typeLabels[comment.type]}</span>
+                    </div>
+                    <div class="timestamp">
+                        <i class="far fa-clock mr-1"></i>
+                        ${new Date(comment.timestamp).toLocaleString('pt-BR')}
+                    </div>
+                </div>
+                
+                <p class="mb-4 opacity-90 leading-relaxed">${comment.text}</p>
+                
+                <div class="flex justify-between items-center flex-wrap gap-2">
+                    <div class="flex items-center gap-2">
+                        <button onclick="showReplyForm('${comment.id}')" 
+                                class="btn-secondary text-sm px-3 py-1">
+                            <i class="fas fa-reply mr-1"></i>
+                            Responder
+                        </button>
+                        ${comment.replyCount > 0 ? `
+                            <span class="text-sm opacity-70">
+                                <i class="fas fa-comments mr-1"></i>
+                                ${comment.replyCount} resposta(s)
+                            </span>
+                        ` : ''}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="analyzeComment('${comment.id}')" 
+                                class="btn-secondary text-sm px-3 py-1">
+                            <i class="fas fa-search mr-1"></i>
+                            Analisar
+                        </button>
+                        <button onclick="requestDeleteComment('${comment.id}')" 
+                                class="btn-danger text-sm px-3 py-1">
+                            <i class="fas fa-trash mr-1"></i>
+                            Excluir
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulário de Resposta -->
+                <div id="reply-form-${comment.id}" class="mt-4 hidden">
+                    <div class="reply-card p-4">
+                        <h4 class="font-semibold mb-3">
+                            <i class="fas fa-reply mr-1"></i>
+                            Sua Resposta
+                        </h4>
+                        <textarea id="reply-text-${comment.id}" 
+                                  placeholder="Escreva sua resposta..."
+                                  class="input-modern w-full mb-3 h-20"></textarea>
+                        <input type="text" id="reply-author-${comment.id}"
+                               placeholder="Seu nome (opcional)"
+                               class="input-modern w-full mb-3">
+                        <div class="flex gap-2">
+                            <button onclick="addReply('${comment.id}')" 
+                                    class="btn-modern flex-1 text-sm py-2">
+                                <i class="fas fa-paper-plane mr-1"></i>
+                                Enviar
+                            </button>
+                            <button onclick="hideReplyForm('${comment.id}')" 
+                                    class="btn-secondary text-sm px-4 py-2">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            return div;
+        }
+
+        // Criar elemento de resposta
+        function createReplyElement(reply) {
+            const div = document.createElement('div');
+            div.className = 'reply-card fade-in p-4';
+            div.id = reply.id;
+
+            div.innerHTML = `
+                <div class="flex items-start justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-sm">${reply.author}</span>
+                        <span class="badge-modern text-xs">
+                            <i class="fas fa-reply mr-1"></i>
+                            Resposta
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="timestamp text-xs">
+                            ${new Date(reply.timestamp).toLocaleString('pt-BR')}
+                        </div>
+                        <button onclick="requestDeleteReply('${reply.id}')" 
+                                class="btn-danger text-xs px-2 py-1 ml-2">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <p class="opacity-90 text-sm">${reply.text}</p>
+            `;
+
+            return div;
+        }
+
+        // Mostrar formulário de resposta
+        function showReplyForm(commentId) {
+            const form = document.getElementById(`reply-form-${commentId}`);
+            if (form) {
+                form.classList.remove('hidden');
+                const textarea = document.getElementById(`reply-text-${commentId}`);
+                if (textarea) textarea.focus();
+            }
+        }
+
+        // Ocultar formulário de resposta
+        function hideReplyForm(commentId) {
+            const form = document.getElementById(`reply-form-${commentId}`);
+            if (form) {
+                form.classList.add('hidden');
+            }
+        }
+
+        // Animação para novo item
+        function animateNewItem(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Análise de comentário
+        function analyzeComment(commentId) {
+            const comment = commentsData.comments.find(c => c.id === commentId);
+            if (comment) {
+                const questions = [
+                    "Esta descoberta levanta questões sobre quais contextos históricos?",
+                    "Como outras evidências subaquáticas corroboram esta observação?",
+                    "Que métodos de datação seriam apropriados para esta descoberta?",
+                    "Esta observação sugere novas áreas de escavação?"
+                ];
+                
+                const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+                
+                const modal = document.createElement('div');
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold">Análise Detalhada</h3>
+                            <button onclick="this.closest('.modal-overlay').remove()" class="text-xl opacity-70 hover:opacity-100">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="mb-4 p-4 rounded-lg" style="background: rgba(255,255,255,0.05);">
+                            <p class="opacity-90">"${comment.text}"</p>
+                            <div class="flex items-center mt-2 text-sm opacity-70">
+                                <span class="font-medium">${comment.author}</span>
+                                <span class="mx-2">•</span>
+                                <span>${new Date(comment.timestamp).toLocaleDateString('pt-BR')}</span>
+                            </div>
+                        </div>
+                        <div class="p-4 rounded-lg" style="background: rgba(74, 123, 166, 0.1); border-left: 4px solid var(--accent-blue);">
+                            <h4 class="font-bold mb-2">Questão de Investigação</h4>
+                            <p class="opacity-90">${randomQuestion}</p>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button onclick="this.closest('.modal-overlay').remove()" class="btn-modern px-4 py-2">
+                                Fechar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+            }
+        }
+
+        // Atualizar contador
+        function updateCommentCount() {
+            const total = commentsData.comments.length + commentsData.replies.length;
+            const counter = document.getElementById('total-comments');
+            if (counter) {
+                counter.textContent = total;
+            }
+        }
+
+        // Salvar dados
+        function saveData() {
+            localStorage.setItem('subaquaticComments', JSON.stringify(commentsData));
+        }
+
+        // Limpar formulário
+        function clearForm() {
+            const authorInput = document.getElementById('author-name');
+            const textInput = document.getElementById('comment-text');
+            const typeSelect = document.getElementById('comment-type');
+            const depthInput = document.getElementById('comment-depth');
+
+            if (authorInput) authorInput.value = '';
+            if (textInput) textInput.value = '';
+            if (typeSelect) typeSelect.value = 'question';
+            if (depthInput) depthInput.value = 3;
+            
+            updateDepthValue();
+        }
+
+        // Dados de exemplo
+        function addSampleData() {
+            if (commentsData.comments.length === 0) {
+                const sampleComments = [
+                    {
+                        id: 'c1',
+                        author: 'Dra. Marina Silva',
+                        text: 'Recente escavação no litoral sul revelou cerâmicas do período colonial em excelente estado de preservação. A salinidade parece ter contribuído para a conservação.',
+                        type: 'discovery',
+                        depth: 8,
+                        timestamp: new Date(Date.now() - 3600000).toISOString(),
+                        replyCount: 2
+                    },
+                    {
+                        id: 'c2', 
+                        author: 'Prof. Carlos Ocean',
+                        text: 'Alguém tem experiência com datação por radiocarbono em materiais submersos? Estou encontrando discrepâncias interessantes nos meus achados.',
+                        type: 'question',
+                        depth: 5,
+                        timestamp: new Date(Date.now() - 7200000).toISOString(),
+                        replyCount: 1
+                    }
+                ];
+
+                const sampleReplies = [
+                    {
+                        id: 'r1',
+                        commentId: 'c1',
+                        author: 'Arq. Sub Roberto',
+                        text: 'Fascinante! Em que profundidade exata foram encontradas? A corrente marinha local pode ter influenciado no depósito.',
+                        timestamp: new Date(Date.now() - 1800000).toISOString()
+                    },
+                    {
+                        id: 'r2',
+                        commentId: 'c1', 
+                        author: 'Dra. Ana Costa',
+                        text: 'Concordo com a observação sobre a salinidade. Nos meus estudos no Mediterrâneo, observei padrão similar em naufrágios romanos.',
+                        timestamp: new Date(Date.now() - 900000).toISOString()
+                    }
+                ];
+
+                commentsData.comments = sampleComments;
+                commentsData.replies = sampleReplies;
+                saveData();
+                renderAllComments();
+                updateCommentCount();
+            }
+        }
+
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', initializeComments);
+    </script>
+</body>
+</html>

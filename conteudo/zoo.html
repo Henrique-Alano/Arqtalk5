@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArqTalk-Zooarqueologia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/ArqTalk/conteudo/style.css">
+    <link rel="shortcut icon" href="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009165249.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+<!-- SISTEMA DE AUTENTICAÇÃO ZOO - SEM EMOJIS -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔍 Zooarqueologia - Verificando login...');
+    
+    const userData = localStorage.getItem('arqtalk_user');
+    forceVisibilityZoo(userData);
+    
+    if (userData) {
+        const user = JSON.parse(userData);
+        updateUserProfileZoo(user);
+        setupUserPermissionsZoo(user);
+    } else {
+        setupGuestPermissionsZoo();
+    }
+});
+
+function forceVisibilityZoo(userData) {
+    const loginBtn = document.getElementById('loginBtn');
+    const userProfile = document.getElementById('userProfile');
+    
+    if (userData) {
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (userProfile) userProfile.style.display = 'flex';
+    } else {
+        if (loginBtn) loginBtn.style.display = 'flex';
+        if (userProfile) userProfile.style.display = 'none';
+    }
+}
+
+function updateUserProfileZoo(user) {
+    const userName = document.getElementById('userName');
+    const userAvatar = document.getElementById('userAvatar');
+    
+    if (userName) userName.textContent = user.name || user.email.split('@')[0];
+    if (userAvatar) userAvatar.textContent = user.initials || 'US';
+    
+    addProfessionBadgeZoo(user.profession);
+    
+    const userProfile = document.getElementById('userProfile');
+    if (userProfile) {
+        userProfile.onclick = function() {
+            if (confirm('Deseja sair da sua conta?')) {
+                localStorage.removeItem('arqtalk_user');
+                location.reload();
+            }
+        };
+    }
+}
+
+function setupUserPermissionsZoo(user) {
+    const findTypeSelect = document.getElementById('find-type');
+    const researcherNameInput = document.getElementById('researcher-name');
+    
+    if (researcherNameInput) {
+        researcherNameInput.value = user.name || user.email.split('@')[0];
+        researcherNameInput.readOnly = true;
+    }
+    
+    if (findTypeSelect) {
+        const profession = user.profession?.toLowerCase() || '';
+        
+        if (profession.includes('arqueólogo') || profession.includes('arqueologo')) {
+            findTypeSelect.innerHTML = `
+                <option value="question">Pergunta</option>
+                <option value="theory">Teoria</option>
+                <option value="observation">Observação</option>
+                <option value="analysis">Análise</option>
+                <option value="insight">Insight</option>
+                <option value="discovery">Descoberta</option>
+            `;
+        } else {
+            findTypeSelect.innerHTML = `
+                <option value="question">Pergunta Geral</option>
+                <option value="question">Dúvida Zooarqueológica</option>
+                <option value="question">Consulta sobre Espécimes</option>
+            `;
+        }
+    }
+}
+
+function addProfessionBadgeZoo(profession) {
+    const existingBadge = document.getElementById('profession-badge');
+    if (existingBadge) existingBadge.remove();
+    
+    const userProfile = document.getElementById('userProfile');
+    if (userProfile && profession) {
+        const badge = document.createElement('div');
+        badge.id = 'profession-badge';
+        
+        let badgeColor = '#666';
+        let badgeText = profession;
+        
+        if (profession.toLowerCase().includes('arqueólogo') || profession.toLowerCase().includes('arqueologo')) {
+            badgeColor = '#b58647';
+            badgeText = 'Arqueólogo';
+        } else if (profession.toLowerCase().includes('estudante')) {
+            badgeColor = '#4f7db0';
+            badgeText = 'Estudante';
+        }
+        
+        badge.innerHTML = `
+            <span style="background: ${badgeColor}; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.65rem; font-weight: 600;">
+                ${badgeText}
+            </span>
+        `;
+        
+        userProfile.appendChild(badge);
+    }
+}
+
+function setupGuestPermissionsZoo() {
+    console.log('🚫 Aplicando bloqueio TOTAL para visitantes...');
+    
+    // 1. BLOQUEAR FORMULÁRIO DE NOVO REGISTRO
+    const formCard = document.querySelector('.space-y-6 .card-modern.p-6');
+    if (formCard) {
+        formCard.innerHTML = `
+            <div class="text-center p-6">
+                <div class="text-4xl mb-4">🔐</div>
+                <h3 class="text-lg font-bold mb-2">Acesso Restrito</h3>
+                <p class="mb-4 opacity-80">Faça login para registrar novos achados zooarqueológicos</p>
+                <a href="loginarq.html" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-lg">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Fazer Login
+                </a>
+            </div>
+        `;
+    }
+    
+    // 2. BLOQUEAR COMPLETAMENTE A ÁREA DE REGISTROS (SUBSTITUIR TUDO)
+    const mainContentCard = document.querySelector('.lg\\:col-span-2 .card-modern.p-6');
+    if (mainContentCard) {
+        mainContentCard.innerHTML = `
+            <div class="text-center p-8">
+                <div class="text-5xl mb-4">🔒</div>
+                <h2 class="text-2xl font-bold mb-2">Registros Zooarqueológicos</h2>
+                <p class="text-lg mb-4 opacity-80">Acesso restrito a usuários cadastrados</p>
+                <p class="mb-6 opacity-70">Faça login para visualizar os achados, análises e discussões especializadas</p>
+                <a href="loginarq.html" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-lg text-lg">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Fazer Login para Acessar
+                </a>
+                <div class="mt-6 p-4 rounded-lg" style="background: rgba(181, 134, 71, 0.1); border: 1px solid rgba(181, 134, 71, 0.3);">
+                    <p class="text-sm opacity-80">
+                        <strong>Benefícios do acesso:</strong><br>
+                        • Visualização completa de achados faunísticos<br>
+                        • Análises científicas especializadas<br>
+                        • Discussões com arqueólogos<br>
+                        • Registro de novos espécimes
+                    </p>
+                </div>
+            </div>
+        `;
+    }
+    
+    // 3. IMPEDIR QUE O SISTEMA DE COMENTÁRIOS CARREGUE OS DADOS
+    const findsContainer = document.getElementById('zooarch-finds');
+    if (findsContainer) {
+        findsContainer.innerHTML = ''; // Limpa qualquer conteúdo
+    }
+    
+    console.log('✅ Bloqueio total aplicado - visitantes não veem registros');
+}
+</script>
+    <style>
+    :root {
+        --primary-bronze: #b58647;
+        --primary-dark: #725227;
+        --bronze-light: #d4b88c;
+        --bronze-lighter: #f0e4d3;
+        --dark-medium: #8a6b3a;
+        --dark-light: #a38754;
+        --delete-red: #dc2626;
+        --delete-dark: #991b1b;
+        --site-background: #725227;
+        --content-background: #b58647;
+    }
+
+    body {
+        background: var(--site-background);
+        color: #f0e4d3;
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh;
+    }
+/* 🔧 CORREÇÃO DO ESPAÇAMENTO DO USER PROFILE */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.5rem 1.2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    border: 1px solid rgba(181, 134, 71, 0.3);
+    transition: all 0.3s ease;
+    min-width: fit-content;
+}
+
+.user-profile:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+.avatar-with-initials {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+    border: 2px solid var(--bronze-light);
+    flex-shrink: 0;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--bronze-lighter);
+    white-space: nowrap;
+}
+
+.login-btn-nav {
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    color: white !important;
+    padding: 0.6rem 1.8rem !important;
+    border-radius: 25px !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid transparent !important;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.login-btn-nav:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(181, 134, 71, 0.4);
+    background: linear-gradient(135deg, var(--dark-medium), var(--primary-bronze)) !important;
+}
+
+/* 🔧 CORREÇÃO DO NAVBAR PARA MELHOR ESPAÇAMENTO */
+.navbar .menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* 🔧 RESPONSIVIDADE */
+@media (max-width: 768px) {
+    .user-profile {
+        padding: 0.4rem 1rem;
+        gap: 0.5rem;
+    }
+    
+    .user-name {
+        font-size: 0.9rem;
+    }
+    
+    .login-btn-nav {
+        padding: 0.5rem 1.2rem !important;
+        font-size: 0.9rem;
+    }
+}
+    .modern-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    /* 🔥 CARDS ESCURECIDOS - PADRÃO ARQTALK */
+    .specimen-card {
+        background: linear-gradient(135deg, rgba(181, 134, 71, 0.15), rgba(114, 82, 39, 0.25));
+        backdrop-filter: blur(15px);
+        border-radius: 16px;
+        border: 1px solid rgba(181, 134, 71, 0.4);
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .specimen-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-bronze), var(--bronze-light));
+    }
+
+    .specimen-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        border-color: var(--primary-bronze);
+    }
+
+    .response-card {
+        background: linear-gradient(135deg, rgba(181, 134, 71, 0.1), rgba(114, 82, 39, 0.2));
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        border: 1px solid rgba(181, 134, 71, 0.3);
+        padding: 1.5rem;
+        margin-left: 3rem;
+        margin-top: 1rem;
+        position: relative;
+        border-left: 4px solid var(--bronze-light);
+    }
+
+    .response-card::before {
+        content: '';
+        position: absolute;
+        left: -1.5rem;
+        top: 1.5rem;
+        width: 1rem;
+        height: 2px;
+        background: var(--bronze-light);
+        opacity: 0.6;
+    }
+
+    /* 🎯 ELEMENTOS DE DESTAQUE */
+    .stratum-indicator {
+        background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .specimen-icon {
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+        width: 70px;
+        height: 70px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .badge-academic {
+        background: linear-gradient(135deg, var(--primary-dark), var(--dark-medium));
+        color: var(--bronze-lighter);
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border: 1px solid rgba(181, 134, 71, 0.4);
+    }
+
+    .badge-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--bronze-light);
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .scientific-dating {
+        font-family: 'Courier New', monospace;
+        background: rgba(90, 65, 32, 0.8);
+        color: #f0e4d3;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        border: 1px solid var(--primary-dark);
+    }
+
+    /* 🎨 BOTÕES PADRONIZADOS */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(181, 134, 71, 0.4);
+    }
+
+    .btn-outline {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--bronze-lighter);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-outline:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+    }
+
+    /* 📝 FORMULÁRIOS ESCURECIDOS */
+    .input-modern {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        color: var(--bronze-lighter);
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .input-modern:focus {
+        outline: none;
+        border-color: var(--primary-bronze);
+        box-shadow: 0 0 0 3px rgba(181, 134, 71, 0.3);
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .input-modern::placeholder {
+        color: rgba(240, 228, 211, 0.6);
+    }
+
+    select.input-modern {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23f0e4d3' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+
+    /* 🎪 HEADER DA PÁGINA */
+    .head-zoo {
+        background-image: linear-gradient(rgba(114, 82, 39, 0.8), rgba(90, 65, 32, 0.9)), url('/images/zoo-background.jpg');
+        background-size: cover;
+        background-position: center;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-family: "League Spartan", serif;
+        color: white;
+        letter-spacing: 2px;
+    }
+
+    .head-zoo h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        opacity: 0.9;
+    }
+
+    /* 🔬 FORMULÁRIO DE RESPOSTA */
+    .response-form {
+        background: linear-gradient(135deg, rgba(181, 134, 71, 0.1), rgba(114, 82, 39, 0.2));
+        border-radius: 12px;
+        border: 1px solid rgba(181, 134, 71, 0.3);
+    }
+         .footer {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-bronze));
+            padding: 2.5rem 2rem;
+            margin-top: auto;
+            border-top: 3px solid var(--primary-bronze);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--bronze-lighter);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .footer-logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--bronze-light);
+            font-size: 1rem;
+        }
+
+        .footer-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--bronze-lighter);
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+        }
+
+        .robot-icon {
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-link {
+            color: var(--bronze-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .footer-link:hover {
+            color: var(--bronze-lighter);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+
+    .response-indicator {
+        position: absolute;
+        left: -2rem;
+        top: 1rem;
+        background: var(--bronze-light);
+        color: var(--primary-dark);
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .response-indicator:hover {
+        background: var(--primary-bronze);
+        transform: scale(1.1);
+    }
+
+    /* ✨ ÍCONES E CORES */
+    .icon-primary {
+        color: var(--primary-bronze);
+    }
+
+    /* 📊 MODAL ESCURECIDO */
+    .modal-overlay {
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+        background: linear-gradient(135deg, var(--primary-dark), var(--dark-medium));
+        border-radius: 16px;
+        border: 2px solid var(--primary-bronze);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 📱 RESPONSIVIDADE */
+    @media (max-width: 768px) {
+        .head-zoo h1 {
+            font-size: 2.5rem;
+        }
+        
+        .specimen-card {
+            padding: 1.5rem;
+        }
+        
+        .response-card {
+            margin-left: 1rem;
+        }
+        
+        .response-indicator {
+            left: -1rem;
+        }
+    }
+
+    /* 🎭 ESTADO VAZIO */
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: rgba(240, 228, 211, 0.7);
+    }
+
+    .empty-state .text-5xl {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    /* 🎪 ANIMAÇÕES */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    /* 🎯 TÍTULOS DE SEÇÃO */
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--bronze-lighter), var(--bronze-light));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    /* 🚨 BOTÕES DE PERIGO */
+    .btn-danger {
+        background: linear-gradient(135deg, var(--delete-red), var(--delete-dark));
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-danger:hover {
+        background: linear-gradient(135deg, var(--delete-dark), var(--delete-red));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+</style>
+</head>
+<body class="min-h-screen">
+     <div class="social-float">
+        <a href="https://wa.me/5547999999999" target="_blank" class="whatsapp-floa">
+            <img src="/ArqTalk/images/circle-whatsapp-logotype-icon-social-media-app-network-application-popular-editorial-brand-vector-il-removebg-preview-fotor-20250308162320.png" alt="WhatsApp">
+        </a>
+        <a href="https://www.instagram.com/robotmakerspvs?igsh=Y29kY3R5ODhuODNr" target="_blank" class="instagram-floa">
+            <img src="/ArqTalk/images/instagram-icon-free-png (1).webp" alt="Instagram">
+        </a>
+    </div>
+    <nav class="navbar">
+    <div class="logo">
+        <h1 style="color: #725227;">ArqTalk</h1>
+        <img class="logo" src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="">
+        <h1>ArqTalk</h1>
+    </div>
+    <div class="menu">
+        <a href="teste.html">Início</a>
+        <a href="subaqua.html">Subaquática</a>
+        <a href="prelit.html">Pré-literária</a>
+        <a href="equipe.html">Sobre Nós</a>
+        
+        <!-- BOTÃO DE LOGIN -->
+        <a href="loginarq.html" class="login-btn-nav" id="loginBtn" style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-sign-in-alt"></i>
+            Entrar
+        </a>
+        
+        <!-- PERFIL DO USUÁRIO -->
+        <div class="user-profile" id="userProfile" style="display: none; cursor: pointer;">
+            <div class="profile-info">
+                <div class="avatar-with-initials" id="userAvatar">
+                    <!-- Iniciais aqui -->
+                </div>
+                <span class="user-name" id="userName">Usuário</span>
+                <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--bronze-light);"></i>
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <div class="header-com-imagemzoo">               
+        <h1>Zooarqueologia</h1>
+    </div>
+    
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Cabeçalho -->
+        <header class="mb-10">
+            <div class="header-academic p-8 rounded-2xl mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <h1 class="text-3xl font-bold mb-2">
+                            <i class="fas fa-microscope mr-3 icon-primary"></i>
+                            ZooArqueoComentários
+                        </h1>
+                        <p class="opacity-90">Sistema de Análise e Documentação de Restos Faunísticos em Contextos Arqueológicos</p>
+                    </div>
+                    <div class="scientific-dating">
+                        <i class="fas fa-layer-group mr-2 icon-primary"></i>
+                        Estrato: Holoceno
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Modal de Confirmação -->
+        <div id="delete-modal" class="fixed inset-0 modal-overlay flex items-center justify-center hidden z-50">
+            <div class="modal-content max-w-md mx-4 p-6">
+                <div class="text-center mb-4">
+                    <div class="specimen-icon mx-auto mb-4" style="background: #e53e3e; color: white;">
+                        <i class="fas fa-exclamation"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Confirmar Exclusão</h3>
+                    <p class="mb-4 opacity-90" id="delete-modal-message">Tem certeza que deseja excluir este registro zooarqueológico?</p>
+                    <p class="text-sm mb-4 text-red-300 font-medium" id="delete-modal-warning"></p>
+                </div>
+                <div class="flex space-x-3 justify-center">
+                    <button id="confirm-delete" class="px-5 py-2 rounded-lg font-medium text-white bg-red-600 hover:bg-red-700 transition-colors">
+                        <i class="fas fa-trash mr-2"></i>
+                        Confirmar
+                    </button>
+                    <button id="cancel-delete" class="px-5 py-2 rounded-lg font-medium border border-primary-light text-primary-light hover:bg-primary-light hover:text-primary-dark transition-colors">
+                        <i class="fas fa-times mr-2"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área Principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Coluna de Achados -->
+            <div class="lg:col-span-2">
+                <div class="card-modern p-6 mb-6">
+                    <h2 class="text-2xl font-bold mb-2">
+                        <i class="fas fa-archive mr-2 icon-primary"></i>
+                        Registros Zooarqueológicos
+                    </h2>
+                    <p class="opacity-90 mb-4">Achados faunísticos documentados no sítio SP-04</p>
+                    
+                    <!-- Área de Achados -->
+                    <div id="zooarch-finds" class="space-y-6">
+                        <!-- Os achados e respostas serão carregados aqui -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna Lateral -->
+            <div class="space-y-6">
+                <!-- Formulário para Novo Achado -->
+           <!-- Formulário para Novo Achado -->
+<div class="card-modern p-6">
+    <h2 class="text-xl font-bold mb-4">
+        <i class="fas fa-plus-circle mr-2 icon-primary"></i>
+        Novo Registro
+    </h2>
+    
+    <div class="space-y-4">
+        <div>
+            <label class="block font-medium mb-2">Pesquisador Responsável</label>
+            <input type="text" id="researcher-name" 
+                   class="input-modern w-full p-3 rounded-lg"
+                   placeholder="Nome completo...">
+        </div>
+        
+        <div>
+            <label class="block font-medium mb-2">Tipo de Espécime</label>
+           <select id="find-type" class="input-modern w-full p-3 rounded-lg">
+    <option value="question">Pergunta</option>
+    <option value="theory">Teoria</option>
+    <option value="observation">Observação</option>
+    <option value="analysis">Análise</option>
+    <option value="insight">Insight</option>
+    <option value="discovery">Descoberta</option>
+</select>
+        </div>
+
+        <div>
+            <label class="block font-medium mb-2">Descrição do Achado</label>
+            <textarea id="find-description" 
+                      class="input-modern w-full p-3 rounded-lg h-32"
+                      placeholder="Descreva detalhadamente o espécime encontrado..."></textarea>
+        </div>
+
+        <div>
+            <label class="block font-medium mb-2">Profundidade do Estrato</label>
+            <input type="range" id="stratum-depth" min="1" max="10" value="3" 
+                   class="w-full h-2 rounded-lg appearance-none cursor-pointer"
+                   style="background: rgba(212, 184, 140, 0.3);">
+            <div class="flex justify-between text-sm font-medium mt-1 opacity-90">
+                <span>Superficial</span>
+                <span id="depth-value">Estrato 3</span>
+                <span>Profundo</span>
+            </div>
+        </div>
+
+        <button onclick="addNewFind()" 
+                class="btn-primary w-full font-medium py-3 px-6 rounded-lg mt-2">
+            <i class="fas fa-save mr-2"></i>
+            Registrar Achado
+        </button>
+    </div>
+</div>
+
+                <!-- Protocolo de Análise -->
+                <div class="card-modern p-6">
+                    <h3 class="text-lg font-bold mb-4">
+                        <i class="fas fa-clipboard-list mr-2 icon-primary"></i>
+                        Protocolo de Análise
+                    </h3>
+                    <div class="space-y-4 text-sm opacity-90">
+                        <div>
+                            <h4 class="font-medium mb-1">Métodos de Identificação</h4>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>Análise morfológica comparativa</li>
+                                <li>Datação por radiocarbono (C-14)</li>
+                                <li>Identificação de marcas de corte</li>
+                                <li>Determinação de idade por fusão epifisária</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="divider"></div>
+                        
+                        <div>
+                            <h4 class="font-medium mb-1">Legenda do Sistema</h4>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="badge-academic text-xs">Espécime</span>
+                                <span class="scientific-dating text-xs">Datação</span>
+                                <span class="badge-secondary text-xs">Análise</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questões de Pesquisa -->
+                <div class="analysis-questions">
+                    <h4 class="font-bold mb-2">
+                        <i class="fas fa-lightbulb mr-2 icon-primary"></i>
+                        Questões de Pesquisa
+                    </h4>
+                    <p class="text-sm opacity-90">Considere estas questões ao analisar os espécimes:</p>
+                    <ul class="text-sm opacity-90 mt-2 space-y-1 list-disc pl-5">
+                        <li>Que informações sobre dieta humana este achado revela?</li>
+                        <li>Como este achado contribui para a datação do sítio?</li>
+                        <li>Que evidências de processamento ou modificação humana são visíveis?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+<footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="ArqTalk">
+                <span>ArqTalk</span>
+            </div>
+            
+            <div class="footer-text">
+                <p>Equipe de robótica dedicada à inovação e excelência tecnológica</p>
+            </div>
+            
+            <div class="footer-author">
+                <i class="fas fa-robot robot-icon"></i>
+                <span>Robot Makers</span>
+            </div>
+            
+            <div class="footer-links">
+                <a href="/ArqTalk/conteudo/index.html" class="footer-link">Início</a>
+                <a href="/ArqTalk/conteudo/prelit.html" class="footer-link">Pré-literária</a>
+                <a href="/ArqTalk/conteudo/subaqua.html" class="footer-link">Subaquática</a>
+                <a href="/ArqTalk/conteudo/zoo.html" class="footer-link">Zooarqueologia</a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Banco de dados de achados zooarqueológicos
+        let zooarchData = JSON.parse(localStorage.getItem('zooarchData')) || {
+            finds: [],
+            responses: []
+        };
+
+        // Variáveis para controle de exclusão
+        let itemToDelete = null;
+        let deleteType = null;
+
+        // Inicializar o sistema
+        function initializeSystem() {
+            renderAllFinds();
+            updateDepthValue();
+            setupDeleteModal();
+            addSampleData();
+        }
+
+        // Configurar modal de exclusão
+        function setupDeleteModal() {
+            const confirmBtn = document.getElementById('confirm-delete');
+            const cancelBtn = document.getElementById('cancel-delete');
+            const modal = document.getElementById('delete-modal');
+
+            confirmBtn.addEventListener('click', executeDeletion);
+            cancelBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                itemToDelete = null;
+                deleteType = null;
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                    itemToDelete = null;
+                    deleteType = null;
+                }
+            });
+        }
+
+        // Atualizar valor da profundidade
+        function updateDepthValue() {
+            const depthSlider = document.getElementById('stratum-depth');
+            const depthValue = document.getElementById('depth-value');
+            depthSlider.addEventListener('input', function() {
+                depthValue.textContent = `Estrato ${this.value}`;
+            });
+        }
+
+        // Adicionar novo achado
+        function addNewFind() {
+            const name = document.getElementById('researcher-name').value.trim();
+            const text = document.getElementById('find-description').value.trim();
+            const type = document.getElementById('find-type').value;
+            const depth = parseInt(document.getElementById('stratum-depth').value);
+
+            if (!name || !text) {
+                alert('Por favor, preencha todos os campos obrigatórios para enviar.');
+                return;
+            }
+
+            const find = {
+                id: 'f' + Date.now(),
+                researcher: name,
+                text: text,
+                type: type,
+                depth: depth,
+                timestamp: new Date().toISOString(),
+                scientificDate: generateScientificDate(),
+                responseCount: 0
+            };
+
+            zooarchData.finds.unshift(find);
+            saveData();
+            renderAllFinds();
+            clearForm();
+            animateNewItem(find.id);
+        }
+
+        // Adicionar resposta a um achado
+        function addResponse(findId) {
+            const responseText = document.getElementById(`response-text-${findId}`).value.trim();
+            const name = document.getElementById(`responder-name-${findId}`)?.value.trim() || 'Pesquisador';
+
+            if (!responseText) {
+                alert('Por favor, escreva algo antes de enviar.');
+                return;
+            }
+
+            const response = {
+                id: 'r' + Date.now(),
+                findId: findId,
+                researcher: name,
+                text: responseText,
+                depth: Math.floor(Math.random() * 3) + 1,
+                timestamp: new Date().toISOString(),
+                scientificDate: generateScientificDate()
+            };
+
+            zooarchData.responses.push(response);
+            
+            const find = zooarchData.finds.find(f => f.id === findId);
+            if (find) {
+                find.responseCount = (find.responseCount || 0) + 1;
+            }
+
+            saveData();
+            renderAllFinds();
+            document.getElementById(`response-text-${findId}`).value = '';
+            hideResponseForm(findId);
+        }
+
+        // Solicitar exclusão de achado
+        function requestDeleteFind(findId) {
+            const find = zooarchData.finds.find(f => f.id === findId);
+            if (!find) return;
+
+            itemToDelete = findId;
+            deleteType = 'find';
+
+            const modal = document.getElementById('delete-modal');
+            const message = document.getElementById('delete-modal-message');
+            const warning = document.getElementById('delete-modal-warning');
+
+            message.textContent = `Tem certeza que deseja excluir?"${find.text.substring(0, 50)}${find.text.length > 50 ? '...' : ''}"?`;
+            
+            const responseCount = zooarchData.responses.filter(r => r.findId === findId).length;
+            if (responseCount > 0) {
+                warning.textContent = `Atenção: ${responseCount} análise(s) vinculada(s) também será(ão) excluída(s).`;
+            } else {
+                warning.textContent = '';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        // Solicitar exclusão de resposta
+        function requestDeleteResponse(responseId) {
+            const response = zooarchData.responses.find(r => r.id === responseId);
+            if (!response) return;
+
+            itemToDelete = responseId;
+            deleteType = 'response';
+
+            const modal = document.getElementById('delete-modal');
+            const message = document.getElementById('delete-modal-message');
+            const warning = document.getElementById('delete-modal-warning');
+
+            message.textContent = `Tem certeza que deseja excluir?"${response.text.substring(0, 50)}${response.text.length > 50 ? '...' : ''}"?`;
+            warning.textContent = '';
+
+            modal.classList.remove('hidden');
+        }
+
+        // Executar a exclusão
+        function executeDeletion() {
+            if (!itemToDelete || !deleteType) return;
+
+            if (deleteType === 'find') {
+                zooarchData.finds = zooarchData.finds.filter(f => f.id !== itemToDelete);
+                zooarchData.responses = zooarchData.responses.filter(r => r.findId !== itemToDelete);
+            } else if (deleteType === 'response') {
+                const response = zooarchData.responses.find(r => r.id === itemToDelete);
+                if (response) {
+                    const find = zooarchData.finds.find(f => f.id === response.findId);
+                    if (find && find.responseCount > 0) {
+                        find.responseCount--;
+                    }
+                }
+                zooarchData.responses = zooarchData.responses.filter(r => r.id !== itemToDelete);
+            }
+
+            saveData();
+            renderAllFinds();
+            document.getElementById('delete-modal').classList.add('hidden');
+            itemToDelete = null;
+            deleteType = null;
+        }
+
+        // Gerar datação científica
+        function generateScientificDate() {
+            const codes = ['C-14', 'TL', 'OSL', 'U-Series', 'AMS'];
+            const methods = codes[Math.floor(Math.random() * codes.length)];
+            const years = Math.floor(Math.random() * 10000) + 1000;
+            return `${methods}: ~${years} anos AP`;
+        }
+
+        // Renderizar todos os achados e respostas
+        function renderAllFinds() {
+            const container = document.getElementById('zooarch-finds');
+            container.innerHTML = '';
+
+            if (zooarchData.finds.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="text-5xl mb-4">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Nenhum comentário ou pergunta registrada</h3>
+                        <p>Utilize o formulário ao lado para registrar o primeiro achado ou pergunta zooarqueológica.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            zooarchData.finds.forEach(find => {
+                const findElement = createFindElement(find);
+                container.appendChild(findElement);
+
+                const responses = zooarchData.responses.filter(r => r.findId === find.id);
+                responses.forEach(response => {
+                    const responseElement = createResponseElement(response);
+                    container.appendChild(responseElement);
+                });
+            });
+        }
+
+        // Criar elemento de achado
+     // Criar elemento de achado
+
+
+
+        // Criar elemento de resposta
+        function createResponseElement(response) {
+            const div = document.createElement('div');
+            div.className = 'response-card fade-in p-4 mt-4';
+            div.id = response.id;
+
+            div.innerHTML = `
+                <div class="response-indicator" onclick="highlightThread('${response.findId}')">
+                    <i class="fas fa-link"></i>
+                </div>
+                <div class="flex items-start">
+                    <div class="mr-3 icon-primary">
+                        <i class="fas fa-comment-alt"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center justify-between mb-2">
+                            <div class="flex items-center flex-wrap gap-2">
+                                <span class="font-medium">${response.researcher}</span>
+                                <span class="badge-secondary">
+                                    <i class="fas fa-reply mr-1"></i>
+                                    Análise
+                                </span>
+                            </div>
+                            <div class="scientific-dating">${response.scientificDate}</div>
+                        </div>
+                        
+                        <p class="mb-2 opacity-90">${response.text}</p>
+                        
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="opacity-90">
+                                <i class="far fa-clock mr-1"></i>
+                                ${new Date(response.timestamp).toLocaleString('pt-BR')}
+                            </span>
+                            <button onclick="requestDeleteResponse('${response.id}')" 
+                                    class="text-red-300 hover:text-red-100 transition-colors">
+                                <i class="fas fa-trash mr-1"></i>
+                                Excluir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            return div;
+        }
+
+        // Mostrar formulário de resposta
+        function showResponseForm(findId) {
+            document.getElementById(`response-form-${findId}`).classList.remove('hidden');
+            document.getElementById(`response-text-${findId}`).focus();
+        }
+
+        // Ocultar formulário de resposta
+        function hideResponseForm(findId) {
+            document.getElementById(`response-form-${findId}`).classList.add('hidden');
+        }
+
+        // Animação para novo item
+        function animateNewItem(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Destaque de thread
+        function highlightThread(findId) {
+            document.querySelectorAll('.specimen-card, .response-card').forEach(el => {
+                el.style.boxShadow = '0 2px 12px rgba(0, 0, 0, 0.2)';
+            });
+
+            const find = document.getElementById(findId);
+            if (find) {
+                find.style.boxShadow = '0 0 0 2px var(--primary-light), 0 4px 20px rgba(0,0,0,0.3)';
+            }
+
+            zooarchData.responses
+                .filter(r => r.findId === findId)
+                .forEach(response => {
+                    const responseEl = document.getElementById(response.id);
+                    if (responseEl) {
+                        responseEl.style.boxShadow = '0 0 0 1px var(--primary-light), 0 2px 12px rgba(0,0,0,0.3)';
+                    }
+                });
+        }
+
+        // Função de análise científica
+        function analyzeFind(findId) {
+            const find = zooarchData.finds.find(f => f.id === findId);
+            if (find) {
+                const analysisQuestions = [
+                    "Que informações sobre dieta humana este achado revela?",
+                    "Como este achado contribui para a datação do sítio?",
+                    "Que evidências de processamento ou modificação humana são visíveis?",
+                    "Este achado sugere qual estação de ocupação do sítio?"
+                ];
+                
+                const randomQuestion = analysisQuestions[Math.floor(Math.random() * analysisQuestions.length)];
+                
+                // Criar um modal de análise
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 modal-overlay flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="modal-content max-w-2xl w-full mx-4 p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold">Análise Detalhada</h3>
+                            <button onclick="this.closest('.modal-overlay').remove()" class="icon-primary hover:opacity-70">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="mb-4 p-4 rounded-lg" style="background: rgba(212, 184, 140, 0.2); border: 1px solid var(--primary-light);">
+                            <p class="opacity-90">"${find.text}"</p>
+                            <div class="flex items-center mt-2 text-sm opacity-90">
+                                <span class="font-medium">${find.researcher}</span>
+                                <span class="mx-2">•</span>
+                                <span>${find.scientificDate}</span>
+                            </div>
+                        </div>
+                        <div class="analysis-questions mb-4">
+                            <h4 class="font-bold mb-2">Questão de Pesquisa</h4>
+                            <p class="opacity-90">${randomQuestion}</p>
+                        </div>
+                        <div class="flex justify-end">
+                            <button onclick="this.closest('.modal-overlay').remove()" class="btn-primary px-4 py-2 rounded">
+                                Fechar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+            }
+        }
+
+        // Salvar dados
+        function saveData() {
+            localStorage.setItem('zooarchData', JSON.stringify(zooarchData));
+        }
+
+        // Limpar formulário
+        function clearForm() {
+            document.getElementById('researcher-name').value = '';
+            document.getElementById('find-description').value = '';
+            document.getElementById('find-type').value = 'question';
+            document.getElementById('stratum-depth').value = 3;
+            updateDepthValue();
+        }
+
+        // Dados de exemplo
+      // Dados de exemplo
+function addSampleData() {
+    if (zooarchData.finds.length === 0) {
+        const sampleFinds = [
+            {
+                id: 'f1',
+                researcher: 'Dra. Ana Oliveira',
+                text: 'Mandíbula completa de Mazama gouazoubira (veado-catingueiro) com desgaste dentário avançado. Idade estimada: 6-8 anos. Marcas de corte no ramo mandibular sugerem processamento para consumo.',
+                type: 'analisys', // CORRIGIDO: era 'analysis'
+                depth: 3,
+                timestamp: new Date(Date.now() - 3600000).toISOString(),
+                scientificDate: 'C-14: ~3200 anos AP',
+                responseCount: 2
+            },
+            {
+                id: 'f2', 
+                researcher: 'Zooarqueólogo Carlos Santos',
+                text: 'Conjunto de valvas de Anomalocardia brasiliana (berbigão) com perfurações artificiais. Evidências de marisqueiro e possível uso como adornos corporais. Concentração sugere área específica de descarte.',
+                type: 'discovery', // CORRIGIDO: era 'discovery' 
+                depth: 5,
+                timestamp: new Date(Date.now() - 7200000).toISOString(),
+                scientificDate: 'C-14: ~2800 anos AP',
+                responseCount: 1
+            }
+        ];
+
+        // ... resto do código permanece igual
+    }
+}
+
+        // Inicializar o sistema quando a página carregar
+        document.addEventListener('DOMContentLoaded', initializeSystem);
+
+
+        // Criar elemento de achado
+
+function createFindElement(find) {
+    const div = document.createElement('div');
+    div.className = 'specimen-card fade-in p-5';
+    div.id = find.id;
+
+    const typeNames = {
+        'question': 'Pergunta',
+        'theory': 'Teoria',
+        'observation': 'Observação', 
+        'analysis': 'Análise',
+        'insight': 'Insight',
+        'discovery': 'Descoberta'
+    };
+
+    div.innerHTML = `
+        <div class="stratum-indicator">Profundidade  ${find.depth}cm</div>
+        <div class="flex items-start mb-4">
+            <div class="flex-1">
+                <div class="flex flex-wrap items-center justify-between mb-2">
+                    <div class="flex items-center flex-wrap gap-2">
+                        <span class="font-bold">${find.researcher}</span>
+                        <span class="badge-academic">${typeNames[find.type]}</span>
+                        ${find.responseCount > 0 ? `<span class="badge-secondary">${find.responseCount} análise(s)</span>` : ''}
+                    </div>
+                    <div class="scientific-dating">${find.scientificDate}</div>
+                </div>
+                
+                <p class="mb-4 leading-relaxed opacity-90">${find.text}</p>
+                
+                <div class="flex justify-between items-center text-sm">
+                    <span class="opacity-90">
+                        <i class="far fa-clock mr-1"></i>
+                        ${new Date(find.timestamp).toLocaleString('pt-BR')}
+                    </span>
+                    <div class="flex space-x-2">
+                        <button onclick="showResponseForm('${find.id}')" 
+                                class="btn-outline text-xs px-3 py-1 rounded">
+                            <i class="fas fa-reply mr-1"></i>
+                            Responder
+                        </button>
+                        <button onclick="analyzeFind('${find.id}')" 
+                                class="btn-outline text-xs px-3 py-1 rounded">
+                            <i class="fas fa-search mr-1"></i>
+                            Detalhes
+                        </button>
+                        <button onclick="requestDeleteFind('${find.id}')" 
+                                class="text-xs px-3 py-1 rounded text-red-300 border border-red-400 hover:bg-red-500 hover:text-white transition-colors">
+                            <i class="fas fa-trash mr-1"></i>
+                            Excluir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulário de Resposta -->
+        <div id="response-form-${find.id}" class="response-form mt-4 p-4 hidden">
+            <h4 class="font-bold mb-3">
+                <i class="fas fa-edit mr-1 icon-primary"></i>
+                Análise Científica
+            </h4>
+            <textarea id="response-text-${find.id}" 
+                      placeholder="Descreva sua análise científica ou resposta."
+                      class="input-modern w-full p-3 rounded mb-3 h-24"></textarea>
+            <input type="text" id="responder-name-${find.id} "
+                   placeholder="Seu nome
+                   class="input-modern w-full p-2 rounded mb-3">
+            <div class="flex space-x-2">
+                <button onclick="addResponse('${find.id}')" 
+                        class="btn-primary flex-1 py-2 rounded text-sm">
+                    <i class="fas fa-paper-plane mr-1"></i>
+                    Enviar Análise
+                </button>
+                <button onclick="hideResponseForm('${find.id}')" 
+                        class="px-4 py-2 rounded border border-primary-light text-primary-light hover:bg-primary-light hover:text-primary-dark transition-colors text-sm">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    `;
+
+    return div;
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009165249.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/ArqTalk/conteudo/style.css">
+    <title>Arqtalk-Pré-Literária</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Sistema de Autenticação e Permissões -->
+<script>
+// ⭐⭐ SISTEMA DE LOGIN - VERSÃO SIMPLIFICADA E CONFIÁVEL ⭐⭐
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔍 Iniciando verificação de login...');
+    
+    const userData = localStorage.getItem('arqtalk_user');
+    const loginBtn = document.getElementById('loginBtn');
+    const userProfile = document.getElementById('userProfile');
+    
+    // ⭐⭐ MÉTODO 1: Adicionar classe no body ⭐⭐
+    if (userData) {
+        console.log('✅ Usuário logado detectado');
+        document.body.classList.add('user-logged-in');
+        
+        const user = JSON.parse(userData);
+        updateUserProfile(user);
+        setupUserPermissions(user);
+        
+    } else {
+        console.log('❌ Usuário não logado');
+        document.body.classList.remove('user-logged-in');
+        setupGuestPermissions();
+    }
+    
+    // ⭐⭐ MÉTODO 2: Forçar manualmente (backup) ⭐⭐
+    forceVisibility(userData);
+});
+
+// ⭐⭐ ATUALIZAR PERFIL DO USUÁRIO ⭐⭐
+function updateUserProfile(user) {
+    const userName = document.getElementById('userName');
+    const userAvatar = document.getElementById('userAvatar');
+    
+    if (userName) userName.textContent = user.name || user.email.split('@')[0];
+    if (userAvatar) userAvatar.textContent = user.initials || 'US';
+    
+    // Configurar logout
+    const userProfile = document.getElementById('userProfile');
+    if (userProfile) {
+        userProfile.onclick = function() {
+            if (confirm('Deseja sair da sua conta?')) {
+                localStorage.removeItem('arqtalk_user');
+                location.reload();
+            }
+        };
+    }
+    
+    addProfessionBadge(user.profession);
+}
+
+// ⭐⭐ FORÇAR VISIBILIDADE MANUALMENTE (BACKUP) ⭐⭐
+function forceVisibility(userData) {
+    const loginBtn = document.getElementById('loginBtn');
+    const userProfile = document.getElementById('userProfile');
+    
+    if (userData) {
+        // Usuário LOGADO - mostra perfil, esconde login
+        if (loginBtn) {
+            loginBtn.style.display = 'none';
+            console.log('🔒 Login button hidden manually');
+        }
+        if (userProfile) {
+            userProfile.style.display = 'flex';
+            console.log('👤 User profile shown manually');
+        }
+    } else {
+        // Usuário NÃO LOGADO - mostra login, esconde perfil
+        if (loginBtn) {
+            loginBtn.style.display = 'flex';
+            console.log('🔓 Login button shown manually');
+        }
+        if (userProfile) {
+            userProfile.style.display = 'none';
+            console.log('👤 User profile hidden manually');
+        }
+    }
+}
+
+// ⭐⭐ CONFIGURAR PERMISSÕES ⭐⭐
+function setupUserPermissions(user) {
+    const commentTypeSelect = document.getElementById('comment-type');
+    const authorNameInput = document.getElementById('author-name');
+    
+    if (authorNameInput) {
+        authorNameInput.value = user.name || user.email.split('@')[0];
+        authorNameInput.readOnly = true;
+    }
+    
+    if (commentTypeSelect) {
+        const profession = user.profession?.toLowerCase() || '';
+        
+        if (profession.includes('arqueólogo') || profession.includes('arqueologo')) {
+            commentTypeSelect.innerHTML = `
+                <option value="question">❓ Pergunta</option>
+                <option value="theory">🧪 Teoria</option>
+                <option value="observation">🔍 Observação</option>
+                <option value="analysis">📊 Análise</option>
+                <option value="insight">💡 Insight</option>
+                <option value="discovery">🏺 Descoberta</option>
+            `;
+        } else {
+            commentTypeSelect.innerHTML = `
+                <option value="question">❓ Pergunta Geral</option>
+                <option value="question">🤔 Dúvida</option>
+                <option value="question">📚 Consulta</option>
+            `;
+        }
+    }
+}
+
+// ⭐⭐ BADGE DE PROFISSÃO ⭐⭐
+// ⭐⭐ BADGE DE PROFISSÃO - VERSÃO MELHORADA ⭐⭐
+function addProfessionBadge(profession) {
+    console.log('🎯 Criando badge para:', profession);
+    
+    // Remove badge existente
+    const existingBadge = document.getElementById('profession-badge');
+    if (existingBadge) {
+        existingBadge.remove();
+        console.log('🗑️ Badge anterior removido');
+    }
+    
+    const userProfile = document.getElementById('userProfile');
+    if (!userProfile) {
+        console.log('❌ userProfile não encontrado');
+        return;
+    }
+    
+    if (!profession) {
+        console.log('❌ Profissão não definida');
+        return;
+    }
+    
+    const badge = document.createElement('div');
+    badge.id = 'profession-badge';
+    
+    // Determinar tipo de badge
+    let badgeClass = 'badge-outros';
+    let badgeText = profession;
+    
+    const profLower = profession.toLowerCase();
+    
+    if (profLower.includes('arqueólogo') || profLower.includes('arqueologo')) {
+        badgeClass = 'badge-arqueologo';
+        badgeText = '🏺 Arqueólogo';
+        console.log('🔓 Badge: Arqueólogo');
+    } else if (profLower.includes('estudante')) {
+        badgeClass = 'badge-estudante';
+        badgeText = '🎓 Estudante';
+        console.log('🎓 Badge: Estudante');
+    } else {
+        console.log('👥 Badge: Outra profissão');
+    }
+    
+    badge.innerHTML = `
+        <span class="${badgeClass}">${badgeText}</span>
+    `;
+    
+    userProfile.appendChild(badge);
+    console.log('✅ Badge adicionado com sucesso');
+    
+    // ⭐⭐ VERIFICAÇÃO FINAL ⭐⭐
+    setTimeout(() => {
+        const checkBadge = document.getElementById('profession-badge');
+        console.log('🔍 Badge no DOM:', checkBadge ? '✅ Encontrado' : '❌ Não encontrado');
+        if (checkBadge) {
+            console.log('📋 Conteúdo do badge:', checkBadge.innerHTML);
+        }
+    }, 100);
+}
+
+
+// ⭐⭐ CONFIGURAÇÃO PARA VISITANTES ⭐⭐
+function setupGuestPermissions() {
+    const commentForm = document.querySelector('.modern-card.p-6');
+    if (commentForm) {
+        commentForm.innerHTML = `
+            <div class="text-center p-6">
+                <div class="text-4xl mb-4">🔐</div>
+                <h3 class="text-lg font-bold mb-2">Acesso Restrito</h3>
+                <p class="mb-4 opacity-80">Faça login para participar</p>
+                <a href="loginarq.html" class="btn-modern inline-flex items-center gap-2">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Fazer Login
+                </a>
+            </div>
+        `;
+    }
+}
+</script>
+    <style>
+        :root {
+            --primary-bronze: #b58647;
+            --primary-dark: #725227;
+            --bronze-light: #d4b88c;
+            --bronze-lighter: #f0e4d3;
+            --dark-medium: #8a6b3a;
+            --dark-light: #a38754;
+            --delete-red: #dc2626;
+            --delete-dark: #991b1b;
+            --site-background: #725227;
+            --content-background: #b58647;
+        }
+
+        body {
+            background: var(--site-background);
+            color: #f0e4d3;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .modern-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .modern-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .modern-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .comment-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-bronze);
+            transition: all 0.2s ease;
+        }
+
+        .comment-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(4px);
+        }
+
+        .reply-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-left: 3rem;
+            border-left: 3px solid var(--bronze-light);
+            position: relative;
+        }
+
+        .reply-card::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 1.5rem;
+            width: 1rem;
+            height: 2px;
+            background: var(--bronze-light);
+            opacity: 0.6;
+        }
+
+        .badge-modern {
+            background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-modern {
+            background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--bronze-lighter);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--delete-red), var(--delete-dark));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, var(--delete-dark), var(--delete-red));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .input-modern {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--bronze-lighter);
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-modern:focus {
+            outline: none;
+            border-color: var(--primary-bronze);
+            box-shadow: 0 0 0 3px rgba(181, 134, 71, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .input-modern::placeholder {
+            color: rgba(240, 228, 211, 0.6);
+        }
+
+        select.input-modern {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23f0e4d3' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .depth-indicator {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark-medium));
+            color: var(--bronze-lighter);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .timestamp {
+            color: rgba(240, 228, 211, 0.7);
+            font-size: 0.8rem;
+        }
+
+        .carbon-dating {
+            font-family: 'Courier New', monospace;
+            background: rgba(90, 65, 32, 0.8);
+            color: #f0e4d3;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            border: 1px solid var(--primary-dark);
+        }
+
+        /* Badges de Profissão */
+/* 🔧 CORREÇÃO DO PERFIL DO USUÁRIO */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    border: 1px solid rgba(181, 134, 71, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 40px;
+    margin: 0;
+}
+
+.user-profile:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Avatar alinhado corretamente */
+.avatar-with-initials {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.7rem;
+    border: 2px solid var(--bronze-light);
+    flex-shrink: 0;
+}
+
+/* ⭐⭐ CORREÇÃO SIMPLES E EFETIVA ⭐⭐ */
+#userProfile {
+    display: none !important;
+}
+
+#loginBtn {
+    display: flex !important;
+}
+
+/* Quando o usuário estiver logado, inverte via JavaScript */
+.user-logged-in #userProfile {
+    display: flex !important;
+}
+
+.user-logged-in #loginBtn {
+    display: none !important;
+}
+
+/* Espaçamento consistente */
+.menu > * {
+    flex-shrink: 0;
+}
+/* Nome do usuário em linha única */
+.user-name {
+    color: var(--bronze-lighter);
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Seta alinhada */
+.user-profile .fa-chevron-down {
+    font-size: 0.8rem;
+    color: var(--bronze-light);
+    flex-shrink: 0;
+}
+
+/* 🔧 BADGE DE PROFISSÃO CENTRALIZADA */
+#profession-badge {
+    display: flex;
+    align-items: center;
+    margin-left: 4px;
+}
+
+#profession-badge span {
+    background: var(--primary-bronze);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Badge específica para estudantes */
+#profession-badge span.student-badge {
+    background: #4f7db0;
+}
+
+/* Badge específica para outras profissões */
+#profession-badge span.other-badge {
+    background: #666;
+}
+
+/* 🔧 BOTÃO DE LOGIN CORRIGIDO */
+.login-btn-nav {
+    background: linear-gradient(135deg, var(--primary-bronze), var(--dark-medium));
+    color: white !important;
+    padding: 8px 20px !important;
+    border-radius: 25px !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid transparent !important;
+    font-size: 14px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+
+.login-btn-nav:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(181, 134, 71, 0.4);
+    background: linear-gradient(135deg, var(--dark-medium), var(--primary-bronze)) !important;
+}
+
+/* Mensagem de Permissão */
+.permission-message {
+    background: rgba(181, 134, 71, 0.1);
+    border-left: 4px solid var(--primary-bronze);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--bronze-lighter), var(--bronze-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(240, 228, 211, 0.7);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Modal de confirmação */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--primary-dark), var(--dark-medium));
+            border-radius: 16px;
+            border: 2px solid var(--primary-bronze);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            padding: 2rem;
+            max-width: 90%;
+            width: 400px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Correção para o range input */
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--bronze-light), var(--primary-bronze), var(--primary-dark));
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-bronze);
+            cursor: pointer;
+            border: 2px solid var(--bronze-lighter);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-bronze);
+            cursor: pointer;
+            border: 2px solid var(--bronze-lighter);
+        }
+
+    
+       
+
+        
+
+        
+
+        .social-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .social-float a {
+            display: block;
+            margin-bottom: 10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .social-float a:hover {
+            transform: scale(1.1);
+        }
+
+        .social-float img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--bronze-lighter);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .footer-logo img {
+            height: 70px;
+            width: 70px;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--bronze-light);
+            font-size: 1rem;
+        }
+
+        .footer-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--bronze-lighter);
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            border: 1px solid rgba(181, 134, 71, 0.3);
+        }
+
+        .robot-icon {
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-link {
+            color: var(--bronze-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .footer-link:hover {
+            color: var(--bronze-lighter);
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+    <div class="logo">
+        <h1 style="color: #725227;">ArqTalk</h1>
+        <img class="logo" src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="">
+        <h1>ArqTalk</h1>
+    </div>
+    <div class="menu">
+        <a href="teste.html">Início</a>
+        <a href="subaqua.html">Subaquática</a>
+        <a href="zoo.html">Zooarqueologia</a>
+        <a href="equipe.html">Sobre Nós</a>
+        
+        <!-- BOTÃO DE LOGIN -->
+        <a href="loginarq.html" class="login-btn-nav" id="loginBtn" style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-sign-in-alt"></i>
+            Entrar
+        </a>
+        
+        <!-- PERFIL DO USUÁRIO -->
+        <div class="user-profile" id="userProfile" style="display: none; cursor: pointer;">
+            <div class="profile-info">
+                <div class="avatar-with-initials" id="userAvatar">
+                    <!-- Iniciais aqui -->
+                </div>
+                <span class="user-name" id="userName">Usuário</span>
+                <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--bronze-light);"></i>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <div class="head-pre">
+        <h1>Pré-literária</h1>
+    </div>
+
+    <div class="social-float">
+        <a href="https://wa.me/5547999999999" target="_blank" class="whatsapp-floa">
+            <img src="/ArqTalk/images/circle-whatsapp-logotype-icon-social-media-app-network-application-popular-editorial-brand-vector-il-removebg-preview-fotor-20250308162320.png" alt="WhatsApp">
+        </a>
+        <a href="https://www.instagram.com/robotmakerspvs?igsh=Y29kY3R5ODhuODNr" target="_blank" class="instagram-floa">
+            <img src="/ArqTalk/images/instagram-icon-free-png (1).webp" alt="Instagram">
+        </a>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="delete-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="text-center mb-4">
+                <div class="text-4xl mb-4">🗑️</div>
+                <h3 class="text-xl font-bold mb-2">Confirmar Exclusão</h3>
+                <p class="mb-4 opacity-90" id="delete-modal-message">Tem certeza que deseja excluir esta contribuição?</p>
+                <p class="text-sm mb-4 text-red-300 font-medium" id="delete-modal-warning"></p>
+            </div>
+            <div class="flex space-x-3 justify-center">
+                <button id="confirm-delete" class="btn-danger px-5 py-2 rounded-lg font-medium">
+                    <i class="fas fa-trash mr-2"></i>
+                    Sim, Excluir
+                </button>
+                <button id="cancel-delete" class="btn-secondary px-5 py-2 rounded-lg font-medium">
+                    <i class="fas fa-times mr-2"></i>
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modern-container">
+        <!-- Cabeçalho da Seção de Comentários -->
+        <div class="text-center mb-12">
+            <h2 class="section-title">Escavações Pré-Literárias</h2>
+            <p class="text-lg opacity-80">Compartilhe descobertas e insights sobre culturas pré-escrita</p>
+        </div>
+
+        <!-- Área Principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Coluna de Comentários -->
+            <div class="lg:col-span-3">
+                <div class="modern-card p-6 mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold">
+                            <i class="fas fa-comments mr-2" style="color: var(--primary-bronze);"></i>
+                            Descobertas Recentes
+                        </h3>
+                        <div class="flex items-center gap-4">
+                            <span class="depth-indicator">
+                                <i class="fas fa-layer-group mr-1"></i>
+                                <span id="total-comments">0</span> contribuições
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Área de Comentários -->
+                    <div id="comments-container" class="space-y-6">
+                        <!-- Comentários serão carregados aqui -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar - Novo Comentário -->
+            <div class="space-y-6">
+                <!-- Formulário -->
+                <div class="modern-card p-6">
+                    <h3 class="text-lg font-bold mb-4">
+                        <i class="fas fa-plus-circle mr-2" style="color: var(--primary-bronze);"></i>
+                        Nova Escavação
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block font-medium mb-2">Nome do Arqueólogo</label>
+                            <input type="text" id="author-name" 
+                                   class="input-modern"
+                                   placeholder="Seu nome...">
+                        </div>
+                        
+                        <div>
+                            <label class="block font-medium mb-2">Tipo de Achado</label>
+                            <select id="comment-type" class="input-modern">
+                                <option value="question">❓ Pergunta de Escavação</option>
+                                <option value="theory">🧪 Teoria Arqueológica</option>
+                                <option value="observation">🔍 Observação de Campo</option>
+                                <option value="analysis">📊 Análise Estratigráfica</option>
+                                <option value="insight">💡 Insight Pré-Literário</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-medium mb-2">Descoberta</label>
+                            <textarea id="comment-text" 
+                                      class="input-modern h-32"
+                                      placeholder="Descreva sua descoberta pré-literária..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block font-medium mb-2">Profundidade</label>
+                            <input type="range" id="comment-depth" min="1" max="10" value="3" 
+                                   class="w-full">
+                            <div class="flex justify-between text-sm font-medium mt-1 opacity-80">
+                                <span>Superficial</span>
+                                <span id="depth-value">Camada 3</span>
+                                <span>Profunda</span>
+                            </div>
+                        </div>
+
+                        <button onclick="addNewComment()" 
+                                class="btn-modern w-full font-semibold py-3">
+                            <i class="fas fa-shovel mr-2"></i>
+                            Registrar Descoberta
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Informações -->
+                <div class="modern-card p-6">
+                    <h3 class="text-lg font-bold mb-4">
+                        <i class="fas fa-info-circle mr-2" style="color: var(--primary-bronze);"></i>
+                        Sobre Esta Zona
+                    </h3>
+                    <div class="space-y-3 text-sm opacity-80">
+                        <p>Esta é uma zona de discussão colaborativa para arqueologia pré-literária.</p>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="badge-modern text-xs">❓ Pergunta</span>
+                            <span class="badge-modern text-xs">🔍 Descoberta</span>
+                            <span class="badge-modern text-xs">📊 Análise</span>
+                            <span class="btn-danger text-xs px-2 py-1 rounded">🗑️ Excluir</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/ArqTalk/images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="ArqTalk">
+                <span>ArqTalk</span>
+            </div>
+            
+            <div class="footer-text">
+                <p>Equipe de robótica dedicada à inovação e excelência tecnológica</p>
+            </div>
+            
+            <div class="footer-author">
+                <i class="fas fa-robot robot-icon"></i>
+                <span>Robot Makers</span>
+            </div>
+            
+            <div class="footer-links">
+                <a href="/ArqTalk/conteudo/index.html" class="footer-link">Início</a>
+                <a href="/ArqTalk/conteudo/prelit.html" class="footer-link">Pré-literária</a>
+                <a href="/ArqTalk/conteudo/subaqua.html" class="footer-link">Subaquática</a>
+                <a href="/ArqTalk/conteudo/zoo.html" class="footer-link">Zooarqueologia</a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Banco de dados
+        let commentsData = JSON.parse(localStorage.getItem('preliteraryComments')) || {
+            comments: [],
+            replies: []
+        };
+
+        // Variáveis para controle de exclusão
+        let itemToDelete = null;
+        let deleteType = null;
+
+        // Inicializar
+        function initializeComments() {
+            renderAllComments();
+            updateDepthValue();
+            setupDeleteModal();
+            addSampleData();
+            updateCommentCount();
+        }
+
+        // Configurar modal de exclusão
+        function setupDeleteModal() {
+            const confirmBtn = document.getElementById('confirm-delete');
+            const cancelBtn = document.getElementById('cancel-delete');
+            const modal = document.getElementById('delete-modal');
+
+            confirmBtn.addEventListener('click', executeDeletion);
+            cancelBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                itemToDelete = null;
+                deleteType = null;
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                    itemToDelete = null;
+                    deleteType = null;
+                }
+            });
+        }
+
+        // Atualizar valor da profundidade
+        function updateDepthValue() {
+            const depthSlider = document.getElementById('comment-depth');
+            const depthValue = document.getElementById('depth-value');
+            
+            if (depthSlider && depthValue) {
+                depthSlider.addEventListener('input', function() {
+                    depthValue.textContent = `Camada ${this.value}`;
+                });
+            }
+        }
+
+        // Adicionar novo comentário
+    // ⭐⭐ FUNÇÃO ATUALIZADA COM VERIFICAÇÃO DE PERMISSÕES ⭐⭐
+function addNewComment() {
+    const userData = localStorage.getItem('arqtalk_user');
+    if (!userData) {
+        alert('❌ Você precisa estar logado para contribuir.');
+        window.location.href = 'loginarq.html';
+        return;
+    }
+    
+    const user = JSON.parse(userData);
+    const author = document.getElementById('author-name').value.trim();
+    const text = document.getElementById('comment-text').value.trim();
+    const type = document.getElementById('comment-type').value;
+    const depth = parseInt(document.getElementById('comment-depth').value);
+
+    if (!author || !text) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+
+    // ⭐⭐ VERIFICAÇÃO DE PERMISSÃO POR PROFISSÃO ⭐⭐
+    const userProfession = user.profession?.toLowerCase() || '';
+    
+    // Estudantes e outras profissões só podem fazer perguntas
+    if (!userProfession.includes('arqueólogo') && !userProfession.includes('arqueologo')) {
+        if (type !== 'question') {
+            alert('❌ Sua profissão permite apenas fazer perguntas. Por favor, selecione um tipo de pergunta.');
+            return;
+        }
+    }
+
+    const comment = {
+        id: 'c' + Date.now(),
+        author: author,
+        profession: user.profession || 'Não informada', // ⭐⭐ SALVA A PROFISSÃO ⭐⭐
+        text: text,
+        type: type,
+        depth: depth,
+        timestamp: new Date().toISOString(),
+        carbonDate: generateCarbonDate(),
+        replyCount: 0
+    };
+
+    commentsData.comments.unshift(comment);
+    saveData();
+    renderAllComments();
+    clearForm();
+    animateNewItem(comment.id);
+    updateCommentCount();
+}
+        // Adicionar resposta
+        function addReply(commentId) {
+            const replyText = document.getElementById(`reply-text-${commentId}`).value.trim();
+            const author = document.getElementById(`reply-author-${commentId}`)?.value.trim() || 'Anônimo';
+
+            if (!replyText) {
+                alert('Por favor, escreva sua resposta.');
+                return;
+            }
+
+            const reply = {
+                id: 'r' + Date.now(),
+                commentId: commentId,
+                author: author,
+                text: replyText,
+                timestamp: new Date().toISOString(),
+                carbonDate: generateCarbonDate()
+            };
+
+            commentsData.replies.push(reply);
+            
+            const comment = commentsData.comments.find(c => c.id === commentId);
+            if (comment) {
+                comment.replyCount = (comment.replyCount || 0) + 1;
+            }
+
+            saveData();
+            renderAllComments();
+            document.getElementById(`reply-text-${commentId}`).value = '';
+            hideReplyForm(commentId);
+            updateCommentCount();
+        }
+
+        // Solicitar exclusão de comentário
+        function requestDeleteComment(commentId) {
+            const comment = commentsData.comments.find(c => c.id === commentId);
+            if (!comment) return;
+
+            itemToDelete = commentId;
+            deleteType = 'comment';
+
+            const modal = document.getElementById('delete-modal');
+            const message = document.getElementById('delete-modal-message');
+            const warning = document.getElementById('delete-modal-warning');
+
+            message.textContent = `Tem certeza que deseja excluir a contribuição "${comment.text.substring(0, 50)}${comment.text.length > 50 ? '...' : ''}"?`;
+            
+            const replyCount = commentsData.replies.filter(r => r.commentId === commentId).length;
+            if (replyCount > 0) {
+                warning.textContent = `Atenção: ${replyCount} resposta(s) vinculada(s) também será(ão) excluída(s).`;
+            } else {
+                warning.textContent = '';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        // Solicitar exclusão de resposta
+        function requestDeleteReply(replyId) {
+            const reply = commentsData.replies.find(r => r.id === replyId);
+            if (!reply) return;
+
+            itemToDelete = replyId;
+            deleteType = 'reply';
+
+            const modal = document.getElementById('delete-modal');
+            const message = document.getElementById('delete-modal-message');
+            const warning = document.getElementById('delete-modal-warning');
+
+            message.textContent = `Tem certeza que deseja excluir a resposta "${reply.text.substring(0, 50)}${reply.text.length > 50 ? '...' : ''}"?`;
+            warning.textContent = '';
+
+            modal.classList.remove('hidden');
+        }
+
+        // Executar a exclusão
+        function executeDeletion() {
+            if (!itemToDelete || !deleteType) return;
+
+            if (deleteType === 'comment') {
+                commentsData.comments = commentsData.comments.filter(c => c.id !== itemToDelete);
+                commentsData.replies = commentsData.replies.filter(r => r.commentId !== itemToDelete);
+            } else if (deleteType === 'reply') {
+                const reply = commentsData.replies.find(r => r.id === itemToDelete);
+                if (reply) {
+                    const comment = commentsData.comments.find(c => c.id === reply.commentId);
+                    if (comment && comment.replyCount > 0) {
+                        comment.replyCount--;
+                    }
+                }
+                commentsData.replies = commentsData.replies.filter(r => r.id !== itemToDelete);
+            }
+
+            saveData();
+            renderAllComments();
+            document.getElementById('delete-modal').classList.add('hidden');
+            itemToDelete = null;
+            deleteType = null;
+            updateCommentCount();
+        }
+
+        // Gerar datação por carbono
+        function generateCarbonDate() {
+            const years = Math.floor(Math.random() * 500) + 100;
+            return `C-14: ~${years} anos BP`;
+        }
+
+        // Renderizar todos os comentários
+        function renderAllComments() {
+            const container = document.getElementById('comments-container');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (commentsData.comments.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comment-slash"></i>
+                        <h3 class="text-xl font-bold mb-2">Nenhuma Descoberta</h3>
+                        <p>Seja o primeiro a compartilhar uma descoberta!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            commentsData.comments.forEach(comment => {
+                const commentElement = createCommentElement(comment);
+                container.appendChild(commentElement);
+
+                const replies = commentsData.replies.filter(r => r.commentId === comment.id);
+                replies.forEach(reply => {
+                    const replyElement = createReplyElement(reply);
+                    container.appendChild(replyElement);
+                });
+            });
+        }
+
+        // Criar elemento de comentário
+        function createCommentElement(comment) {
+            const div = document.createElement('div');
+            div.className = 'comment-card fade-in p-5';
+            div.id = comment.id;
+
+            const typeIcons = {
+                'question': '❓',
+                'theory': '🧪',
+                'observation': '🔍',
+                'analysis': '📊',
+                'insight': '💡'
+            };
+
+            const typeLabels = {
+                'question': 'Pergunta',
+                'theory': 'Teoria',
+                'observation': 'Observação',
+                'analysis': 'Análise',
+                'insight': 'Insight'
+            };
+
+            div.innerHTML = `
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <div class="depth-indicator">${comment.depth}m</div>
+                        <span class="font-semibold">${comment.author}</span>
+                        <span class="badge-modern">${typeIcons[comment.type]} ${typeLabels[comment.type]}</span>
+                    </div>
+                    <div class="carbon-dating">${comment.carbonDate}</div>
+                </div>
+                
+                <p class="mb-4 opacity-90 leading-relaxed">${comment.text}</p>
+                
+                <div class="flex justify-between items-center flex-wrap gap-2">
+                    <div class="flex items-center gap-2">
+                        <button onclick="showReplyForm('${comment.id}')" 
+                                class="btn-secondary text-sm px-3 py-1">
+                            <i class="fas fa-reply mr-1"></i>
+                            Responder
+                        </button>
+                        ${comment.replyCount > 0 ? `
+                            <span class="text-sm opacity-70">
+                                <i class="fas fa-comments mr-1"></i>
+                                ${comment.replyCount} resposta(s)
+                            </span>
+                        ` : ''}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="analyzeComment('${comment.id}')" 
+                                class="btn-secondary text-sm px-3 py-1">
+                            <i class="fas fa-search mr-1"></i>
+                            Analisar
+                        </button>
+                        <button onclick="requestDeleteComment('${comment.id}')" 
+                                class="btn-danger text-sm px-3 py-1">
+                            <i class="fas fa-trash mr-1"></i>
+                            Excluir
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulário de Resposta -->
+                <div id="reply-form-${comment.id}" class="mt-4 hidden">
+                    <div class="reply-card p-4">
+                        <h4 class="font-semibold mb-3">
+                            <i class="fas fa-reply mr-1"></i>
+                            Sua Resposta
+                        </h4>
+                        <textarea id="reply-text-${comment.id}" 
+                                  placeholder="Escreva sua resposta..."
+                                  class="input-modern w-full mb-3 h-20"></textarea>
+                        <input type="text" id="reply-author-${comment.id}"
+                               placeholder="Seu nome (opcional)"
+                               class="input-modern w-full mb-3">
+                        <div class="flex gap-2">
+                            <button onclick="addReply('${comment.id}')" 
+                                    class="btn-modern flex-1 text-sm py-2">
+                                <i class="fas fa-paper-plane mr-1"></i>
+                                Enviar
+                            </button>
+                            <button onclick="hideReplyForm('${comment.id}')" 
+                                    class="btn-secondary text-sm px-4 py-2">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            return div;
+        }
+
+        // Criar elemento de resposta
+        function createReplyElement(reply) {
+            const div = document.createElement('div');
+            div.className = 'reply-card fade-in p-4';
+            div.id = reply.id;
+
+            div.innerHTML = `
+                <div class="flex items-start justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-sm">${reply.author}</span>
+                        <span class="badge-modern text-xs">
+                            <i class="fas fa-reply mr-1"></i>
+                            Resposta
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="carbon-dating text-xs">
+                            ${reply.carbonDate}
+                        </div>
+                        <button onclick="requestDeleteReply('${reply.id}')" 
+                                class="btn-danger text-xs px-2 py-1 ml-2">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <p class="opacity-90 text-sm">${reply.text}</p>
+            `;
+
+            return div;
+        }
+
+        // Mostrar formulário de resposta
+        function showReplyForm(commentId) {
+            const form = document.getElementById(`reply-form-${commentId}`);
+            if (form) {
+                form.classList.remove('hidden');
+                const textarea = document.getElementById(`reply-text-${commentId}`);
+                if (textarea) textarea.focus();
+            }
+        }
+
+        // Ocultar formulário de resposta
+        function hideReplyForm(commentId) {
+            const form = document.getElementById(`reply-form-${commentId}`);
+            if (form) {
+                form.classList.add('hidden');
+            }
+        }
+
+        // Animação para novo item
+        function animateNewItem(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Análise de comentário
+        function analyzeComment(commentId) {
+            const comment = commentsData.comments.find(c => c.id === commentId);
+            if (comment) {
+                const questions = [
+                    "Esta descoberta levanta questões sobre quais contextos históricos?",
+                    "Como outras evidências pré-literárias corroboram esta observação?",
+                    "Que métodos de datação seriam apropriados para esta descoberta?",
+                    "Esta observação sugere novas áreas de escavação?"
+                ];
+                
+                const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+                
+                const modal = document.createElement('div');
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold">Análise Detalhada</h3>
+                            <button onclick="this.closest('.modal-overlay').remove()" class="text-xl opacity-70 hover:opacity-100">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="mb-4 p-4 rounded-lg" style="background: rgba(255,255,255,0.05);">
+                            <p class="opacity-90">"${comment.text}"</p>
+                            <div class="flex items-center mt-2 text-sm opacity-70">
+                                <span class="font-medium">${comment.author}</span>
+                                <span class="mx-2">•</span>
+                                <span>${new Date(comment.timestamp).toLocaleDateString('pt-BR')}</span>
+                            </div>
+                        </div>
+                        <div class="p-4 rounded-lg" style="background: rgba(181, 134, 71, 0.1); border-left: 4px solid var(--primary-bronze);">
+                            <h4 class="font-bold mb-2">Questão de Investigação</h4>
+                            <p class="opacity-90">${randomQuestion}</p>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button onclick="this.closest('.modal-overlay').remove()" class="btn-modern px-4 py-2">
+                                Fechar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+            }
+        }
+
+        // Atualizar contador
+        function updateCommentCount() {
+            const total = commentsData.comments.length + commentsData.replies.length;
+            const counter = document.getElementById('total-comments');
+            if (counter) {
+                counter.textContent = total;
+            }
+        }
+
+        // Salvar dados
+        function saveData() {
+            localStorage.setItem('preliteraryComments', JSON.stringify(commentsData));
+        }
+
+        // Limpar formulário
+        function clearForm() {
+            const authorInput = document.getElementById('author-name');
+            const textInput = document.getElementById('comment-text');
+            const typeSelect = document.getElementById('comment-type');
+            const depthInput = document.getElementById('comment-depth');
+
+            if (authorInput) authorInput.value = '';
+            if (textInput) textInput.value = '';
+            if (typeSelect) typeSelect.value = 'question';
+            if (depthInput) depthInput.value = 3;
+            
+            updateDepthValue();
+        }
+
+        // Dados de exemplo
+        function addSampleData() {
+            if (commentsData.comments.length === 0) {
+                const sampleComments = [
+                    {
+                        id: 'c1',
+                        author: 'Dra. Elena Petroglifo',
+                        text: 'Recente análise de pinturas rupestres no sítio X revela padrões repetitivos que podem representar calendários lunares primitivos. Alguém já observou padrões similares?',
+                        type: 'observation',
+                        depth: 7,
+                        timestamp: new Date(Date.now() - 3600000).toISOString(),
+                        carbonDate: 'C-14: ~3200 anos BP',
+                        replyCount: 2
+                    },
+                    {
+                        id: 'c2', 
+                        author: 'Prof. Marco Silex',
+                        text: 'Qual a opinião da comunidade sobre a relação entre ferramentas líticas e desenvolvimento de linguagem simbólica em sociedades pré-literárias?',
+                        type: 'question',
+                        depth: 5,
+                        timestamp: new Date(Date.now() - 7200000).toISOString(),
+                        carbonDate: 'C-14: ~2800 anos BP',
+                        replyCount: 1
+                    }
+                ];
+
+                const sampleReplies = [
+                    {
+                        id: 'r1',
+                        commentId: 'c1',
+                        author: 'Arq. Lúcia Ossos',
+                        text: 'Excelente observação! No sítio Y encontramos padrões similares que parecem correlacionar-se com ciclos sazonais de caça.',
+                        timestamp: new Date(Date.now() - 1800000).toISOString(),
+                        carbonDate: 'C-14: ~150 anos BP'
+                    },
+                    {
+                        id: 'r2',
+                        commentId: 'c1', 
+                        author: 'Dr. Pedro Cerâmica',
+                        text: 'Concordo com a hipótese calendárica. Nos meus estudos no Nordeste, observei que esses padrões frequentemente coincidem com eventos astronômicos importantes.',
+                        timestamp: new Date(Date.now() - 900000).toISOString(),
+                        carbonDate: 'C-14: ~120 anos BP'
+                    }
+                ];
+
+                commentsData.comments = sampleComments;
+                commentsData.replies = sampleReplies;
+                saveData();
+                renderAllComments();
+                updateCommentCount();
+            }
+        }
+
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', initializeComments);
+    </script>
+</body>
+</html>

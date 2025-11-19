@@ -1,0 +1,377 @@
+    *{
+         margin: 0;
+  padding: 0;
+    box-sizing: border-box;
+}
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap');
+
+body {
+    margin:0;
+    padding: 0;   
+    font-family: 'Roboto', sans-serif;
+    background-color: #b58647;
+}
+
+
+
+
+    
+  .navbar {
+    background-color: #725227;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100px;
+    width: 100%;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    width: 90px;
+    height: 90px;
+    background-color: #725227;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo h1 {
+    font-family: "Playfair Display", serif;
+    font-size: 35px;
+    color: white;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    text-align: center;
+}
+
+
+.menu {
+    display: flex;
+    gap: 20px;
+    font-family: "Playfair Display", serif;
+    color: white;
+    align-items: center;
+}
+
+.menu a {
+    background: var(--card-bg);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 1.2em 1em 1em 1.2em;
+      transition: background 0.22s, box-shadow 0.22s, border-color 0.22s;
+      
+      justify-content: space-between;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    padding: 10px 16px;
+    text-decoration: none;
+      font-weight: 600;
+    
+}
+
+.menu a:hover {
+    border-radius: 15%;
+    background-color: #593e1b;
+    border: 2px solid white;
+    color: white;
+      background: var(--card-hover);
+      box-shadow: 0 6px 24px white;
+      border-color: white;
+          transform: translateY(-2px);
+            animation-delay: 0.8s;
+}
+
+.header-com-imagem {
+    background-image: url(/Arqtalk/images/arqueologia_subaquatica_no_egito_01\ \(1\).jpg);
+    background-size: cover; /* ou contain */
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 560px; /* altura mínima importante */
+     text-align: center;
+    font-family: "League Spartan", serif;
+    color: white;
+    letter-spacing: 2px;
+    font-size: 80px;
+    margin-top: 0;
+}
+.header-com-imagemzoo {
+    background-image: url(/Arqtalk/images/estilo-de-vida-periodo-neolitico\ \(1\).jpg);
+    background-size: cover; /* ou contain */
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 560px; /* altura mínima importante */
+     text-align: center;
+    font-family: "League Spartan", serif;
+    color: white;
+    letter-spacing: 2px;
+    font-size: 80px;
+    margin-top: 0;
+}
+.social-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+}
+.whatsapp-floa img {
+      width: 50px;
+    height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 100%; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease; 
+}
+
+.instagram-floa img {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 100%; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease; 
+}
+
+.whatsapp-floa img:hover {
+    transform: scale(1.1);
+}
+.instagram-floa img:hover {
+    transform: scale(1.1);
+}
+ h1 {
+     font-family: "Playfair Display", serif;
+ }
+ .h1in {
+    text-align: center;
+    color: black;
+    font-size: xx-large;
+ }
+ .pinicio{
+    text-align: center;
+    font-size: larger;
+
+}
+.obj-00{
+    border: 8px double black;
+    border-radius: 4%;
+    width: 90%;
+    height: 300px;
+    margin-top: 45px;
+    margin-left: 5%;
+    padding: auto;
+    background-color: #b58647;
+}
+
+.head-pre{
+    background-size: cover;
+    background-image: url(/Arqtalk/images/grianghraf-_H2cNuFnWDY-unsplash\ \(1\).jpg);
+    height: 550px;
+    width: 100%;
+    text-align: center;
+    font-family: "League Spartan", serif;
+    color: white;
+    letter-spacing: 2px;
+    margin-top: 0;
+}
+
+        /* Base Styles */
+       
+        .head-equipe{
+              background-size: cover;
+    background-image: url(/Arqtalk/images/equipe/Anotação\ 2025-02-20\ 171228\ \(1\)\ \(1\).png);
+    height: 550px;
+    width: 100%;
+    text-align: center;
+    font-family: "League Spartan", serif;
+    color: white;
+    letter-spacing: 2px;
+    font-size: 190px;
+    margin-top: 0;
+    
+        }
+       hr {
+  height: 2px; 
+  background-color: #725227; 
+  border: none; 
+}
+/* ESTILO PARA OS TÍTULOS DAS PÁGINAS */
+.head h1 {
+    text-align: center;
+    width: 100%;
+    opacity: 0.85; /* Transparência */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Sombra para melhor legibilidade */
+    margin: 0 auto;
+    padding-top: 150px; /* Ajuste conforme necessário */
+    font-family: "League Spartan", serif;
+    color: white;
+    letter-spacing: 2px;
+    font-size: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Para responsividade */
+@media (max-width: 768px) {
+    .head h1 {
+        font-size: 50px;
+        padding-top: 100px;
+        opacity: 0.9; /* Menos transparente em mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .head h1 {
+        font-size: 36px;
+        padding-top: 80px;
+        opacity: 0.95; /* Quase sólido em telas muito pequenas */
+    }
+}
+/* ESTILO PARA OS TÍTULOS DAS PÁGINAS */
+.head-equipe h1 {
+    text-align: center;
+    width: 100%;
+    opacity: 0.85; /* Transparência */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Sombra para melhor legibilidade */
+    margin: 0 auto;
+    padding-top: 150px; /* Ajuste conforme necessário */
+    font-family: "League Spartan", serif;
+    color: white;
+    letter-spacing: 2px;
+    font-size: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Para responsividade */
+@media (max-width: 768px) {
+    .head-equipe h1 {
+        font-size: 50px;
+        padding-top: 100px;
+        opacity: 0.9; /* Menos transparente em mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .head-equipe h1 {
+        font-size: 36px;
+        padding-top: 80px;
+        opacity: 0.95; /* Quase sólido em telas muito pequenas */
+    }
+}
+/* ESTILO PARA OS TÍTULOS DAS PÁGINAS */
+.head-pre h1 {
+    text-align: center;
+    width: 100%;
+    opacity: 0.85; /* Transparência */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Sombra para melhor legibilidade */
+    margin: 0 auto;
+    padding-top: 150px; /* Ajuste conforme necessário */
+    font-family: "League Spartan", serif;
+    color: white;
+    letter-spacing: 2px;
+    font-size: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Para responsividade */
+@media (max-width: 768px) {
+    .head-pre h1 {
+        font-size: 50px;
+        padding-top: 100px;
+        opacity: 0.9; /* Menos transparente em mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .head-pre h1 {
+        font-size: 36px;
+        padding-top: 80px;
+        opacity: 0.95; /* Quase sólido em telas muito pequenas */
+    }
+}
+
+/* ESTILO PARA OS TÍTULOS DAS PÁGINAS */
+.header-com-imagem h1 {
+    text-align: center;
+    width: 100%;
+    opacity: 0.85; /* Transparência */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Sombra para melhor legibilidade */
+    margin: 0 auto;
+    padding-top: 150px; /* Ajuste conforme necessário */
+    font-family: "League Spartan", serif;
+    color: white;
+    letter-spacing: 2px;
+    font-size: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Para responsividade */
+@media (max-width: 768px) {
+    .header-com-imagem h1 {
+        font-size: 50px;
+        padding-top: 100px;
+        opacity: 0.9; /* Menos transparente em mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .header-com-imagem h1 {
+        font-size: 36px;
+        padding-top: 80px;
+        opacity: 0.95; /* Quase sólido em telas muito pequenas */
+    }
+}
+/* ESTILO PARA OS TÍTULOS DAS PÁGINAS */
+.header-com-imagemzoo h1 {
+    text-align: center;
+    width: 100%;
+    opacity: 0.85; /* Transparência */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Sombra para melhor legibilidade */
+    margin: 0 auto;
+    padding-top: 150px; /* Ajuste conforme necessário */
+    font-family: "League Spartan", serif;
+    color: white;
+    letter-spacing: 2px;
+    font-size: 170px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Para responsividade */
+@media (max-width: 768px) {
+    .header-com-imagemzoo h1 {
+        font-size: 50px;
+        padding-top: 100px;
+        opacity: 0.9; /* Menos transparente em mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .header-com-imagemzoo h1 {
+        font-size: 36px;
+        padding-top: 80px;
+        opacity: 0.95; /* Quase sólido em telas muito pequenas */
+    }
+}
