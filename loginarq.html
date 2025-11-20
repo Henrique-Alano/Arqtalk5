@@ -572,10 +572,10 @@
             <h1>ArqTalk</h1>
         </div>
         <div class="menu">
-            <a href="/ArqTalk/conteudo/prelit.html">Pré-Literária</a>
-            <a href="/ArqTalk/conteudo/subaqua.html">Subaquática</a>
-            <a href="/ArqTalk/conteudo/zoo.html">Zooarqueologia</a>
-            <a href="/ArqTalk/conteudo/equipe.html">Sobre Nós</a>
+            <a href="prelit.html">Pré-Literária</a>
+            <a href="subaqua.html">Subaquática</a>
+            <a href="zoo.html">Zooarqueologia</a>
+            <a href="equipe.html">Sobre Nós</a>
         </div>
          
     </nav>
@@ -693,10 +693,10 @@
             </div>
             
             <div class="footer-links">
-                <a href="/ArqTalk/conteudo/index.html" class="footer-link">Início</a>
-                <a href="/ArqTalk/conteudo/prelit.html" class="footer-link">Pré-literária</a>
-                <a href="/ArqTalk/conteudo/subaqua.html" class="footer-link">Subaquática</a>
-                <a href="/ArqTalk/conteudo/zoo.html" class="footer-link">Zooarqueologia</a>
+                <a href="index.html" class="footer-link">Início</a>
+                <a href="prelit.html" class="footer-link">Pré-literária</a>
+                <a href="subaqua.html" class="footer-link">Subaquática</a>
+                <a href="zoo.html" class="footer-link">Zooarqueologia</a>
             </div>
         </div>
     </footer>
@@ -807,7 +807,7 @@
         
         // ⭐⭐ REDIRECIONAMENTO CONFIRMADO ⭐⭐
         console.log('🔄 Redirecionando para a página principal...');
-        window.location.href = 'teste.html';
+        window.location.href = 'index.html';
     }
 
     function addLogoutButton() {
@@ -845,7 +845,7 @@
             addLogoutButton();
             
             if (window.location.pathname.includes('loginarq.html')) {
-                window.location.href = 'teste.html';
+                window.location.href = 'index.html';
             }
         }
     }
@@ -972,7 +972,7 @@
                     
                     // 4. Redireciona para teste.html
                     setTimeout(() => {
-                        window.location.href = 'teste.html';
+                        window.location.href = 'index.html';
                     }, 1000);
                     
                 } catch (error) {
@@ -980,7 +980,7 @@
                     alert(`🔶 Login offline!\nBem-vindo, ${userData.name}!`);
                     addLogoutButton();
                     setTimeout(() => {
-                        window.location.href = 'teste.html';
+                        window.location.href = 'index.html';
                     }, 1000);
                 }
             });

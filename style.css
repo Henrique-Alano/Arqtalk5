@@ -89,7 +89,7 @@ body {
 }
 
 .header-com-imagem {
-    background-image: url(/Arqtalk/images/arqueologia_subaquatica_no_egito_01\ \(1\).jpg);
+    background-image: url(/images/arqueologia_subaquatica_no_egito_01\ \(1\).jpg);
     background-size: cover; /* ou contain */
     background-position: center;
     background-repeat: no-repeat;
@@ -102,7 +102,7 @@ body {
     margin-top: 0;
 }
 .header-com-imagemzoo {
-    background-image: url(/Arqtalk/images/estilo-de-vida-periodo-neolitico\ \(1\).jpg);
+    background-image: url(/images/estilo-de-vida-periodo-neolitico\ \(1\).jpg);
     background-size: cover; /* ou contain */
     background-position: center;
     background-repeat: no-repeat;
@@ -179,7 +179,7 @@ body {
 
 .head-pre{
     background-size: cover;
-    background-image: url(/Arqtalk/images/grianghraf-_H2cNuFnWDY-unsplash\ \(1\).jpg);
+    background-image: url(/images/grianghraf-_H2cNuFnWDY-unsplash\ \(1\).jpg);
     height: 550px;
     width: 100%;
     text-align: center;
@@ -193,7 +193,7 @@ body {
        
         .head-equipe{
               background-size: cover;
-    background-image: url(/Arqtalk/images/equipe/Anotação\ 2025-02-20\ 171228\ \(1\)\ \(1\).png);
+    background-image: url(/images/equipe/Anotação\ 2025-02-20\ 171228\ \(1\)\ \(1\).png);
     height: 550px;
     width: 100%;
     text-align: center;
