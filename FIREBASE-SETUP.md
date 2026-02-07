@@ -47,7 +47,8 @@ firebase deploy --only firestore:rules
 
 ## 6. Publicação do site (GitHub Pages)
 
-O site já é publicado pelo **GitHub Pages** com o domínio **arqtalk.com.br** (configurado no arquivo `CNAME`).
+O site já é publicado pelo **GitHub Pages** com o domínio **arqtalk.com.br** (configurado no arquivo `CNAME`).  
+**Se você fez push e o site não atualizou:** o Pages publica só **uma** branch (geralmente `main`). Veja **[GITHUB-PAGES.md](GITHUB-PAGES.md)** para publicar as mudanças (merge na branch do Pages ou trocar a branch no Settings).
 
 - **Repositório:** a branch/publicação usada para o Pages (ex.: `main` ou `gh-pages`) deve conter os arquivos do site (HTML, CSS, JS, `images/`, etc.).
 - **Domínio:** o DNS do domínio comprado deve apontar para o GitHub Pages conforme a [documentação do GitHub](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).

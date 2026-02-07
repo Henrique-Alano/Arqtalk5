@@ -1427,7 +1427,7 @@
         var layer = window.arqtalkCommunityLayer;
         if (!map || !layer) return;
         layer.clearLayers();
-        if (!user || typeof ArqtalkFirestore === 'undefined' || !ArqtalkFirestore.getPublicDiscoveries) return;
+        if (typeof ArqtalkFirestore === 'undefined' || !ArqtalkFirestore.getPublicDiscoveries) return;
         var communityIcon = L.divIcon({
             className: 'emoji-marker',
             html: '📍',
@@ -1968,9 +1968,11 @@
             };
             legenda.addTo(map);
 
-            // Se já houver usuário logado, carregar marcadores da comunidade
-            if (typeof ArqtalkAuth !== 'undefined' && ArqtalkAuth.getCurrentUser()) {
+            // Carregar marcadores da comunidade (com ou sem login)
+            if (typeof ArqtalkAuth !== 'undefined') {
                 addCommunityMarkersToMap(ArqtalkAuth.getCurrentUser());
+            } else {
+                addCommunityMarkersToMap(null);
             }
             
         } catch (error) {
