@@ -12,8 +12,13 @@
     
     <!-- Leaflet CSS para o mapa -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-auth.js"></script>
+    <script src="js/firebase-firestore.js"></script>
+    <script src="js/auth-ui.js"></script>
 
     <style>
         :root {
@@ -1130,10 +1135,8 @@
         <h1>ArqTalk</h1>
     </div>
     <div class="menu">
-        <a href="prelit.html">Pré-Literária</a>
-        <a href="subaqua.html">Subaquática</a>
-        <a href="zoo.html">Zooarqueologia</a>
-        <a href="equipe.html">Sobre Nós</a>
+        <a href="index.html">Início</a>
+        <a href="comunidade.html">Comunidade</a>
         
         <!-- BOTÃO DE LOGIN (aparece quando não logado) -->
         <a href="loginarq.html" class="login-btn-nav" id="loginBtn" style="display: flex; align-items: center; gap: 0.5rem;">
@@ -1281,11 +1284,23 @@
             </div>
         </section>
 
+        <!-- Feed da comunidade (public_discoveries do app) -->
+        <section class="map-section" id="communityFeedSection" style="margin-bottom: 2rem;">
+            <h2 class="map-title">📋 Publicações da comunidade</h2>
+            <p class="map-subtitle">
+                Descobertas publicadas pelos usuários do Arqtalk (app e site). Faça login para ver.
+            </p>
+            <div id="communityFeedList" style="display: grid; gap: 1rem; margin-top: 1rem;"></div>
+            <p id="communityFeedLoginHint" style="text-align: center; color: var(--bronze-light); margin-top: 1rem; display: none;">
+                Faça login para ver as publicações da comunidade.
+            </p>
+        </section>
+
         <!-- NOVA SEÇÃO: Mapa de Sítios Arqueológicos -->
         <section class="map-section">
             <h2 class="map-title">🏺 Mapa de Sítios Arqueológicos Mundiais</h2>
             <p class="map-subtitle">
-                Explore importantes sítios arqueológicos ao redor do mundo. Clique nos vasos para descobrir a história de cada local.
+                Sítios de referência e descobertas da comunidade (mesmo mapa do app). Clique nos marcadores para ver detalhes.
             </p>
             
             <div id="archeologyMap"></div>
@@ -1333,64 +1348,20 @@
     <!-- Leaflet JavaScript -->
      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
  <script>
-    // ✅ SISTEMA COMPLETO DE VERIFICAÇÃO DE LOGIN
-        
-    // Sistema de Login
-    function checkLoginStatus() {
-        const userData = localStorage.getItem('arqtalk_user');
-        const loginBtn = document.getElementById('loginBtn');
-        const userProfile = document.getElementById('userProfile');
-        const userName = document.getElementById('userName');
-        const userAvatar = document.getElementById('userAvatar');
-        
-        if (userData) {
-            const user = JSON.parse(userData);
-            loginBtn.style.display = 'none';
-            userProfile.style.display = 'flex';
-            userName.textContent = user.name || user.email.split('@')[0];
-            userAvatar.textContent = user.initials || 'US';
-        } else {
-            loginBtn.style.display = 'flex';
-            userProfile.style.display = 'none';
-        }
-    }
-
-    // Logout function
-    function logout() {
-        localStorage.removeItem('arqtalk_user');
-        checkLoginStatus();
-        alert('Logout realizado com sucesso!');
-        location.reload();
-    }
-
-    // Adicionar evento de logout ao perfil
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('📄 Página carregada!');
-        
-        checkLoginStatus();
-        
-        // Adicionar evento de clique no perfil para logout
-        const userProfile = document.getElementById('userProfile');
-        if (userProfile) {
-            userProfile.addEventListener('click', function() {
-                if (confirm('Deseja sair da sua conta?')) {
-                    logout();
-                }
+        // Login/perfil atualizado por auth-ui.js (Firebase Auth)
+
+        // Carregar feed e mapa da comunidade quando houver usuário logado
+        if (typeof ArqtalkAuth !== 'undefined') {
+            ArqtalkAuth.onAuthStateChanged(function(user) {
+                loadCommunityFeed(user);
+                addCommunityMarkersToMap(user);
             });
-            
-            // Tooltip para o perfil
-            userProfile.title = 'Clique para sair';
         }
 
-        // ⭐⭐ VERIFICAR SE O MAPA EXISTE ANTES DE INICIALIZAR ⭐⭐
         const mapElement = document.getElementById('archeologyMap');
-        console.log('🗺️ Elemento do mapa:', mapElement);
-        
         if (mapElement) {
-            console.log('✅ Inicializando mapa...');
             initializeMap();
-        } else {
-            console.error('❌ Elemento do mapa não encontrado!');
         }
         
         // Animação para os elementos do projeto
@@ -1449,6 +1420,66 @@
                 return 'US';
             }
         }
+    }
+
+    function addCommunityMarkersToMap(user) {
+        var map = window.arqtalkMap;
+        var layer = window.arqtalkCommunityLayer;
+        if (!map || !layer) return;
+        layer.clearLayers();
+        if (!user || typeof ArqtalkFirestore === 'undefined' || !ArqtalkFirestore.getPublicDiscoveries) return;
+        var communityIcon = L.divIcon({
+            className: 'emoji-marker',
+            html: '📍',
+            iconSize: [28, 28],
+            iconAnchor: [14, 14]
+        });
+        ArqtalkFirestore.getPublicDiscoveries(100).then(function(list) {
+            (list || []).forEach(function(d) {
+                if (d.latitude == null || d.longitude == null) return;
+                var author = d.authorName || d.authorId || 'Anônimo';
+                var title = d.title || 'Descoberta';
+                var desc = (d.description || '').substring(0, 80);
+                if ((d.description || '').length > 80) desc += '...';
+                L.marker([d.latitude, d.longitude], { icon: communityIcon })
+                    .addTo(layer)
+                    .bindPopup('<div class="custom-popup"><h3>' + title + '</h3><p><strong>Autor:</strong> ' + author + '</p><p>' + (desc || '—') + '</p></div>');
+            });
+        });
+    }
+
+    function loadCommunityFeed(user) {
+        var listEl = document.getElementById('communityFeedList');
+        var hintEl = document.getElementById('communityFeedLoginHint');
+        if (!listEl) return;
+        if (!user) {
+            listEl.innerHTML = '';
+            if (hintEl) hintEl.style.display = 'block';
+            return;
+        }
+        if (hintEl) hintEl.style.display = 'none';
+        if (typeof ArqtalkFirestore === 'undefined' || !ArqtalkFirestore.getPublicDiscoveries) {
+            listEl.innerHTML = '<p style="color: var(--bronze-light);">Carregando...</p>';
+            return;
+        }
+        ArqtalkFirestore.getPublicDiscoveries(30).then(function(list) {
+            if (!list || list.length === 0) {
+                listEl.innerHTML = '<p style="color: var(--bronze-light);">Nenhuma publicação ainda.</p>';
+                return;
+            }
+            listEl.innerHTML = list.map(function(d) {
+                var author = d.authorName || d.authorId || 'Anônimo';
+                var desc = (d.description || '').substring(0, 120);
+                if ((d.description || '').length > 120) desc += '...';
+                return '<div style="background: rgba(255,255,255,0.08); border-radius: 12px; padding: 1rem; border: 1px solid rgba(181,134,71,0.3);">' +
+                    '<div style="font-size: 0.85rem; color: var(--bronze-light); margin-bottom: 4px;">' + author + '</div>' +
+                    '<div style="font-weight: 600; color: #f0e4d3;">' + (d.title || 'Sem título') + '</div>' +
+                    (desc ? '<div style="font-size: 0.9rem; margin-top: 6px; opacity: 0.9;">' + desc + '</div>' : '') +
+                    '</div>';
+            }).join('');
+        }).catch(function() {
+            listEl.innerHTML = '<p style="color: var(--bronze-light);">Erro ao carregar. Verifique a conexão.</p>';
+        });
     }
 
     // FUNÇÃO COMPLETA DO MAPA - VERSÃO CORRIGIDA
@@ -1909,7 +1940,7 @@
 
             // Adicionar marcadores ao mapa
             sitiosArqueologicos.forEach(sitio => {
-                const marker = L.marker(sitio.coordenadas, {icon: archeologyIcon})
+                L.marker(sitio.coordenadas, {icon: archeologyIcon})
                     .addTo(map)
                     .bindPopup(`
                         <div class="custom-popup">
@@ -1923,19 +1954,24 @@
                     `);
             });
 
+            // Camada de marcadores da comunidade (descobertas do app) — preenchida quando o usuário logar
+            var communityLayer = L.layerGroup().addTo(map);
+            window.arqtalkMap = map;
+            window.arqtalkCommunityLayer = communityLayer;
+
             // Adicionar legenda
-            const legenda = L.control({position: 'bottomright'});
-            legenda.onAdd = function(map) {
-                const div = L.DomUtil.create('div', 'map-legend');
-                div.innerHTML = `
-                    <h4>🏺 Legenda</h4>
-                    <p>🏺 Sítio Arqueológico</p>
-                `;
+            var legenda = L.control({position: 'bottomright'});
+            legenda.onAdd = function(m) {
+                var div = L.DomUtil.create('div', 'map-legend');
+                div.innerHTML = '<h4>🏺 Legenda</h4><p>🏺 Sítio de referência</p><p>📍 Descoberta da comunidade</p>';
                 return div;
             };
             legenda.addTo(map);
 
-            console.log('✅ Mapa inicializado com sucesso!');
+            // Se já houver usuário logado, carregar marcadores da comunidade
+            if (typeof ArqtalkAuth !== 'undefined' && ArqtalkAuth.getCurrentUser()) {
+                addCommunityMarkersToMap(ArqtalkAuth.getCurrentUser());
+            }
             
         } catch (error) {
             console.error('❌ Erro ao inicializar mapa:', error);

@@ -11,182 +11,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Sistema de Autenticação - Subaquática -->
-<script>
-// ⭐⭐ SISTEMA DE LOGIN - SUBAQUÁTICA ⭐⭐
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔍 Subaquática - Verificando login...');
-    
-    const userData = localStorage.getItem('arqtalk_user');
-    
-    // ⭐⭐ MÉTODO SIMPLES: Forçar manualmente ⭐⭐
-    forceVisibilitySubaqua(userData);
-    
-    if (userData) {
-        const user = JSON.parse(userData);
-        updateUserProfileSubaqua(user);
-        setupUserPermissionsSubaqua(user);
-    } else {
-        setupGuestPermissionsSubaqua();
-    }
-});
-
-function forceVisibilitySubaqua(userData) {
-    const loginBtn = document.getElementById('loginBtn');
-    const userProfile = document.getElementById('userProfile');
-    
-    if (userData) {
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (userProfile) userProfile.style.display = 'flex';
-    } else {
-        if (loginBtn) loginBtn.style.display = 'flex';
-        if (userProfile) userProfile.style.display = 'none';
-    }
-}
-
-function updateUserProfileSubaqua(user) {
-    const userName = document.getElementById('userName');
-    const userAvatar = document.getElementById('userAvatar');
-    
-    if (userName) userName.textContent = user.name || user.email.split('@')[0];
-    if (userAvatar) userAvatar.textContent = user.initials || 'US';
-    
-    addProfessionBadgeSubaqua(user.profession);
-    
-    const userProfile = document.getElementById('userProfile');
-    if (userProfile) {
-        userProfile.onclick = function() {
-            if (confirm('Deseja sair da sua conta?')) {
-                localStorage.removeItem('arqtalk_user');
-                location.reload();
-            }
-        };
-    }
-}
-
-function setupUserPermissionsSubaqua(user) {
-    const commentTypeSelect = document.getElementById('comment-type');
-    const authorNameInput = document.getElementById('author-name');
-    
-    if (authorNameInput) {
-        authorNameInput.value = user.name || user.email.split('@')[0];
-        authorNameInput.readOnly = true;
-    }
-    
-    if (commentTypeSelect) {
-        const profession = user.profession?.toLowerCase() || '';
-        
-        if (profession.includes('arqueólogo') || profession.includes('arqueologo')) {
-            commentTypeSelect.innerHTML = `
-                <option value="question">❓ Pergunta Subaquática</option>
-                <option value="discovery">🐚 Descoberta Marinha</option>
-                <option value="analysis">🔍 Análise de Naufrágio</option>
-                <option value="technology">🤖 Tecnologia Subaquática</option>
-                <option value="conservation">💧 Conservação Aquática</option>
-                <option value="publication">📄 Publicação Oceânica</option>
-            `;
-        } else {
-            commentTypeSelect.innerHTML = `
-                <option value="question">❓ Pergunta Geral</option>
-                <option value="question">🌊 Dúvida Subaquática</option>
-                <option value="question">🐠 Consulta Marinha</option>
-            `;
-        }
-    }
-}
-
-function addProfessionBadgeSubaqua(profession) {
-    const existingBadge = document.getElementById('profession-badge');
-    if (existingBadge) existingBadge.remove();
-    
-    const userProfile = document.getElementById('userProfile');
-    if (userProfile && profession) {
-        const badge = document.createElement('div');
-        badge.id = 'profession-badge';
-        
-        let badgeColor = '#666';
-        let badgeText = profession;
-        
-        if (profession.toLowerCase().includes('arqueólogo') || profession.toLowerCase().includes('arqueologo')) {
-            badgeColor = 'var(--primary-bronze)';
-            badgeText = '🏺 Arqueólogo';
-        } else if (profession.toLowerCase().includes('estudante')) {
-            badgeColor = '#4f7db0';
-            badgeText = '🎓 Estudante';
-        }
-        
-        badge.innerHTML = `
-            <span style="background: ${badgeColor}; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.65rem; font-weight: 600;">
-                ${badgeText}
-            </span>
-        `;
-        
-        userProfile.appendChild(badge);
-    }
-}
-
-function setupGuestPermissionsSubaqua() {
-    const commentForm = document.querySelector('.modern-card.p-6');
-    if (commentForm) {
-        commentForm.innerHTML = `
-            <div class="text-center p-6">
-                <div class="text-4xl mb-4">🔐</div>
-                <h3 class="text-lg font-bold mb-2">Acesso Restrito</h3>
-                <p class="mb-4 opacity-80">Faça login para explorar a arqueologia subaquática</p>
-                <a href="loginarq.html" class="btn-modern inline-flex items-center gap-2">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Fazer Login
-                </a>
-                <p class="text-sm mt-4 opacity-70">
-                    <strong>Arqueólogos:</strong> Acesso completo às descobertas marinhas<br>
-                    <strong>Estudantes:</strong> Apenas perguntas sobre naufrágios<br>
-                    <strong>Outras profissões:</strong> Perguntas básicas
-                </p>
-            </div>
-        `;
-    }
-}
-</script>
-<script>
-// ⭐⭐ SISTEMA DE LOGIN - prelit.html ⭐⭐
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔍 Verificando login na pré-literária...');
-    
-    const userData = localStorage.getItem('arqtalk_user');
-    const loginBtn = document.getElementById('loginBtn');
-    const userProfile = document.getElementById('userProfile');
-    const userName = document.getElementById('userName');
-    const userAvatar = document.getElementById('userAvatar');
-    
-    if (userData) {
-        console.log('✅ Usuário está logado!');
-        const user = JSON.parse(userData);
-        
-        // Esconde login, mostra perfil
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (userProfile) {
-            userProfile.style.display = 'flex';
-            
-            // Logout ao clicar no perfil
-            userProfile.addEventListener('click', function() {
-                if (confirm('Deseja sair da sua conta?')) {
-                    localStorage.removeItem('arqtalk_user');
-                    location.reload();
-                }
-            });
-        }
-        
-        // Atualiza nome e avatar
-        if (userName) userName.textContent = user.name || user.email.split('@')[0];
-        if (userAvatar) userAvatar.textContent = user.initials || 'US';
-        
-    } else {
-        console.log('❌ Usuário NÃO está logado');
-        if (loginBtn) loginBtn.style.display = 'flex';
-        if (userProfile) userProfile.style.display = 'none';
-    }
-});
-</script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-auth.js"></script>
+    <script src="js/firebase-firestore.js"></script>
+    <script src="js/auth-ui.js"></script>
     <style>
         :root {
             --deep-brown: #725227;
@@ -597,10 +428,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <h1>ArqTalk</h1>
     </div>
     <div class="menu">
-        <a href="https://arqtalk.com.br/">Início</a>
-        <a href="prelit.html">Pré-literária</a>
-        <a href="zoo.html">Zooarqueologia</a>
-        <a href="equipe.html">Sobre Nós</a>
+        <a href="index.html">Início</a>
+        <a href="comunidade.html">Comunidade</a>
         
         <!-- BOTÃO DE LOGIN -->
         <a href="loginarq.html" class="login-btn-nav" id="loginBtn" style="display: flex; align-items: center; gap: 0.5rem;">

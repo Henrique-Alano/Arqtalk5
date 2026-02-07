@@ -10,48 +10,13 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-<!-- Sistema de Autenticação -->
-<script>
-// ⭐⭐ SISTEMA DE LOGIN - prelit.html ⭐⭐
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔍 Verificando login na pré-literária...');
-    
-    const userData = localStorage.getItem('arqtalk_user');
-    const loginBtn = document.getElementById('loginBtn');
-    const userProfile = document.getElementById('userProfile');
-    const userName = document.getElementById('userName');
-    const userAvatar = document.getElementById('userAvatar');
-    
-    if (userData) {
-        console.log('✅ Usuário está logado!');
-        const user = JSON.parse(userData);
-        
-        // Esconde login, mostra perfil
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (userProfile) {
-            userProfile.style.display = 'flex';
-            
-            // Logout ao clicar no perfil
-            userProfile.addEventListener('click', function() {
-                if (confirm('Deseja sair da sua conta?')) {
-                    localStorage.removeItem('arqtalk_user');
-                    location.reload();
-                }
-            });
-        }
-        
-        // Atualiza nome e avatar
-        if (userName) userName.textContent = user.name || user.email.split('@')[0];
-        if (userAvatar) userAvatar.textContent = user.initials || 'US';
-        
-    } else {
-        console.log('❌ Usuário NÃO está logado');
-        if (loginBtn) loginBtn.style.display = 'flex';
-        if (userProfile) userProfile.style.display = 'none';
-    }
-});
-</script> 
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-auth.js"></script>
+    <script src="js/firebase-firestore.js"></script>
+    <script src="js/auth-ui.js"></script>
  <style>
 
         :root {
@@ -805,10 +770,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <h1>ArqTalk</h1>
     </div>
     <div class="menu">
-        <a href="https://arqtalk.com.br/">Início</a>
-        <a href="subaqua.html">Subaquática</a>
-        <a href="zoo.html">Zooarqueologia</a>
-        <a href="prelit.html">Pré-literária</a>
+        <a href="index.html">Início</a>
+        <a href="comunidade.html">Comunidade</a>
         
         <!-- BOTÃO DE LOGIN -->
         <a href="loginarq.html" class="login-btn-nav" id="loginBtn" style="display: flex; align-items: center; gap: 0.5rem;">

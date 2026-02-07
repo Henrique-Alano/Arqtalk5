@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009165249.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <title>Comunidade - ArqTalk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-auth.js"></script>
+    <script src="js/firebase-firestore.js"></script>
+    <script src="js/auth-ui.js"></script>
+    <style>
+        :root {
+            --primary-bronze: #b58647;
+            --primary-dark: #725227;
+            --bronze-light: #d4b88c;
+            --bronze-lighter: #f0e4d3;
+            --site-background: #725227;
+            --content-bg: rgba(255,255,255,0.08);
+            --border-card: rgba(181,134,71,0.3);
+        }
+        body { background: var(--site-background); color: var(--bronze-lighter); font-family: 'Inter', sans-serif; min-height: 100vh; }
+        .community-container { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
+        .community-title { font-size: 1.25rem; color: var(--bronze-light); margin-bottom: 1rem; }
+        .search-filter { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem; }
+        .search-input { width: 100%; padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--border-card); background: var(--content-bg); color: var(--bronze-lighter); font-size: 1rem; }
+        .search-input::placeholder { color: var(--bronze-light); opacity: 0.8; }
+        .filter-select { padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--border-card); background: var(--content-bg); color: var(--bronze-lighter); font-size: 0.95rem; }
+        .card-list { display: flex; flex-direction: column; gap: 1rem; }
+        .community-card {
+            background: var(--content-bg); border-radius: 16px; border: 1px solid var(--border-card);
+            overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .community-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .card-photo { height: 180px; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; }
+        .card-photo i { font-size: 48px; color: var(--bronze-light); opacity: 0.7; }
+        .card-body { padding: 12px; }
+        .card-author { font-size: 12px; color: var(--bronze-light); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .card-title { font-size: 15px; font-weight: 600; color: var(--bronze-lighter); margin-bottom: 6px; }
+        .card-location { font-size: 12px; color: var(--bronze-light); margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+        .card-site { font-size: 12px; color: var(--bronze-light); margin-bottom: 4px; }
+        .card-desc { font-size: 12px; color: var(--bronze-lighter); margin-bottom: 4px; max-lines: 2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .card-category { font-size: 12px; color: var(--bronze-light); }
+        .community-card { cursor: pointer; }
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--bronze-light); }
+        .empty-state i { font-size: 48px; margin-bottom: 12px; opacity: 0.7; }
+        .login-hint { text-align: center; padding: 2rem; color: var(--bronze-light); }
+        .card-photo img { width: 100%; height: 180px; object-fit: cover; display: block; }
+        /* Modal detalhes */
+        .detail-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; box-sizing: border-box; }
+        .detail-modal { background: var(--primary-dark); border-radius: 16px; border: 1px solid var(--border-card); max-width: 560px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; }
+        .detail-modal .detail-scroll { overflow-y: auto; padding: 1rem; flex: 1; }
+        .detail-modal .detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .detail-modal .detail-close { background: transparent; border: none; color: var(--bronze-light); font-size: 1.5rem; cursor: pointer; padding: 0.25rem; }
+        .detail-modal .detail-title { font-size: 1.1rem; font-weight: 600; color: var(--bronze-lighter); }
+        .detail-modal .detail-author { font-size: 12px; color: var(--bronze-light); margin-bottom: 0.5rem; }
+        .detail-modal .detail-photos { margin: 0.75rem 0; border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.2); }
+        .detail-modal .detail-photos img { width: 100%; max-height: 240px; object-fit: contain; display: block; }
+        .detail-photos-carousel { display: flex; gap: 8px; overflow-x: auto; padding: 8px 0; }
+        .detail-photos-carousel img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; flex-shrink: 0; cursor: pointer; }
+        .detail-modal .detail-section { font-size: 12px; color: var(--bronze-light); margin-top: 0.5rem; }
+        .detail-modal .detail-section strong { color: var(--bronze-lighter); }
+        .detail-modal .detail-desc { margin-top: 0.5rem; color: var(--bronze-lighter); font-size: 14px; white-space: pre-wrap; }
+        .detail-modal .forum-title { font-size: 14px; font-weight: 600; color: var(--bronze-lighter); margin-top: 1rem; margin-bottom: 0.5rem; }
+        .detail-modal .forum-subtitle { font-size: 12px; color: var(--bronze-light); margin-bottom: 0.75rem; }
+        .detail-modal .comments-list { margin-bottom: 0.75rem; }
+        .detail-modal .comment-item { background: var(--content-bg); border-radius: 8px; padding: 0.5rem 0.75rem; margin-bottom: 0.5rem; font-size: 13px; }
+        .detail-modal .comment-author { color: var(--bronze-light); font-size: 11px; margin-bottom: 2px; }
+        .detail-modal .comment-text { color: var(--bronze-lighter); }
+        .detail-modal .comment-time { color: var(--bronze-light); font-size: 10px; margin-top: 2px; }
+        .detail-modal .comment-input-row { display: flex; gap: 8px; margin-top: 0.5rem; }
+        .detail-modal .comment-input { flex: 1; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border-card); background: var(--content-bg); color: var(--bronze-lighter); font-size: 14px; }
+        .detail-modal .comment-send { padding: 0.5rem 1rem; border-radius: 8px; background: var(--primary-bronze); color: white; border: none; cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;">
+                <img class="logo" src="images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009162544 (1).png" alt="">
+                <h1>ArqTalk</h1>
+            </a>
+        </div>
+        <div class="menu">
+            <a href="index.html">Início</a>
+            <a href="comunidade.html">Comunidade</a>
+            <a href="loginarq.html" class="login-btn-nav" id="loginBtn" style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-sign-in-alt"></i>
+                Entrar
+            </a>
+            <div class="user-profile" id="userProfile" style="display: none; cursor: pointer;">
+                <div class="profile-info">
+                    <div class="avatar-with-initials" id="userAvatar"></div>
+                    <span class="user-name" id="userName">Usuário</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="community-container">
+        <h1 class="community-title">Publicações da comunidade</h1>
+        <p style="font-size: 14px; color: var(--bronze-light); margin-bottom: 1rem;">As mesmas publicações do app Arqtalk. Faça login para ver.</p>
+
+        <div id="loginHint" class="login-hint">
+            Faça login para ver as publicações da comunidade.
+        </div>
+
+        <div id="feedArea" style="display: none;">
+            <div class="search-filter">
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar no feed..." autocomplete="off">
+                <select id="categoryFilter" class="filter-select">
+                    <option value="">Todos os tipos</option>
+                    <option value="Objeto / Artefato">Objeto / Artefato</option>
+                    <option value="Estrutura (muro, pavimento)">Estrutura (muro, pavimento)</option>
+                    <option value="Cerâmica">Cerâmica</option>
+                    <option value="Lítico (pedra lascada)">Lítico (pedra lascada)</option>
+                    <option value="Material ósseo">Material ósseo</option>
+                    <option value="Inscrição / Epígrafe">Inscrição / Epígrafe</option>
+                    <option value="Outro">Outro</option>
+                </select>
+            </div>
+            <div id="feedList" class="card-list"></div>
+        </div>
+    </div>
+
+    <!-- Modal detalhes do post (como no app) -->
+    <div id="detailOverlay" class="detail-overlay" style="display: none;">
+        <div class="detail-modal">
+            <div class="detail-scroll">
+                <div class="detail-header">
+                    <h2 class="detail-title" id="detailTitle">—</h2>
+                    <button type="button" class="detail-close" id="detailClose" aria-label="Fechar">&times;</button>
+                </div>
+                <div class="detail-author" id="detailAuthor">—</div>
+                <div class="detail-photos" id="detailPhotos"></div>
+                <div class="detail-section" id="detailLocation"></div>
+                <div class="detail-section" id="detailSite"></div>
+                <div class="detail-section" id="detailCategory"></div>
+                <div class="detail-desc" id="detailDesc"></div>
+                <div class="forum-title">Fórum</div>
+                <div class="forum-subtitle">Comente e discuta. Atualização em tempo real (requer conexão).</div>
+                <div class="comments-list" id="detailComments"></div>
+                <div class="comment-input-row">
+                    <input type="text" class="comment-input" id="detailCommentInput" placeholder="Escreva um comentário..." maxlength="500">
+                    <button type="button" class="comment-send" id="detailCommentSend">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var CATEGORY_LABELS = {
+        'artifact': 'Objeto / Artefato',
+        'structure': 'Estrutura (muro, pavimento)',
+        'pottery': 'Cerâmica',
+        'tool': 'Lítico (pedra lascada)',
+        'bone': 'Material ósseo',
+        'inscription': 'Inscrição / Epígrafe',
+        'other': 'Outro'
+    };
+    function categoryDisplay(cat) {
+        if (!cat) return 'Outro';
+        return CATEGORY_LABELS[cat] || cat;
+    }
+
+    function filterAndRender(list) {
+        var search = (document.getElementById('searchInput') && document.getElementById('searchInput').value) ? document.getElementById('searchInput').value.trim().toLowerCase() : '';
+        var catFilter = document.getElementById('categoryFilter') ? document.getElementById('categoryFilter').value : '';
+        var filtered = (list || []).filter(function(d) {
+            if (search && !(d.title || '').toLowerCase().includes(search) && !(d.siteName || '').toLowerCase().includes(search)) return false;
+            if (catFilter && categoryDisplay(d.category) !== catFilter) return false;
+            return true;
+        });
+        renderCards(filtered);
+    }
+
+    function renderCards(list) {
+        var el = document.getElementById('feedList');
+        if (!el) return;
+        if (!list || list.length === 0) {
+            el.innerHTML = '<div class="empty-state"><i class="fas fa-article"></i><p>Nenhuma publicação na comunidade.</p></div>';
+            return;
+        }
+        el.innerHTML = list.map(function(d) {
+            var author = d.authorName || 'Anônimo';
+            var title = d.title || 'Sem título';
+            var hasLoc = d.latitude != null && d.longitude != null;
+            var locStr = hasLoc ? (d.latitude.toFixed(5) + ', ' + d.longitude.toFixed(5)) : '';
+            var siteStr = (d.siteName && d.siteName.trim()) ? ('Sítio: ' + d.siteName) : '';
+            var desc = (d.description || '').trim();
+            var cat = categoryDisplay(d.category);
+            return '<div class="community-card" data-discovery-id="' + (d.id || '') + '">' +
+                '<div class="card-photo" id="photo-' + (d.id || '') + '"><i class="fas fa-photo-library"></i></div>' +
+                '<div class="card-body">' +
+                '<div class="card-author"><i class="fas fa-user"></i> ' + author + '</div>' +
+                '<div class="card-title">' + title + '</div>' +
+                (hasLoc ? '<div class="card-location"><i class="fas fa-location-dot"></i> ' + locStr + '</div>' : '') +
+                (siteStr ? '<div class="card-site">' + siteStr + '</div>' : '') +
+                (desc ? '<div class="card-desc">' + desc + '</div>' : '') +
+                '<div class="card-category">' + cat + '</div>' +
+                '</div></div>';
+        }).join('');
+        loadPhotosForCards(list);
+    }
+
+    function loadPhotosForCards(list) {
+        if (!list || typeof ArqtalkFirestore === 'undefined' || !ArqtalkFirestore.getDiscoveryPhotos) return;
+        list.forEach(function(d) {
+            if (!d.id || !d.authorId) return;
+            ArqtalkFirestore.getDiscoveryPhotos(d.authorId, d.id).then(function(urls) {
+                var el = document.getElementById('photo-' + d.id);
+                if (!el) return;
+                if (urls && urls.length > 0) {
+                    el.innerHTML = '<img src="' + urls[0] + '" alt="">';
+                }
+            });
+        });
+    }
+
+    function openDetail(d) {
+        var overlay = document.getElementById('detailOverlay');
+        var titleEl = document.getElementById('detailTitle');
+        var authorEl = document.getElementById('detailAuthor');
+        var photosEl = document.getElementById('detailPhotos');
+        var locationEl = document.getElementById('detailLocation');
+        var siteEl = document.getElementById('detailSite');
+        var categoryEl = document.getElementById('detailCategory');
+        var descEl = document.getElementById('detailDesc');
+        var commentsEl = document.getElementById('detailComments');
+        var inputEl = document.getElementById('detailCommentInput');
+        if (!overlay || !titleEl) return;
+        titleEl.textContent = d.title || 'Sem título';
+        authorEl.innerHTML = '<i class="fas fa-user"></i> ' + (d.authorName || 'Anônimo');
+        locationEl.textContent = '';
+        if (d.latitude != null && d.longitude != null) {
+            locationEl.innerHTML = '<i class="fas fa-location-dot"></i> ' + d.latitude.toFixed(5) + ', ' + d.longitude.toFixed(5);
+        }
+        siteEl.textContent = (d.siteName && d.siteName.trim()) ? ('Sítio: ' + d.siteName) : '';
+        categoryEl.textContent = 'Tipo: ' + categoryDisplay(d.category);
+        descEl.textContent = (d.description || '').trim() || '—';
+        photosEl.innerHTML = '<p style="color:var(--bronze-light);font-size:12px;">Carregando fotos…</p>';
+        if (typeof ArqtalkFirestore !== 'undefined' && ArqtalkFirestore.getDiscoveryPhotos && d.authorId && d.id) {
+            ArqtalkFirestore.getDiscoveryPhotos(d.authorId, d.id).then(function(urls) {
+                if (!urls || urls.length === 0) {
+                    photosEl.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--bronze-light);"><i class="fas fa-photo-library"></i><br>Sem fotos</div>';
+                } else {
+                    var html = '<div class="detail-photos-carousel">';
+                    urls.forEach(function(src) {
+                        html += '<img src="' + src + '" alt="" loading="lazy">';
+                    });
+                    html += '</div>';
+                    photosEl.innerHTML = html;
+                }
+            });
+        } else {
+            photosEl.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--bronze-light);"><i class="fas fa-photo-library"></i><br>Sem fotos</div>';
+        }
+        function renderComments(comments) {
+            if (!commentsEl) return;
+            if (!comments || comments.length === 0) {
+                commentsEl.innerHTML = '<div class="comment-item" style="color:var(--bronze-light);">Nenhum comentário ainda.</div>';
+                return;
+            }
+            commentsEl.innerHTML = comments.map(function(c) {
+                var t = c.createdAt instanceof Date ? c.createdAt : new Date(c.createdAt);
+                var timeStr = t.getDate() + '/' + (t.getMonth()+1) + '/' + t.getFullYear() + ' ' + t.getHours().toString().padStart(2,'0') + ':' + t.getMinutes().toString().padStart(2,'0');
+                return '<div class="comment-item"><div class="comment-author">' + (c.authorLabel || 'Participante') + '</div><div class="comment-text">' + (c.text || '').replace(/</g,'&lt;') + '</div><div class="comment-time">' + timeStr + '</div></div>';
+            }).join('');
+        }
+        if (typeof ArqtalkFirestore !== 'undefined' && ArqtalkFirestore.getMyCommentsForDiscovery && d.id) {
+            ArqtalkFirestore.getMyCommentsForDiscovery(d.id).then(renderComments);
+        } else {
+            renderComments([]);
+        }
+        if (inputEl) inputEl.value = '';
+        overlay.style.display = 'flex';
+        var sendBtn = document.getElementById('detailCommentSend');
+        function onSend() {
+            var text = inputEl && inputEl.value ? inputEl.value.trim() : '';
+            if (!text || !d.id || typeof ArqtalkFirestore === 'undefined' || !ArqtalkFirestore.addCommentToDiscovery) return;
+            var user = typeof ArqtalkAuth !== 'undefined' && ArqtalkAuth.getCurrentUser ? ArqtalkAuth.getCurrentUser() : null;
+            var label = user && (ArqtalkAuth.getDisplayName(user) || (user.email)) ? (ArqtalkAuth.getDisplayName(user) || user.email) : 'Participante';
+            ArqtalkFirestore.addCommentToDiscovery(d.id, text, label).then(function(ok) {
+                if (ok && ArqtalkFirestore.getMyCommentsForDiscovery) {
+                    ArqtalkFirestore.getMyCommentsForDiscovery(d.id).then(renderComments);
+                    if (inputEl) inputEl.value = '';
+                }
+            });
+        }
+        if (sendBtn) { sendBtn.onclick = onSend; }
+        if (inputEl) { inputEl.onkeydown = function(e) { if (e.key === 'Enter') onSend(); }; }
+    }
+
+    function closeDetail() {
+        var overlay = document.getElementById('detailOverlay');
+        if (overlay) overlay.style.display = 'none';
+    }
+
+    function loadFeed() {
+        var loginHint = document.getElementById('loginHint');
+        var feedArea = document.getElementById('feedArea');
+        if (typeof ArqtalkAuth === 'undefined' || !ArqtalkAuth.getCurrentUser()) {
+            if (loginHint) loginHint.style.display = 'block';
+            if (feedArea) feedArea.style.display = 'none';
+            return;
+        }
+        if (loginHint) loginHint.style.display = 'none';
+        if (feedArea) feedArea.style.display = 'block';
+        if (typeof ArqtalkFirestore === 'undefined' || !ArqtalkFirestore.getPublicDiscoveries) {
+            renderCards([]);
+            return;
+        }
+        ArqtalkFirestore.getPublicDiscoveries(100).then(function(list) {
+            window._communityList = list || [];
+            filterAndRender(window._communityList);
+        }).catch(function() {
+            renderCards([]);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof ArqtalkAuth !== 'undefined') {
+            ArqtalkAuth.onAuthStateChanged(function() { loadFeed(); });
+        }
+        var searchInput = document.getElementById('searchInput');
+        var categoryFilter = document.getElementById('categoryFilter');
+        if (searchInput) searchInput.addEventListener('input', function() { filterAndRender(window._communityList || []); });
+        if (categoryFilter) categoryFilter.addEventListener('change', function() { filterAndRender(window._communityList || []); });
+        var feedList = document.getElementById('feedList');
+        if (feedList) {
+            feedList.addEventListener('click', function(e) {
+                var card = e.target && e.target.closest && e.target.closest('.community-card');
+                if (!card) return;
+                var id = card.getAttribute('data-discovery-id');
+                if (!id) return;
+                var list = window._communityList || [];
+                var d = list.filter(function(x) { return x.id === id; })[0];
+                if (d) openDetail(d);
+            });
+        }
+        var detailClose = document.getElementById('detailClose');
+        if (detailClose) detailClose.addEventListener('click', closeDetail);
+        var detailOverlay = document.getElementById('detailOverlay');
+        if (detailOverlay) {
+            detailOverlay.addEventListener('click', function(e) {
+                if (e.target === detailOverlay) closeDetail();
+            });
+        }
+    });
+    </script>
+</body>
+</html>

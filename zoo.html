@@ -10,171 +10,13 @@
     <link rel="shortcut icon" href="images/ArqTalk_Communications_Brand_Logo_-_Modern_Wordmark-removebg-preview-fotor-20251009165249.ico" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- SISTEMA DE AUTENTICAÇÃO ZOO - SEM EMOJIS -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔍 Zooarqueologia - Verificando login...');
-    
-    const userData = localStorage.getItem('arqtalk_user');
-    forceVisibilityZoo(userData);
-    
-    if (userData) {
-        const user = JSON.parse(userData);
-        updateUserProfileZoo(user);
-        setupUserPermissionsZoo(user);
-    } else {
-        setupGuestPermissionsZoo();
-    }
-});
-
-function forceVisibilityZoo(userData) {
-    const loginBtn = document.getElementById('loginBtn');
-    const userProfile = document.getElementById('userProfile');
-    
-    if (userData) {
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (userProfile) userProfile.style.display = 'flex';
-    } else {
-        if (loginBtn) loginBtn.style.display = 'flex';
-        if (userProfile) userProfile.style.display = 'none';
-    }
-}
-
-function updateUserProfileZoo(user) {
-    const userName = document.getElementById('userName');
-    const userAvatar = document.getElementById('userAvatar');
-    
-    if (userName) userName.textContent = user.name || user.email.split('@')[0];
-    if (userAvatar) userAvatar.textContent = user.initials || 'US';
-    
-    addProfessionBadgeZoo(user.profession);
-    
-    const userProfile = document.getElementById('userProfile');
-    if (userProfile) {
-        userProfile.onclick = function() {
-            if (confirm('Deseja sair da sua conta?')) {
-                localStorage.removeItem('arqtalk_user');
-                location.reload();
-            }
-        };
-    }
-}
-
-function setupUserPermissionsZoo(user) {
-    const findTypeSelect = document.getElementById('find-type');
-    const researcherNameInput = document.getElementById('researcher-name');
-    
-    if (researcherNameInput) {
-        researcherNameInput.value = user.name || user.email.split('@')[0];
-        researcherNameInput.readOnly = true;
-    }
-    
-    if (findTypeSelect) {
-        const profession = user.profession?.toLowerCase() || '';
-        
-        if (profession.includes('arqueólogo') || profession.includes('arqueologo')) {
-            findTypeSelect.innerHTML = `
-                <option value="question">Pergunta</option>
-                <option value="theory">Teoria</option>
-                <option value="observation">Observação</option>
-                <option value="analysis">Análise</option>
-                <option value="insight">Insight</option>
-                <option value="discovery">Descoberta</option>
-            `;
-        } else {
-            findTypeSelect.innerHTML = `
-                <option value="question">Pergunta Geral</option>
-                <option value="question">Dúvida Zooarqueológica</option>
-                <option value="question">Consulta sobre Espécimes</option>
-            `;
-        }
-    }
-}
-
-function addProfessionBadgeZoo(profession) {
-    const existingBadge = document.getElementById('profession-badge');
-    if (existingBadge) existingBadge.remove();
-    
-    const userProfile = document.getElementById('userProfile');
-    if (userProfile && profession) {
-        const badge = document.createElement('div');
-        badge.id = 'profession-badge';
-        
-        let badgeColor = '#666';
-        let badgeText = profession;
-        
-        if (profession.toLowerCase().includes('arqueólogo') || profession.toLowerCase().includes('arqueologo')) {
-            badgeColor = '#b58647';
-            badgeText = 'Arqueólogo';
-        } else if (profession.toLowerCase().includes('estudante')) {
-            badgeColor = '#4f7db0';
-            badgeText = 'Estudante';
-        }
-        
-        badge.innerHTML = `
-            <span style="background: ${badgeColor}; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.65rem; font-weight: 600;">
-                ${badgeText}
-            </span>
-        `;
-        
-        userProfile.appendChild(badge);
-    }
-}
-
-function setupGuestPermissionsZoo() {
-    console.log('🚫 Aplicando bloqueio TOTAL para visitantes...');
-    
-    // 1. BLOQUEAR FORMULÁRIO DE NOVO REGISTRO
-    const formCard = document.querySelector('.space-y-6 .card-modern.p-6');
-    if (formCard) {
-        formCard.innerHTML = `
-            <div class="text-center p-6">
-                <div class="text-4xl mb-4">🔐</div>
-                <h3 class="text-lg font-bold mb-2">Acesso Restrito</h3>
-                <p class="mb-4 opacity-80">Faça login para registrar novos achados zooarqueológicos</p>
-                <a href="loginarq.html" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-lg">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Fazer Login
-                </a>
-            </div>
-        `;
-    }
-    
-    // 2. BLOQUEAR COMPLETAMENTE A ÁREA DE REGISTROS (SUBSTITUIR TUDO)
-    const mainContentCard = document.querySelector('.lg\\:col-span-2 .card-modern.p-6');
-    if (mainContentCard) {
-        mainContentCard.innerHTML = `
-            <div class="text-center p-8">
-                <div class="text-5xl mb-4">🔒</div>
-                <h2 class="text-2xl font-bold mb-2">Registros Zooarqueológicos</h2>
-                <p class="text-lg mb-4 opacity-80">Acesso restrito a usuários cadastrados</p>
-                <p class="mb-6 opacity-70">Faça login para visualizar os achados, análises e discussões especializadas</p>
-                <a href="loginarq.html" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-lg text-lg">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Fazer Login para Acessar
-                </a>
-                <div class="mt-6 p-4 rounded-lg" style="background: rgba(181, 134, 71, 0.1); border: 1px solid rgba(181, 134, 71, 0.3);">
-                    <p class="text-sm opacity-80">
-                        <strong>Benefícios do acesso:</strong><br>
-                        • Visualização completa de achados faunísticos<br>
-                        • Análises científicas especializadas<br>
-                        • Discussões com arqueólogos<br>
-                        • Registro de novos espécimes
-                    </p>
-                </div>
-            </div>
-        `;
-    }
-    
-    // 3. IMPEDIR QUE O SISTEMA DE COMENTÁRIOS CARREGUE OS DADOS
-    const findsContainer = document.getElementById('zooarch-finds');
-    if (findsContainer) {
-        findsContainer.innerHTML = ''; // Limpa qualquer conteúdo
-    }
-    
-    console.log('✅ Bloqueio total aplicado - visitantes não veem registros');
-}
-</script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-auth.js"></script>
+    <script src="js/firebase-firestore.js"></script>
+    <script src="js/auth-ui.js"></script>
     <style>
     :root {
         --primary-bronze: #b58647;
@@ -694,10 +536,8 @@ function setupGuestPermissionsZoo() {
         <h1>ArqTalk</h1>
     </div>
     <div class="menu">
-        <a href="https://arqtalk.com.br/">Início</a>
-        <a href="subaqua.html">Subaquática</a>
-        <a href="prelit.html">Pré-literária</a>
-        <a href="equipe.html">Sobre Nós</a>
+        <a href="index.html">Início</a>
+        <a href="comunidade.html">Comunidade</a>
         
         <!-- BOTÃO DE LOGIN -->
         <a href="loginarq.html" class="login-btn-nav" id="loginBtn" style="display: flex; align-items: center; gap: 0.5rem;">

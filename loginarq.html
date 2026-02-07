@@ -15,6 +15,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Firebase (mesmo backend do app) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-auth.js"></script>
+    <script src="js/firebase-firestore.js"></script>
 
 </head>
 
@@ -572,10 +579,8 @@
             <h1>ArqTalk</h1>
         </div>
         <div class="menu">
-            <a href="prelit.html">Pré-Literária</a>
-            <a href="subaqua.html">Subaquática</a>
-            <a href="zoo.html">Zooarqueologia</a>
-            <a href="equipe.html">Sobre Nós</a>
+            <a href="index.html">Início</a>
+            <a href="comunidade.html">Comunidade</a>
         </div>
          
     </nav>
@@ -702,319 +707,97 @@
     </footer>
 
    <script>
-    // ✅ CONFIGURAÇÃO COMPLETA DO SISTEMA DE LOGIN
-    
-    // ⭐⭐ FUNÇÃO getAvatarInitials NO ESCOPO GLOBAL ⭐⭐
-    function getAvatarInitials(email) {
-        const username = email.split('@')[0];
-        const lettersOnly = username.replace(/[^a-zA-ZÀ-ÿ]/g, '');
-        
-        if (lettersOnly.length >= 2) {
-            return lettersOnly.substring(0, 2).toUpperCase();
-        } else if (lettersOnly.length === 1) {
-            return (lettersOnly + lettersOnly).toUpperCase();
-        } else {
-            const numbersOnly = username.replace(/[^0-9]/g, '');
-            if (numbersOnly.length >= 2) {
-                return numbersOnly.substring(0, 2);
-            } else if (numbersOnly.length === 1) {
-                return numbersOnly + numbersOnly;
-            } else {
-                return 'US';
-            }
-        }
+    // Login com Firebase (mesmo backend do app)
+    function getDisplayNameFromProfession(profession) {
+        if (profession && profession.trim()) return profession.trim();
+        return null;
     }
 
-    // ✅ FUNÇÃO DE LOGIN GOOGLE - NO ESCOPO GLOBAL
     function handleGoogleLogin(response) {
-        console.log('🎯 handleGoogleLogin chamada!');
-        console.log('📦 Resposta do Google:', response);
-        
         if (!response || !response.credential) {
-            console.error('❌ Resposta do Google inválida:', response);
             alert('Erro: Resposta do Google inválida. Tente novamente.');
             return;
         }
-
-        const userData = decodeJWT(response.credential);
-        console.log('🔓 Dados decodificados:', userData);
-        
-        if (userData) {
-            const userInfo = {
-                email: userData.email,
-                name: userData.name,
-                photo: userData.picture,
-                provider: 'google',
-                loginTime: new Date().toLocaleString('pt-BR'),
-                lastAccess: new Date().toISOString(),
-                accessCount: 1,
-                initials: getAvatarInitials(userData.email),
-                locale: userData.locale || 'pt-BR',
-                emailVerified: userData.email_verified || false,
-                userSince: new Date().toLocaleDateString('pt-BR')
-            };
-            
-            // Atualiza contador de acessos se já existir
-            const existingUser = JSON.parse(localStorage.getItem('arqtalk_user'));
-            if (existingUser) {
-                userInfo.accessCount = (existingUser.accessCount || 0) + 1;
-            }
-            
-            console.log('💾 Salvando no localStorage:', userInfo);
-            localStorage.setItem('arqtalk_user', JSON.stringify(userInfo));
-            
-            // ⭐⭐ VERIFICAR SE SALVOU CORRETAMENTE ⭐⭐
-            const savedUser = localStorage.getItem('arqtalk_user');
-            console.log('✅ Usuário salvo no localStorage:', savedUser);
-            
-            showWelcomeMessage(userInfo);
-        } else {
-            console.error('❌ Falha ao decodificar JWT');
-            alert('Erro ao processar login do Google.');
-        }
-    }
-
-    // Função para decodificar o token JWT
-    function decodeJWT(token) {
-        try {
-            const base64Url = token.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-
-            return JSON.parse(jsonPayload);
-        } catch (error) {
-            console.error('Erro ao decodificar JWT:', error);
-            return null;
-        }
-    }
-
-    function showWelcomeMessage(user) {
-        console.log('👋 Mostrando mensagem de boas-vindas para:', user.name);
-        
-        const messages = [
-            `Bem-vindo de volta, ${user.name}! 🎉`,
-            `Que bom te ver novamente, ${user.name}! 👋`,
-            `${user.name}, seu conhecimento é valioso aqui! 📚`,
-            `Acesso número ${user.accessCount}! Continue explorando! 🔍`
-        ];
-        
-        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-        console.log('💬 Mensagem:', randomMessage);
-        
-        alert(randomMessage);
-        
-        // ⭐⭐ REDIRECIONAMENTO CONFIRMADO ⭐⭐
-        console.log('🔄 Redirecionando para a página principal...');
-        window.location.href = 'https://arqtalk.com.br/';
-    }
-
-    function addLogoutButton() {
-        const user = JSON.parse(localStorage.getItem('arqtalk_user'));
-        const userPanel = document.getElementById('userPanel');
-        
-        if (user && userPanel) {
-            const providerIcon = user.provider === 'google' ? '🔵' : '📧';
-            const avatarContent = user.photo 
-                ? `<img src="${user.photo}" class="user-avatar" alt="${user.name}">`
-                : `<div class="avatar-initials">${user.initials}</div>`;
-            
-            userPanel.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    ${avatarContent}
-                    <div class="user-info">
-                        <span class="user-name">${user.name} ${providerIcon}</span>
-                        <span class="user-email">${user.email}</span>
-                        <small style="color: var(--bronze-light);">${user.profession || 'Visitante'}</small>
-                    </div>
-                    <button onclick="logout()" class="logout-btn">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Sair
-                    </button>
-                </div>
-            `;
-            userPanel.style.display = 'flex';
-        }
-    }
-
-    function checkExistingLogin() {
-        const user = JSON.parse(localStorage.getItem('arqtalk_user'));
-        if (user) {
-            console.log('👤 Usuário já logado:', user.name);
-            addLogoutButton();
-            
-            if (window.location.pathname.includes('loginarq.html')) {
-                window.location.href = 'https://arqtalk.com.br/';
-            }
-        }
-    }
-
-    function logout() {
-        localStorage.removeItem('arqtalk_user');
-        if (typeof firebase !== 'undefined') {
-            firebase.auth().signOut();
-        }
-        alert('Até logo! 👋');
-        location.reload();
-    }
-
-    // Salva estatísticas de uso
-    function saveUserStats(action) {
-        const stats = JSON.parse(localStorage.getItem('arqtalk_stats')) || {};
-        const today = new Date().toDateString();
-        
-        if (!stats[today]) {
-            stats[today] = { logins: 0, pageViews: 0, actions: [] };
-        }
-        
-        stats[today].actions.push({
-            action: action,
-            timestamp: new Date().toISOString()
+        var credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
+        firebase.auth().signInWithCredential(credential).then(function() {
+            alert('Bem-vindo! Redirecionando...');
+            window.location.href = 'index.html';
+        }).catch(function(err) {
+            console.error(err);
+            alert('Erro ao entrar com Google: ' + (err.message || err));
         });
-        
-        localStorage.setItem('arqtalk_stats', JSON.stringify(stats));
     }
 
-    // ✅ DOMContentLoaded CORRETO
     document.addEventListener('DOMContentLoaded', function() {
-        const professionOptions = document.querySelectorAll('.profession-option');
-        const otherProfessionInput = document.getElementById('otherProfessionInput');
-        const otherProfessionField = document.getElementById('otherProfession');
+        if (typeof ArqtalkAuth !== 'undefined' && ArqtalkAuth.getCurrentUser()) {
+            window.location.href = 'index.html';
+            return;
+        }
 
-        // Seleção de profissão
-        professionOptions.forEach(option => {
+        var professionOptions = document.querySelectorAll('.profession-option');
+        var otherProfessionInput = document.getElementById('otherProfessionInput');
+        var otherProfessionField = document.getElementById('otherProfession');
+        professionOptions.forEach(function(option) {
             option.addEventListener('click', function() {
-                professionOptions.forEach(opt => opt.classList.remove('selected'));
+                professionOptions.forEach(function(opt) { opt.classList.remove('selected'); });
                 this.classList.add('selected');
-                
                 if (this.dataset.profession === 'outras') {
                     otherProfessionInput.classList.add('show');
-                    otherProfessionField.required = true;
+                    if (otherProfessionField) otherProfessionField.required = true;
                 } else {
                     otherProfessionInput.classList.remove('show');
-                    otherProfessionField.required = false;
-                    otherProfessionField.value = '';
+                    if (otherProfessionField) { otherProfessionField.required = false; otherProfessionField.value = ''; }
                 }
             });
         });
 
-        // Alternar visibilidade da senha
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('password');
-        
+        var togglePassword = document.getElementById('togglePassword');
+        var passwordInput = document.getElementById('password');
         if (togglePassword && passwordInput) {
             togglePassword.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordInput.setAttribute('type', type);
                 this.classList.toggle('fa-eye');
                 this.classList.toggle('fa-eye-slash');
             });
         }
-        
-        // URL do Google Apps Script
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyrfJCMzrAL0SqlCDFYvuB9jYgSQuUJOGUuLKT4Hj2oPL-I-fVQEdEYvC1A4ADdItEv/exec';
 
-        // Validação do formulário NORMAL
-        const loginForm = document.getElementById('loginForm');
+        var loginForm = document.getElementById('loginForm');
         if (loginForm) {
-            loginForm.addEventListener('submit', async function(e) {
+            loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const selectedProfession = document.querySelector('.profession-option.selected');
-                
+                var email = document.getElementById('email').value.trim();
+                var password = document.getElementById('password').value;
+                var selectedProfession = document.querySelector('.profession-option.selected');
                 if (!selectedProfession) {
                     alert('Por favor, selecione sua profissão.');
                     return;
                 }
-                
-                const profession = selectedProfession.dataset.profession;
-                let professionText = '';
-                
-                if (profession === 'arqueologo') professionText = 'Arqueólogo';
-                else if (profession === 'estudante') professionText = 'Estudante';
-                else if (profession === 'outras') {
-                    if (!otherProfessionField.value.trim()) {
-                        alert('Por favor, informe sua profissão.');
-                        return;
-                    }
-                    professionText = otherProfessionField.value;
+                var profession = selectedProfession.dataset.profession;
+                var professionText = profession === 'arqueologo' ? 'Arqueólogo' : (profession === 'estudante' ? 'Estudante' : (otherProfessionField ? otherProfessionField.value.trim() : ''));
+                if (profession === 'outras' && !professionText) {
+                    alert('Por favor, informe sua profissão.');
+                    return;
                 }
+                var displayName = professionText || email.split('@')[0];
 
-                // Dados do usuário
-                const userData = {
-                    email: email,
-                    name: email.split('@')[0],
-                    profession: professionText,
-                    loginTime: new Date().toLocaleString('pt-BR'),
-                    initials: getAvatarInitials(email),
-                    provider: 'email',
-                    photo: null
-                };
-
-                try {
-                    // 1. Salva localmente
-                    localStorage.setItem('arqtalk_user', JSON.stringify(userData));
-                    
-                    // 2. Tenta enviar para o servidor
-                    const serverSuccess = await saveToGoogleSheets(userData);
-                    
-                    if (serverSuccess) {
-                        alert(`✅ Login salvo no servidor!\nBem-vindo, ${userData.name}!`);
+                ArqtalkAuth.signInWithEmailAndPassword(email, password).then(function() {
+                    alert('Bem-vindo! Redirecionando...');
+                    window.location.href = 'index.html';
+                }).catch(function(err) {
+                    if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                        ArqtalkAuth.createUserWithEmailAndPassword(email, password, displayName).then(function() {
+                            alert('Conta criada! Bem-vindo.');
+                            window.location.href = 'index.html';
+                        }).catch(function(err2) {
+                            alert('Erro ao cadastrar: ' + (err2.message || err2));
+                        });
                     } else {
-                        alert(`⚠️ Login salvo localmente!\nBem-vindo, ${userData.name}!`);
+                        alert('Erro ao entrar: ' + (err.message || err));
                     }
-                    
-                    // 3. MOSTRA O PAINEL DO USUÁRIO
-                    addLogoutButton();
-                    
-                    // 4. Redireciona para teste.html
-                    setTimeout(() => {
-                        window.location.href = 'https://arqtalk.com.br/';
-                    }, 1000);
-                    
-                } catch (error) {
-                    // Fallback
-                    alert(`🔶 Login offline!\nBem-vindo, ${userData.name}!`);
-                    addLogoutButton();
-                    setTimeout(() => {
-                        window.location.href = 'https://arqtalk.com.br/';
-                    }, 1000);
-                }
+                });
             });
         }
-
-        // Função para salvar no Google Sheets
-        async function saveToGoogleSheets(userData) {
-            try {
-                const params = new URLSearchParams({
-                    email: userData.email,
-                    nome: userData.name,
-                    profissao: userData.profession,
-                    dataLogin: userData.loginTime
-                });
-
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: params
-                });
-                
-                const result = await response.json();
-                return result.result === 'success';
-                
-            } catch (error) {
-                console.log('Servidor offline, usando dados locais');
-                return false;
-            }
-        }
-
-        // Verifica se já está logado ao carregar a página
-        checkExistingLogin();
     });
 </script>
 </body>
